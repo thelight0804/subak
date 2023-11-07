@@ -2,6 +2,7 @@ package subak.backend.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import subak.backend.domain.enumType.Nationality;
 
 import javax.persistence.*;
 import java.util.ArrayList;

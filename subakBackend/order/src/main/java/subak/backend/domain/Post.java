@@ -2,6 +2,8 @@ package subak.backend.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import subak.backend.domain.enumType.PostStatus;
+import subak.backend.domain.enumType.ProductStatus;
 
 import javax.persistence.*;
 

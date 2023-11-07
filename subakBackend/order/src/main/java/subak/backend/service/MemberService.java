@@ -1,4 +1,4 @@
-package subak.backend.Service;
+package subak.backend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

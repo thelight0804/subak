@@ -1,4 +1,4 @@
-package subak.backend.domain;
+package subak.backend.domain.enumType;
 
 /**
  * 상품 상태

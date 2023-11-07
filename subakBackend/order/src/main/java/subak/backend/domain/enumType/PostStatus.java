@@ -1,4 +1,4 @@
-package subak.backend.domain;
+package subak.backend.domain.enumType;
 
 /**
  * 게시글 상태
