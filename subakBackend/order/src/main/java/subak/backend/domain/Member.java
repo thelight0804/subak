@@ -37,6 +37,9 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Post> posts = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    private Nationality nationality; // 국적 [KOR, JAP]
+
     //인증타입
 
 }

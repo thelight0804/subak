@@ -14,7 +14,7 @@ import java.util.List;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    
+
     @Transactional
     public Long join(Member member) {
         validateDuplicateMember(member);
@@ -31,10 +31,10 @@ public class MemberService {
     }
 
     // 패스워드 효성 검증 (java 정규표현식)
-    private boolean isPasswordValid(String password) {
-        String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
-        return password.matches(regex);
-    }
+//    private boolean isPasswordValid(String password) {
+//        String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
+//        return password.matches(regex);
+//    }
 
 
 }
