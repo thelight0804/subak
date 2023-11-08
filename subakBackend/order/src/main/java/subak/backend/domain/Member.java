@@ -2,7 +2,6 @@ package subak.backend.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import subak.backend.domain.enumType.Nationality;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -37,9 +36,6 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<Post> posts = new ArrayList<>();
-
-    @Enumerated(EnumType.STRING)
-    private Nationality nationality; // 국적 [KOR, JAP]
 
     //인증타입
 
