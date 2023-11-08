@@ -23,7 +23,6 @@ class MemberServiceTest {
         member.setEmail("0000@gmail.com");
         member.setName("member1");
         member.setPassword("123-4567-8901");
-        member.setNationality(Nationality.KOR);
 
         Long savedMember = memberService.join(member);
 
