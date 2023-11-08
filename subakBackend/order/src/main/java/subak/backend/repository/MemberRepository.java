@@ -25,10 +25,11 @@ public class MemberRepository {
     }
 
     public List<Member> findByEmail(String email){
-        return em.createQuery("select * from Member m where m.email", Member.class)
-                .setParameter("email", email)
+        return em.createQuery("select m from Member m where m.email = :member_email", Member.class)
+                .setParameter("member_email", email)
                 .getResultList();
     }
+
 
 
 
