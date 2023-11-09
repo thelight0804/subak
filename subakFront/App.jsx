@@ -1,6 +1,8 @@
-import React, { useEffect } from 'react';
-import {Text, View} from 'react-native';
+import { useEffect } from 'react';
+import {StyleSheet, View} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
+
+import Start from './src/pages/login/Start';
 
 const App = () => {
 
@@ -10,12 +12,18 @@ const App = () => {
   }, []);
 
   return (
-    <View>
-      <Text>
-        Hello React-native!
-      </Text>
-    </View>
+      <View style={styles.container}>
+        <Start />
+      </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#212123',
+  },
+});
+
 
 export default App;

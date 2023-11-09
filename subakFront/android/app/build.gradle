@@ -69,7 +69,8 @@ def enableProguardInReleaseBuilds = false
 def jscFlavor = 'org.webkit:android-jsc:+'
 
 android {
-    ndkVersion rootProject.ext.ndkVersion
+    // ndkVersion rootProject.ext.ndkVersion
+    ndkVersion '23.1.7779620'
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
@@ -80,6 +81,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     signingConfigs {
         debug {
