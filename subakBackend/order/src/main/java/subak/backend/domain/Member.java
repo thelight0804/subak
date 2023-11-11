@@ -17,19 +17,15 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    @NotNull
     @Column(name = "member_email", unique = true)
     private String email;
 
-    @NotNull
     @Column(name = "member_name")
     private String name;
 
-    @NotNull
     @Column(name = "member_pw")
     private String password;
 
-    @NotNull
     @Column(name = "member_phone")
     private String phone;
 
