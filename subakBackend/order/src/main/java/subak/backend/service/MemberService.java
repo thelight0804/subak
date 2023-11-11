@@ -18,6 +18,7 @@ public class MemberService {
     @Transactional
     public Long join(Member member) {
         validateDuplicateMember(member);
+        validateRequiredFields(member);
         memberRepository.save(member);
         return member.getId();
     }
@@ -27,6 +28,16 @@ public class MemberService {
         List<Member> findMember = memberRepository.findByEmail(member.getEmail());
         if (!findMember.isEmpty()) {
             throw new IllegalStateException("이미 존재하는 회원입니다.");
+        }
+    }
+
+    // 필수 필드 검증
+    private void validateRequiredFields(Member member) {
+        if (member.getEmail() == null || member.getEmail().trim().isEmpty() ||
+                member.getName() == null || member.getName().trim().isEmpty() ||
+                member.getPassword() == null || member.getPassword().trim().isEmpty() ||
+                member.getPhone() == null || member.getPhone().trim().isEmpty()) {
+            throw new IllegalArgumentException("이메일, 이름, 비밀번호, 휴대폰은 필수 입력 값입니다. (공백 문자열 불가능)");
         }
     }
 

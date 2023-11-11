@@ -9,6 +9,7 @@ import subak.backend.domain.Member;
 import subak.backend.repository.MemberRepository;
 
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,15 +22,20 @@ class MemberServiceTest {
     @Autowired
     MemberService memberService;
 
+    @Autowired
+    EntityManager em;
 
-    //테스트 성공
+
     @Test
     @Transactional
-    @Rollback
+    @Rollback(value = true)
     void 회원가입() throws Exception { // jUnit5부터는 public을 붙이지 않아도 된다.
 
         Member member = new Member();
-        member.setEmail("0004@gmail.com");
+        member.setEmail("0003@gmail.com");
+        member.setName("0");
+        member.setPassword("0");
+        member.setPhone("01000000000");
 
         Long savedMember = memberService.join(member);
 
