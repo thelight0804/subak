@@ -8,6 +8,8 @@ import subak.backend.domain.enumType.ProductStatus;
 import javax.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static javax.persistence.FetchType.*;
 
@@ -46,6 +48,15 @@ public class Post {
 
     @Enumerated(EnumType.STRING)
     private PostStatus postStatus; // 게시글 상태 [BASIC, HIDE]
+
+    @OneToMany(mappedBy = "member")
+    private List<Heart> hearts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Review> reviews = new ArrayList<>();
 
 
 
