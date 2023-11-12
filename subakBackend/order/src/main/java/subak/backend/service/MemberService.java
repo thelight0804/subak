@@ -16,7 +16,7 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * 회원가입
@@ -54,11 +54,6 @@ public class MemberService {
 
         return "비밀번호 재설정 성공";
     }
-
-
-
-
-
 
     //중복 회원 검증
     private void validateDuplicateMember(Member member) {
