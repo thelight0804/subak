@@ -18,6 +18,7 @@
     "react-native-safe-area-context": "^4.7.4",
     "react-native-screens": "^3.27.0",
     "react-native-splash-screen": "^3.3.0",
+    "react-native-vector-icons": "^10.0.2",
     "react-native-webview": "^13.6.2",
     "react-native-wheely": "^0.6.0"
   },

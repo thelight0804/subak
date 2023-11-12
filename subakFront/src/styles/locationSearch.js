@@ -4,20 +4,30 @@ import {StyleSheet} from "react-native";
 const styles = StyleSheet.create({
   header: {
     flex: 1,
-    backgroundColor: 'red',
-    height: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  backButton: {
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingTop: 10,
+    paddingBottom: 10,
+  },
+  input: {
     width: '100%',
+    backgroundColor: '#2a2e32',
+    borderRadius: 8,
   },
   button: {
     flex: 1,
-    backgroundColor: 'blue',
-    height: '100%',
-    width: '100%',
   },
-  licationList: {
+  text: {
+    color: 'white',
+  },
+  locationList: {
     flex: 8,
-    backgroundColor: 'green',
-    height: '100%',
-    width: '100%',
-  }
+
+  },
 })
+
+export default styles;

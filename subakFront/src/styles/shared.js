@@ -10,12 +10,15 @@ const shared = StyleSheet.create({
     textAlign: 'center',
   },
   button: {
-    backgroundColor: '#dc645b',
     width: 'auto',
     paddingTop: 10,
     paddingBottom: 10,
     margin: 10,
+
+    backgroundColor: '#dc645b',
     borderRadius: 8,
+
+    alignItems: 'center',
     fontWeight: 'bold',
   },
 });
