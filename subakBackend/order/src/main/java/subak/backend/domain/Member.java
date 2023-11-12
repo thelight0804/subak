@@ -1,5 +1,6 @@
 package subak.backend.domain;
 
+import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,13 +30,24 @@ public class Member {
     private String phone;
 
     @Column(name = "member_temp")
-    private double temp; // 매너온도
+    private float temp; // 매너온도
 
     @Column(name = "member_picture")
     private String picture; //프로필 사진
 
     @OneToMany(mappedBy = "member")
     private List<Post> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Heart> hearts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Review> reviews = new ArrayList<>();
+
+
 
     //인증타입
 

@@ -5,18 +5,15 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-import java.time.LocalDateTime;
-
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
 @Setter
-
-public class Comment {
+public class Heart {
 
     @Id @GeneratedValue
-    @Column(name = "cm_id")
+    @Column(name = "heart_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY)
@@ -26,11 +23,4 @@ public class Comment {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
-
-    @Column(name = "cm_content")
-    private String content;
-
-    @Column(name = "cm_date_time")
-    private LocalDateTime cmDateTime; // 댓글 작성 시간
-
 }
