@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
-import {StyleSheet, View} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Start from './src/pages/login/Start';
 
 const App = () => {
+  const Stack = createNativeStackNavigator(); //React navigation stack
 
   // splash-screen
   useEffect(() => {
@@ -12,18 +14,13 @@ const App = () => {
   }, []);
 
   return (
-      <View style={styles.container}>
-        <Start />
-      </View>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="start" component={Start} />
+        </Stack.Navigator>
+      </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#212123',
-  },
-});
 
 
 export default App;

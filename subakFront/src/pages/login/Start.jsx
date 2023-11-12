@@ -15,7 +15,7 @@ const Index = () => {
   const [openModal, setOpenModal] = useState(false); // 국가 선택 모달 상태
   
   return (
-    <View style={styles.container}>
+    <View style={shared.container}>
       {openModal && <SelectContryModal country={country} countryIndex={countryIndex} setCountryIndex={setCountryIndex} openModal={openModal} setOpenModal={setOpenModal}/>}
       <View style={styles.content}>
         <Image
@@ -49,13 +49,6 @@ const Index = () => {
               onPress={() => console.log("onPress")}> 로그인</Text>
           </Text>
       </View>
-
-      {/* <NavigationContainer>
-        <Stack.Navigator initialRouteName="Start">
-            <Stack.Screen name="FindLocate" component={FindLocate} />
-            <Stack.Screen name="Login" component={Login} />
-        </Stack.Navigator>
-      </NavigationContainer> */}
     </View>
   );
 };
