@@ -1,4 +1,4 @@
-// 시작 화면
+// 로그인이 되어 있지 않을 때 시작 화면
 import { react, useState } from 'react';
 import {Image, Text, View, TouchableOpacity, Modal, TouchableWithoutFeedback} from 'react-native';
 import WheelPicker from 'react-native-wheely';
@@ -6,7 +6,7 @@ import WheelPicker from 'react-native-wheely';
 import shared from '../../styles/shared';
 import styles from '../../styles/start';
 
-const Index = () => {
+const Start = ({navigation}) => {
   // 국가 선택 버튼
   const [country, setCountry] = useState(["🇰🇷 대한민국", "🇯🇵 일본"]);
   const [countryIndex, setCountryIndex] = useState(0); // 선택된 국가 인덱스
@@ -36,7 +36,7 @@ const Index = () => {
 
       <View style={styles.footer}>
           <TouchableOpacity
-            onPress={() => console.log("onPress")}
+            onPress={() => navigation.navigate('LocationSearch')}
           >
             <Text style={[shared.button, styles.text, styles.startText]}>시작하기</Text>
           </TouchableOpacity>
@@ -94,4 +94,4 @@ const SelectContryModal = props => {
 
 
 
-export default Index;
+export default Start;
