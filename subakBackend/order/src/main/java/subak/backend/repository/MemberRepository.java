@@ -16,14 +16,23 @@ public class MemberRepository {
     @PersistenceContext
     private EntityManager em;
 
+    /**
+     * 회원 저장
+     */
     public void save(Member member){
         em.persist(member);
     }
 
+    /**
+     * 이메일 통해 멤버 찾기
+     */
     public Member findOne(Long email){
         return em.find(Member.class, email);
     }
 
+    /**
+     * 이메일 찾기
+     */
     public Optional<Member> findByEmail(String email) {
         List<Member> result = em.createQuery("select m from Member m where m.email = :member_email", Member.class)
                 .setParameter("member_email", email)
@@ -32,7 +41,9 @@ public class MemberRepository {
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 
-
+    /**
+     * 이름, 휴대폰 찾기 (이메일 찾기 기능 구현시 사용)
+     */
     public Optional<Member> findByNamePhone(String name, String phone) {
         List<Member> foundMembers = em.createQuery("select m from Member m where m.name = :member_name and m.phone = :member_phone", Member.class)
                 .setParameter("member_name", name)
@@ -42,6 +53,9 @@ public class MemberRepository {
         return Optional.ofNullable(foundMembers.isEmpty() ? null : foundMembers.get(0));
     }
 
+    /**
+     * 이메일, 이름, 휴대폰 검색 (비밀번호 찾기 기능 구현시 사용)
+     */
     public Optional<Member> findByEmailNamePhone(String email, String name, String phone) {
         List<Member> foundMembers = em.createQuery("select m from Member m where m.email = :member_email and m.name = :member_name and m.phone = :member_phone", Member.class)
                 .setParameter("member_email", email)
