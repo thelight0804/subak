@@ -7,7 +7,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 
 import shared from '../../styles/shared';
-import styles from '../../styles/locationSearch'
+import styles from '../../styles/login/locationSearch'
 
 const LocationSearch = ({ navigation }) => {
   const [location, setLocation] = useState(['근처 동네', '부산시', '창원시']); // 사용자의 주위 위치
@@ -23,7 +23,7 @@ const LocationSearch = ({ navigation }) => {
             <Ionicon name="chevron-back" size={20} color="#FFFFFF" />
           </TouchableOpacity>
           <TextInput
-            style={[styles.input, styles.text]}
+            style={[shared.textInput, styles.text]}
             onChangeText={text => setUserLocate(text)}
             value={userLocate}
             inputMode='text'

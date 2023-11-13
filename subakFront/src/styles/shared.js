@@ -27,6 +27,12 @@ const shared = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
   },
+  textInput: {
+    width: '80%',
+    backgroundColor: '#2a2e32',
+    borderRadius: 8,
+    paddingLeft: 10,
+  },
 });
 
 export default shared;

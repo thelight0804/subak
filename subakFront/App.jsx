@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Start from './src/pages/login/Start';
 import LocationSearch from './src/pages/login/LocationSearch';
+import Login from './src/pages/login/Login';
 
 const App = () => {
   const Stack = createNativeStackNavigator(); //React navigation stack
@@ -19,6 +20,7 @@ const App = () => {
         <Stack.Navigator>
           <Stack.Screen name="Start" component={Start} options={{headerShown: false}}/>
           <Stack.Screen name="LocationSearch" component={LocationSearch} options={{headerShown: false}}/>
+          <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
         </Stack.Navigator>
       </NavigationContainer>
   );

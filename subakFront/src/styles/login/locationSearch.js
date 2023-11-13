@@ -9,12 +9,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     height: 50,
   },
-  input: {
-    width: '80%',
-    backgroundColor: '#2a2e32',
-    borderRadius: 8,
-    paddingLeft: 10,
-  },
   button: {
     marginTop: 10,
     marginBottom: 10,
