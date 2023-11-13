@@ -17,9 +17,9 @@ const styles = StyleSheet.create({
     flex: 8,
   },
   listText: {
-    margin: 10,
+    marginTop: 10,
+    marginBottom: 10,
     color: 'white',
-
   },
 })
 

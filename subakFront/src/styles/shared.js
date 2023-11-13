@@ -3,6 +3,7 @@ import {StyleSheet} from "react-native";
 const shared = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 12,
     backgroundColor: '#212123',
   },
   text: {
@@ -13,7 +14,8 @@ const shared = StyleSheet.create({
   button: {
     width: 'auto',
     padding: 10,
-    margin: 10,
+    marginTop: 10,
+    marginBottom: 10,
 
     backgroundColor: '#dc645b',
     borderRadius: 8,
@@ -22,13 +24,12 @@ const shared = StyleSheet.create({
     alignItems: 'center',
   },
   backButton: {
-    paddingLeft: 15,
     paddingRight: 15,
     paddingTop: 10,
     paddingBottom: 10,
   },
   textInput: {
-    width: '80%',
+    width: '100%',
     backgroundColor: '#2a2e32',
     borderRadius: 8,
     paddingLeft: 10,
