@@ -8,18 +8,24 @@ const shared = StyleSheet.create({
   text: {
     color: 'white',
     textAlign: 'center',
+    fontWeight: 'bold',
   },
   button: {
     width: 'auto',
-    paddingTop: 10,
-    paddingBottom: 10,
+    padding: 10,
     margin: 10,
 
     backgroundColor: '#dc645b',
     borderRadius: 8,
 
+    justifyContent: 'center',
     alignItems: 'center',
-    fontWeight: 'bold',
+  },
+  backButton: {
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
 });
 

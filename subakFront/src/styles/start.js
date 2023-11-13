@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
   },
   startText: {
     fontSize: 24,
+    fontWeight: 'bold',
   },
   text2: {
     color: '#868b94'

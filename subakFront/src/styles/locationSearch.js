@@ -6,26 +6,25 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  backButton: {
-    paddingLeft: 15,
-    paddingRight: 15,
     paddingTop: 10,
-    paddingBottom: 10,
+    height: 50,
   },
   input: {
-    width: '100%',
+    width: '80%',
     backgroundColor: '#2a2e32',
     borderRadius: 8,
+    paddingLeft: 10,
   },
   button: {
-    flex: 1,
-  },
-  text: {
-    color: 'white',
+    marginTop: 10,
+    marginBottom: 10,
   },
   locationList: {
     flex: 8,
+  },
+  listText: {
+    margin: 10,
+    color: 'white',
 
   },
 })

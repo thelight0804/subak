@@ -1,8 +1,9 @@
 // 사용자의 위치 선택 페이지
 import {useState} from 'react';
-import { View, TouchableOpacity, TextInput, Text, KeyboardAvoidingView } from 'react-native';
+import { View, TouchableOpacity, TextInput, Text } from 'react-native';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 
 import shared from '../../styles/shared';
@@ -13,19 +14,16 @@ const LocationSearch = ({ navigation }) => {
   const [userLocate, setUserLocate] = useState(''); // 사용자가 입력한 위치
 
   return (
-    <KeyboardAvoidingView
-      style={shared.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
+    <KeyboardAwareScrollView style={shared.container}>
         <View style={styles.header}>
           <TouchableOpacity 
-            style={styles.backButton}
+            style={shared.backButton}
             onPress={() => navigation.goBack()}
           >
-            <Ionicon name="chevron-back" size={30} color="#FFFFFF" />
+            <Ionicon name="chevron-back" size={20} color="#FFFFFF" />
           </TouchableOpacity>
           <TextInput
-            style={styles.input}
+            style={[styles.input, styles.text]}
             onChangeText={text => setUserLocate(text)}
             value={userLocate}
             inputMode='text'
@@ -35,10 +33,14 @@ const LocationSearch = ({ navigation }) => {
         </View>
         
         <View style={styles.button}>
-          <TouchableOpacity onPress={() => console.log("현재위치로 찾기 버튼 클릭")} >
-            <Text style={[shared.button, shared.text]}>
-              <MaterialIcon name="target" size={25} color="#FFFFFF" />
-              현재 위치로 찾기
+          <TouchableOpacity 
+            style={shared.button}
+            onPress={() => console.log(userLocate)}
+            // TODO: 현재 위치로 찾기 구현
+          >
+            <Text style={shared.text}>
+              <MaterialIcon name="target" size={20} color="#FFFFFF"/>
+              현재위치로 찾기
             </Text>
           </TouchableOpacity>
 
@@ -46,10 +48,12 @@ const LocationSearch = ({ navigation }) => {
         
         <View style={styles.locationList}>
           {location.map((location, i) => 
-            <Text key={i} style={styles.text}>{location}</Text>
+          <TouchableOpacity key={i}>
+            <Text style={[styles.listText]}>{location}</Text>
+          </TouchableOpacity>
           )}
         </View>
-    </KeyboardAvoidingView>
+    </KeyboardAwareScrollView>
   );
 }
 
