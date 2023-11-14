@@ -10,6 +10,19 @@ const Login = ({ navigation }) => {
   const [email, setEmail] = useState(''); //이메일
   const [password, setPassword] = useState(''); //비밀번호
 
+  // 이메일, 비밀번호 정규식
+  const emailRegEx = /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
+  const passwordRegEx = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
+
+  // 이메일, 비밀번호 유효성 검사
+  const emailCheck = (emailValue) => {
+    return emailRegEx.test(emailValue);
+  }
+
+  const passwordCheck = (passwordValue) => {
+    return passwordRegEx.test(passwordValue);
+  }
+
   return (
     <KeyboardAwareScrollView style={shared.container}>
       <TouchableOpacity
@@ -41,16 +54,26 @@ const Login = ({ navigation }) => {
           placeholderTextColor="#676c74"
           secureTextEntry={true}
         />
+        {!passwordCheck(password) && password.length > 0 && (
+          <Text style={{color: '#dc645b'}}>
+            비밀번호는 8자 이상 20자 미만이며{'\n'}영문, 숫자, 특수문자를 포함해야
+            합니다.
+          </Text>
+        )}
       </View>
       <TouchableOpacity
         style={styles.button}
         onPress={() => console.log(email, password)}
-        disabled={email === '' || password === ''}
-      >
-        <Text style={[
-          styles.startText,
-          email === '' || password === '' ? styles.disabled : styles.enabled
-        ]} >로그인 하기</Text>
+        disabled={!(emailCheck(email) && passwordCheck(password))}>
+        <Text
+          style={[
+            styles.startText,
+            emailCheck(email) && passwordCheck(password)
+              ? styles.enabled
+              : styles.disabled,
+          ]}>
+          로그인 하기
+        </Text>
       </TouchableOpacity>
       <Text style={[styles.text, styles.text2]}>
         이메일 또는 비밀번호를 잊으셨나요?
