@@ -1,20 +1,19 @@
-/*
-color:
-  - background color: '#212123'
-  - text color: 'white'
-  - main color: '#dc645b'
-*/
-
 import {StyleSheet} from "react-native";
+
+// color palette
+var colorBackground = '#212123';
+var text = 'white';
+var colorMain = '#dc645b';
+var colorError = '#DC3F3E';
 
 const shared = StyleSheet.create({
   container: {
     flex: 1,
     padding: 12,
-    backgroundColor: '#212123',
+    backgroundColor: colorBackground,
   },
   text: {
-    color: 'white',
+    color: text,
     textAlign: 'center',
     fontWeight: 'bold',
   },
@@ -24,7 +23,7 @@ const shared = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
 
-    backgroundColor: '#dc645b',
+    backgroundColor: colorMain,
     borderRadius: 8,
 
     justifyContent: 'center',
