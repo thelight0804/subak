@@ -1,31 +1,44 @@
 import {StyleSheet} from "react-native";
 
+// color palette
+var colorBackground = '#212123';
+var text = 'white';
+var colorMain = '#dc645b';
+var colorError = '#DC3F3E';
+
 const shared = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#212123',
+    padding: 12,
+    backgroundColor: colorBackground,
   },
   text: {
-    color: 'white',
+    color: text,
     textAlign: 'center',
     fontWeight: 'bold',
   },
   button: {
     width: 'auto',
     padding: 10,
-    margin: 10,
+    marginTop: 10,
+    marginBottom: 10,
 
-    backgroundColor: '#dc645b',
+    backgroundColor: colorMain,
     borderRadius: 8,
 
     justifyContent: 'center',
     alignItems: 'center',
   },
   backButton: {
-    paddingLeft: 15,
     paddingRight: 15,
     paddingTop: 10,
     paddingBottom: 10,
+  },
+  textInput: {
+    width: '100%',
+    backgroundColor: '#2a2e32',
+    borderRadius: 8,
+    paddingLeft: 10,
   },
 });
 

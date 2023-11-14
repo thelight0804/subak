@@ -4,7 +4,7 @@ import {Image, Text, View, TouchableOpacity, Modal, TouchableWithoutFeedback} fr
 import WheelPicker from 'react-native-wheely';
 
 import shared from '../../styles/shared';
-import styles from '../../styles/start';
+import styles from '../../styles/login/start';
 
 const Start = ({navigation}) => {
   // 국가 선택 버튼
@@ -14,7 +14,15 @@ const Start = ({navigation}) => {
   
   return (
     <View style={shared.container}>
-      {openModal && <SelectContryModal country={country} countryIndex={countryIndex} setCountryIndex={setCountryIndex} openModal={openModal} setOpenModal={setOpenModal}/>}
+      {openModal && (
+        <SelectContryModal
+          country={country}
+          countryIndex={countryIndex}
+          setCountryIndex={setCountryIndex}
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+        />
+      )}
       <View style={styles.content}>
         <Image
           style={styles.image}
@@ -35,18 +43,21 @@ const Start = ({navigation}) => {
       </View>
 
       <View style={styles.footer}>
+        <TouchableOpacity
+          style={shared.button}
+          onPress={() => navigation.navigate('LocationSearch')}>
+          <Text style={[styles.text, styles.startText]}>시작하기</Text>
+        </TouchableOpacity>
+        <Text style={[styles.text, styles.text2]}>
+          이미 계정이 있나요?
           <TouchableOpacity
-            style={shared.button}
-            onPress={() => navigation.navigate('LocationSearch')}
+            onPress={() => navigation.navigate('Login')}
           >
-            <Text style={[styles.text, styles.startText]}>시작하기</Text>
+            <Text style={[styles.text, styles.hyperlink]}>
+              로그인
+            </Text>
           </TouchableOpacity>
-          <Text style={[styles.text, styles.text2]}>
-            이미 계정이 있나요?
-            <Text
-              style={[styles.text, styles.hyperlink]}
-              onPress={() => console.log("onPress")}> 로그인</Text>
-          </Text>
+        </Text>
       </View>
     </View>
   );
