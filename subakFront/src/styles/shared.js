@@ -1,3 +1,10 @@
+/*
+color:
+  - background color: '#212123'
+  - text color: 'white'
+  - main color: '#dc645b'
+*/
+
 import {StyleSheet} from "react-native";
 
 const shared = StyleSheet.create({
