@@ -16,7 +16,6 @@ public class MemberRepository {
     @PersistenceContext
     private EntityManager em;
 
-
     public void save(Member member){
         em.persist(member);
     }
@@ -25,11 +24,14 @@ public class MemberRepository {
         return em.find(Member.class, email);
     }
 
-    public List<Member> findByEmail(String email){
-        return em.createQuery("select m from Member m where m.email = :member_email", Member.class)
+    public Optional<Member> findByEmail(String email) {
+        List<Member> result = em.createQuery("select m from Member m where m.email = :member_email", Member.class)
                 .setParameter("member_email", email)
                 .getResultList();
+
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
+
 
     public Optional<Member> findByNamePhone(String name, String phone) {
         List<Member> foundMembers = em.createQuery("select m from Member m where m.name = :member_name and m.phone = :member_phone", Member.class)
