@@ -45,9 +45,9 @@ const Login = ({ navigation }) => {
         />
       </View>
       <TouchableOpacity
-        style={shared.button}
-        onPress={() => console.log("인증문자 받기")}>
-        <Text style={[styles.startText]}>인증문자 받기</Text>
+        style={styles.button}
+        onPress={() => console.log(email, password)}>
+        <Text style={[styles.startText]}>로그인 하기</Text>
       </TouchableOpacity>
       <Text style={[styles.text, styles.text2]}>
         이메일 또는 비밀번호를 잊으셨나요?

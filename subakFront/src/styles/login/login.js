@@ -29,10 +29,24 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: 'white',
   },
+  button: {
+    width: '100%',
+    padding: 10,
+    marginTop: 10,
+    marginBottom: 10,
+
+    borderWidth: 1,
+    borderColor: '#868b94',
+    borderRadius: 8,
+
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   // 이메일 & 비밀번호 찾기
   startText: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: 'bold',
+    color: '#868b94',
   },
 });
 
