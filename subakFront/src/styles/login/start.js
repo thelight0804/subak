@@ -1,6 +1,12 @@
-// Index.jsx Stylesheet
+// Index.jsx StylesheetcolorMain
 
 import {StyleSheet} from "react-native";
+
+// color palette
+var colorBackground = '#212123';
+var text = 'white';
+var colorMain = '#dc645b';
+var colorError = '#DC3F3E';
 
 const styles = StyleSheet.create({
   // content
@@ -20,7 +26,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   text: {
-    color: 'white',
+    color: text,
     textAlign: 'center',
   },
   countryButton: {
@@ -43,7 +49,7 @@ const styles = StyleSheet.create({
     color: '#868b94'
   },
   hyperlink: {
-    color: '#dc645b',
+    color: colorMain,
   },
 
   // 국가 선택 modal
@@ -63,20 +69,20 @@ const styles = StyleSheet.create({
   },
   modal: {
     width: '100%',
-    backgroundColor: '#212123',
+    backgroundColor: colorBackground,
     paddingTop: 24,
     paddingBottom: 24,
     top: '58%',
     borderRadius: 8,
   },
   modalText: {
-    color: 'white',
+    color: text,
     left: 16,
     fontSize: 16,
     fontWeight: 'bold',
   },
   picker: {
-    backgroundColor: '#212123',
+    backgroundColor: colorBackground,
     width: 300,
     height: 215.
   },
@@ -86,7 +92,7 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: 'white',
+    color: text,
   },
 });
 
