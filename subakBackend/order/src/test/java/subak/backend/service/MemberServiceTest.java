@@ -26,6 +26,7 @@ class MemberServiceTest {
     @Transactional
     @Rollback(value = true)
     void 회원가입() throws Exception { // jUnit5부터는 public을 붙이지 않아도 된다.
+        System.out.println("회원가입 테스트 시작");
 
         Member member = new Member();
 
@@ -36,6 +37,8 @@ class MemberServiceTest {
         Long savedMember = memberService.join(member);
 
         Assertions.assertEquals(member, memberRepository.findOne(savedMember));
+
+        System.out.println("회원가입 끝");
     }
 
 
@@ -43,6 +46,7 @@ class MemberServiceTest {
     @Transactional
     @Rollback
     void 중복회원검증() throws Exception {
+        System.out.println("회원중복검증 테스트 시작");
 
         Member member1 = createMember("0004@gmail.com", "0", "0", "01000000000");
         memberService.join(member1);
@@ -51,25 +55,31 @@ class MemberServiceTest {
         member2.setEmail("0004@gmail.com");
 
         assertThrows(IllegalStateException.class, () -> {
-            memberService.join(member2);
-        });
+            memberService.join(member2);});
+
+        System.out.println("회원중복검증 테스트 끝");
     }
 
     @Test
     @Transactional
     @Rollback
     void 이메일찾기() throws Exception {
+        System.out.println("이메일 찾기 테스트 시작");
         Member member = createMember("0004@gmail.com", "0", "0", "01000000000");
         memberService.join(member);
 
         String findEmail = memberService.findMemberEmail(member.getName(), member.getPhone());
         assertEquals("0004@gmail.com", findEmail);
+
+        System.out.println("이메일 찾기 테스트 끝");
     }
 
     @Test
     @Transactional
     @Rollback
     void 이메일찾기_일치하는회원없음_예외() throws Exception {
+        System.out.println("이메일찾기_일치하는회원없음_예외 테스트 시작");
+
         Member member = createMember("0004@gmail.com", "0", "0", "01000000000");
         memberService.join(member);
 
@@ -77,12 +87,15 @@ class MemberServiceTest {
         assertThrows(IllegalArgumentException.class,
                 () -> memberService.findMemberEmail("nonUser", "01012345678"));
 
+        System.out.println("이메일찾기_일치하는회원없음_예외 테스트 끝");
     }
 
     @Test
     @Transactional
     @Rollback
     void 비밀번호찾기_일치하는회원() throws Exception {
+        System.out.println("비밀번호찾기_일치하는회원 테스트 시작");
+        
         Member member = createMember("0004@gmail.com", "0", "0", "01000000000");
         memberService.join(member);
 
@@ -96,12 +109,16 @@ class MemberServiceTest {
         // BCryptPasswordEncoder를 사용하여 암호화된 비밀번호를 확인
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         assertTrue(passwordEncoder.matches(newPassword, updatedMemberOptional.get().getPassword()));
+
+        System.out.println("비밀번호찾기_일치하는회원 테스트 끝");
     }
 
     @Test
     @Transactional
     @Rollback
     void 로그인_성공() throws Exception{
+        System.out.println("로그인 성공 테스트 시작");
+        
         Member member = createMember("0004@gmail.com", "0", "0", "01000000000");
         memberService.join(member);
 
@@ -110,6 +127,8 @@ class MemberServiceTest {
         String result = memberService.login("0004@gmail.com", newPassword);
 
         assertEquals("로그인 성공", result);
+
+        System.out.println("로그인 성공 테스트 끝");
     }
 
 

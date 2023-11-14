@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-@Transactional(readOnly = true) // 읽기 전용일 경우 최적화
+//@Transactional(readOnly = true) // 읽기 전용일 경우 최적화
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -21,7 +21,6 @@ public class MemberService {
     /**
      * 회원가입
      */
-    @Transactional
     public Long join(Member member) {
         validateDuplicateMember(member);
         validateRequiredFields(member);
@@ -80,7 +79,7 @@ public class MemberService {
         }
     }
 
-    // 필수 필드 검증
+    //필수 필드 검증
     private void validateRequiredFields(Member member) {
         if (member.getEmail() == null || member.getEmail().trim().isEmpty() ||
                 member.getName() == null || member.getName().trim().isEmpty() ||
