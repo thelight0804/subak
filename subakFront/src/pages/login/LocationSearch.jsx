@@ -49,7 +49,7 @@ const LocationSearch = ({ navigation }) => {
         <View style={styles.locationList}>
           <Text style={styles.listText}>근처 동네</Text>
           {location.map((location, i) => 
-          <TouchableOpacity key={i} onPress={()=> navigation.navigate('SignUp')}>
+          <TouchableOpacity key={i} onPress={()=> navigation.navigate('SignUp', {location: location})}>
             <Text style={[styles.listText]}>{location}</Text>
           </TouchableOpacity>
           )}

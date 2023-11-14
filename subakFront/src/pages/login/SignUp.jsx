@@ -8,12 +8,12 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import shared from '../../styles/shared';
 import styles from '../../styles/login/login';
 
-const SignUp = ({ navigation }) => {
+const SignUp = ({ navigation, route }) => {
   const [name, setName] = useState(''); // 본명
   const [phone, setPhone] = useState(''); // 휴대폰 번호
   const [email, setEmail] = useState(''); // 이메일
   const [password, setPassword] = useState(''); // 비밀번호
-  const [position, setPosition] = useState(''); // 위치
+  const [location, setLocation] = useState(route.params.location); // 위치
 
 
   // 입력 값 체크 정규식
@@ -107,7 +107,7 @@ const SignUp = ({ navigation }) => {
       </View>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => console.log(email, password, name, phone)}
+        onPress={() => console.log(email, password, name, phone, location)}
         disabled={!(emailCheck(email) && passwordCheck(password) && nameCheck(name) && phoneCheck(phone))}>
         <Text
           style={[
