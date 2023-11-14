@@ -18,9 +18,7 @@ const Login = ({ navigation }) => {
         <Ionicon name="chevron-back" size={20} color="#FFFFFF" />
       </TouchableOpacity>
       <Text style={styles.headerText}>안녕하세요!</Text>
-      <Text style={styles.headerText}>
-        이메일과 비밀번호로 로그인해주세요.
-      </Text>
+      <Text style={styles.headerText}>이메일과 비밀번호로 로그인해주세요.</Text>
       <Text style={styles.text}>
         휴대폰 번호는 안전하게 보관되며 이웃들에게 공개되지 않아요.
       </Text>
@@ -30,7 +28,7 @@ const Login = ({ navigation }) => {
           onChangeText={text => setEmail(text)}
           value={email}
           inputMode="email"
-          keyboardType='email-address'
+          keyboardType="email-address"
           placeholder="이메일 주소 입력"
           placeholderTextColor="#676c74"
         />
@@ -46,8 +44,13 @@ const Login = ({ navigation }) => {
       </View>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => console.log(email, password)}>
-        <Text style={[styles.startText]}>로그인 하기</Text>
+        onPress={() => console.log(email, password)}
+        disabled={email === '' || password === ''}
+      >
+        <Text style={[
+          styles.startText,
+          email === '' || password === '' ? styles.disabled : styles.enabled
+        ]} >로그인 하기</Text>
       </TouchableOpacity>
       <Text style={[styles.text, styles.text2]}>
         이메일 또는 비밀번호를 잊으셨나요?

@@ -42,12 +42,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  // 이메일 & 비밀번호 찾기
   startText: {
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  disabled: {
     color: '#868b94',
   },
+  enabled: {
+    color: 'white',
+  },
+  // 이메일 & 비밀번호 찾기
+  hyperText: {
+    marginBottom: 5,
+    color: 'white',
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
+  }
 });
 
 export default styles;
