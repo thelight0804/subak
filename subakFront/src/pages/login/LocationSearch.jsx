@@ -10,7 +10,7 @@ import shared from '../../styles/shared';
 import styles from '../../styles/login/locationSearch'
 
 const LocationSearch = ({ navigation }) => {
-  const [location, setLocation] = useState(['근처 동네', '부산시', '창원시']); // 사용자의 주위 위치
+  const [location, setLocation] = useState(['부산시', '창원시']); // 사용자의 주위 위치
   const [userLocate, setUserLocate] = useState(''); // 사용자가 입력한 위치
 
   return (
@@ -47,8 +47,9 @@ const LocationSearch = ({ navigation }) => {
         </View>
         
         <View style={styles.locationList}>
+          <Text style={styles.listText}>근처 동네</Text>
           {location.map((location, i) => 
-          <TouchableOpacity key={i}>
+          <TouchableOpacity key={i} onPress={()=> navigation.navigate('SignUp')}>
             <Text style={[styles.listText]}>{location}</Text>
           </TouchableOpacity>
           )}

@@ -4,7 +4,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Ionicon from 'react-native-vector-icons/Ionicons';
 
 import shared from '../../styles/shared';
-import styles from '../../styles/login/login';
+import styles from '../../styles/login/signUp';
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState(''); //이메일
@@ -42,7 +42,7 @@ const Login = ({ navigation }) => {
           value={email}
           inputMode="email"
           keyboardType="email-address"
-          placeholder="이메일 주소 입력"
+          placeholder="이메일 주소"
           placeholderTextColor="#676c74"
         />
         <TextInput
@@ -50,7 +50,7 @@ const Login = ({ navigation }) => {
           onChangeText={text => setPassword(text)}
           value={password}
           inputMode="text"
-          placeholder="비밀번호 입력"
+          placeholder="비밀번호"
           placeholderTextColor="#676c74"
           secureTextEntry={true}
         />

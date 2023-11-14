@@ -1,4 +1,4 @@
-// Login component styleSheet
+// signUp component styleSheet
 import { StyleSheet } from 'react-native';
 
 // color palette
