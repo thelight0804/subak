@@ -1,13 +1,14 @@
 package subak.backend.service;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 import subak.backend.domain.Member;
+import subak.backend.dto.request.member.UpdatePasswordRequest;
 import subak.backend.repository.MemberRepository;
+
 import javax.transaction.Transactional;
 import java.util.Optional;
 
@@ -55,7 +56,8 @@ class MemberServiceTest {
         member2.setEmail("0004@gmail.com");
 
         assertThrows(IllegalStateException.class, () -> {
-            memberService.join(member2);});
+            memberService.join(member2);
+        });
 
         System.out.println("회원중복검증 테스트 끝");
     }
@@ -90,36 +92,41 @@ class MemberServiceTest {
 
     @Test
     @Rollback
-    void 비밀번호찾기_일치하는회원() throws Exception {
-        System.out.println("비밀번호찾기_일치하는회원 테스트 시작");
-        
-        Member member = createMember("0004@gmail.com", "0", "0", "01000000000");
+    void 회원비밀번호_수정() throws Exception {
+        System.out.println("비밀번호 수정 테스트 시작");
+
+        Member member = createMember("test1@gmail.com", "TestUser", "password", "01012345678");
         memberService.join(member);
 
+        // 비밀번호 수정
         String newPassword = "newPassword";
-        memberService.findPassword(member.getEmail(), member.getName(), member.getPhone(), newPassword);
+        String updateResult = memberService.updatePassword("test1@gmail.com", "TestUser", "01012345678", newPassword);
+        assertEquals("비밀번호 수정 성공", updateResult);
 
         // 업데이트된 비밀번호로 로그인이 가능한지 확인
-        Optional<Member> updatedMemberOptional = memberRepository.findByEmail(member.getEmail());
+        Optional<Member> updatedMemberOptional = memberRepository.findById(member.getId());
         assertTrue(updatedMemberOptional.isPresent());
 
-        // BCryptPasswordEncoder를 사용하여 암호화된 비밀번호를 확인
+        // 새로운 비밀번호로 업데이트되었는지 확인
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         assertTrue(passwordEncoder.matches(newPassword, updatedMemberOptional.get().getPassword()));
 
-        System.out.println("비밀번호찾기_일치하는회원 테스트 끝");
+        System.out.println("비밀번호 수정 테스트 끝");
+
+
     }
 
     @Test
     @Rollback
-    void 로그인_성공() throws Exception{
+    void 로그인_성공() throws Exception {
         System.out.println("로그인 성공 테스트 시작");
-        
+
         Member member = createMember("0004@gmail.com", "0", "0", "01000000000");
         memberService.join(member);
 
+        //비밀번호 재설정
         String newPassword = "newPassword";
-        memberService.findPassword(member.getEmail(), member.getName(), member.getPhone(), newPassword);
+        memberService.updatePassword(member.getEmail(), member.getName(), member.getPhone(), newPassword);
         String result = memberService.login("0004@gmail.com", newPassword);
 
         assertEquals("로그인 성공", result);
@@ -134,7 +141,17 @@ class MemberServiceTest {
         member.setName(name);
         member.setPassword(password);
         member.setPhone(phone);
+
         return member;
+    }
+
+    private UpdatePasswordRequest createUpdatePasswordRequest(Member member, String newPassword) {
+        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest();
+        updatePasswordRequest.setEmail(member.getEmail());
+        updatePasswordRequest.setName(member.getName());
+        updatePasswordRequest.setPhone(member.getPhone());
+        updatePasswordRequest.setNewPassword(newPassword);
+        return updatePasswordRequest;
     }
 
 

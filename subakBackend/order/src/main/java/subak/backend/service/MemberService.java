@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import subak.backend.domain.Member;
 import subak.backend.repository.MemberRepository;
+
 import java.util.Optional;
 
 @Service
@@ -24,6 +24,10 @@ public class MemberService {
     public Long join(Member member) {
         validateDuplicateMember(member);
         validateRequiredFields(member);
+
+        String encodedPassword = passwordEncoder.encode(member.getPassword());
+        member.setPassword(encodedPassword);
+
         memberRepository.save(member);
         log.info(member.getEmail() + " 님이 회원가입 하였습니다.");
         return member.getId();
@@ -40,18 +44,23 @@ public class MemberService {
 
 
     /**
-     * 비밀번호(Password) 찾기
+     * 비밀번호(Password) 수정
      */
-    public String findPassword(String email, String name, String phone, String newPassword) {
+    public String updatePassword(String email, String name, String phone, String newPassword) {
         Optional<Member> foundMember = memberRepository.findByEmailAndNameAndPhone(email, name, phone);
-        Member member = foundMember.orElseThrow(() -> new IllegalArgumentException("일치하는 회원 정보가 없습니다."));
 
-        String hashedPassword = passwordEncoder.encode(newPassword);
-        member.setPassword(hashedPassword);
-        memberRepository.save(member);
+        if (foundMember.isPresent()) {
+            Member member = foundMember.get();
+            String encodedNewPassword = passwordEncoder.encode(newPassword);
+            member.setPassword(encodedNewPassword);
+            memberRepository.save(member);
 
-        return "비밀번호 재설정 성공";
+            return "비밀번호 수정 성공";
+        } else {
+            throw new IllegalArgumentException("일치하는 회원 정보가 없습니다.");
+        }
     }
+
 
     /**
      * 로그인 (Email, Password 필요)
