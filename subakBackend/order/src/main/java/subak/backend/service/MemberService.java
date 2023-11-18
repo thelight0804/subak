@@ -33,7 +33,7 @@ public class MemberService {
      * 아이디(Email) 찾기
      */
     public String findMemberEmail(String name, String phone) {
-        Optional<Member> foundMember = memberRepository.findByNamePhone(name, phone);
+        Optional<Member> foundMember = memberRepository.findByNameAndPhone(name, phone);
         Member member = foundMember.orElseThrow(() -> new IllegalArgumentException("일치하는 회원 정보가 없습니다."));
         return member.getEmail();
     }
@@ -43,14 +43,12 @@ public class MemberService {
      * 비밀번호(Password) 찾기
      */
     public String findPassword(String email, String name, String phone, String newPassword) {
-        Optional<Member> foundMember = memberRepository.findByEmailNamePhone(email, name, phone);
+        Optional<Member> foundMember = memberRepository.findByEmailAndNameAndPhone(email, name, phone);
         Member member = foundMember.orElseThrow(() -> new IllegalArgumentException("일치하는 회원 정보가 없습니다."));
 
-        // 비밀번호 재설정
-        String encodedNewPassword = passwordEncoder.encode(newPassword);
-
-        // 비밀번호 업데이트
-        memberRepository.updatePassword(member.getId(), encodedNewPassword);
+        String hashedPassword = passwordEncoder.encode(newPassword);
+        member.setPassword(hashedPassword);
+        memberRepository.save(member);
 
         return "비밀번호 재설정 성공";
     }

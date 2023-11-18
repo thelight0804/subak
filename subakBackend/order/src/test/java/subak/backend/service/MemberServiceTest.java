@@ -14,6 +14,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 class MemberServiceTest {
 
     @Autowired
@@ -23,7 +24,6 @@ class MemberServiceTest {
 
 
     @Test
-    @Transactional
     @Rollback(value = true)
     void 회원가입() throws Exception { // jUnit5부터는 public을 붙이지 않아도 된다.
         System.out.println("회원가입 테스트 시작");
@@ -34,16 +34,16 @@ class MemberServiceTest {
         member.setPassword("0");
         member.setName("0");
         member.setPhone("01000000000");
-        Long savedMember = memberService.join(member);
+        Long savedMemberId = memberService.join(member);
 
-        Assertions.assertEquals(member, memberRepository.findOne(savedMember));
+        Optional<Member> savedMember = memberRepository.findById(savedMemberId);
+        assertTrue(savedMember.isPresent());
 
         System.out.println("회원가입 끝");
     }
 
 
     @Test // jUnit5에서는 @Test에 expected 속성이 지원되지 않는다.
-    @Transactional
     @Rollback
     void 중복회원검증() throws Exception {
         System.out.println("회원중복검증 테스트 시작");
@@ -61,7 +61,6 @@ class MemberServiceTest {
     }
 
     @Test
-    @Transactional
     @Rollback
     void 이메일찾기() throws Exception {
         System.out.println("이메일 찾기 테스트 시작");
@@ -75,7 +74,6 @@ class MemberServiceTest {
     }
 
     @Test
-    @Transactional
     @Rollback
     void 이메일찾기_일치하는회원없음_예외() throws Exception {
         System.out.println("이메일찾기_일치하는회원없음_예외 테스트 시작");
@@ -91,7 +89,6 @@ class MemberServiceTest {
     }
 
     @Test
-    @Transactional
     @Rollback
     void 비밀번호찾기_일치하는회원() throws Exception {
         System.out.println("비밀번호찾기_일치하는회원 테스트 시작");
@@ -114,7 +111,6 @@ class MemberServiceTest {
     }
 
     @Test
-    @Transactional
     @Rollback
     void 로그인_성공() throws Exception{
         System.out.println("로그인 성공 테스트 시작");
