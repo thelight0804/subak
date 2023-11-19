@@ -11,15 +11,25 @@
   },
   "dependencies": {
     "@react-navigation/native": "^6.1.9",
-    "@react-navigation/stack": "^6.3.20",
+    "@react-navigation/native-stack": "^6.9.17",
     "react": "18.2.0",
-    "react-native": "0.72.6",
-    "react-native-webview": "^13.6.2"
+    "react-native": "^0.72.6",
+    "react-native-geolocation-service": "^5.3.1",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-reanimated": "^2.17.0",
+    "react-native-safe-area-context": "^4.7.4",
+    "react-native-screens": "^3.27.0",
+    "react-native-splash-screen": "^3.3.0",
+    "react-native-vector-icons": "^10.0.2",
+    "react-native-webview": "^13.6.2",
+    "react-native-wheely": "^0.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
+    "@react-native-community/datetimepicker": "^7.6.1",
+    "@react-native-picker/picker": "^2.5.1",
     "@react-native/eslint-config": "^0.72.2",
     "@react-native/metro-config": "^0.72.11",
     "@tsconfig/react-native": "^3.0.0",
@@ -30,6 +40,7 @@
     "jest": "^29.2.1",
     "metro-react-native-babel-preset": "0.76.8",
     "prettier": "^2.4.1",
+    "react-native-wheel-pick": "^1.2.2",
     "react-test-renderer": "18.2.0",
     "typescript": "4.8.4"
   },

@@ -1,11 +1,23 @@
 package com.subakfront;
 
-import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
+import com.facebook.react.ReactActivity;
+import android.os.Bundle; // splash-screen
+import org.devio.rn.splashscreen.SplashScreen; // splash-screen
+
+
 
 public class MainActivity extends ReactActivity {
+  /**
+   * react-native-splash-screen
+   */
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    SplashScreen.show(this);  // splash-screen
+    super.onCreate(null);
+  }
 
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule
