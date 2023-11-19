@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 import subak.backend.domain.Member;
 import subak.backend.dto.request.member.UpdatePasswordRequest;
@@ -22,6 +23,8 @@ class MemberServiceTest {
     MemberRepository memberRepository;
     @Autowired
     MemberService memberService;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
 
     @Test
@@ -121,17 +124,25 @@ class MemberServiceTest {
     void 로그인_성공() throws Exception {
         System.out.println("로그인 성공 테스트 시작");
 
-        Member member = createMember("0004@gmail.com", "0", "0", "01000000000");
+        // Given
+        String email = "0004@gmail.com";
+        String password = "password123";
+        String name = "name";
+        String phone = "01012345678";
+
+        Member member = new Member();
+        member.setEmail(email);
+        member.setPassword(password);
+        member.setName(name);
+        member.setPhone(phone);
+
         memberService.join(member);
 
-        //비밀번호 재설정
-        String newPassword = "newPassword";
-        memberService.updatePassword(member.getEmail(), member.getName(), member.getPhone(), newPassword);
-        String result = memberService.login("0004@gmail.com", newPassword);
+        // When
+        String result = memberService.login(email, password);
 
+        // Then
         assertEquals("로그인 성공", result);
-
-        System.out.println("로그인 성공 테스트 끝");
     }
 
 
