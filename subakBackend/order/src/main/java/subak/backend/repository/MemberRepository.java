@@ -9,18 +9,15 @@ import subak.backend.domain.Member;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository <Member, Long>{
+public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmail(String email);
 
-    Optional<Member> findByNamePhone(String name, String phone);
+    Optional<Member> findByNameAndPhone(String name, String phone);
 
-    Optional<Member> findByEmailNamePhone(String email, String name, String phone);
+    Optional<Member> findByEmailAndNameAndPhone(String email, String name, String phone);
 
     @Transactional
     @Modifying
     @Query("update Member m set m.password = :newPassword where m.id = :memberId")
     void updatePassword(@Param("memberId") Long memberId, @Param("newPassword") String newPassword);
-
 }
-
-
