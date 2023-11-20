@@ -2,6 +2,8 @@ import {React, useState} from 'react'
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons';
+import axios from 'axios';
+import Config from 'react-native-config';
 
 import shared from '../../styles/shared';
 import styles from '../../styles/login/signUp';
@@ -63,7 +65,16 @@ const Login = ({ navigation }) => {
       </View>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => console.log(email, password)}
+        // onPress={() => console.log(email, password)}
+        onPress={() => {
+          axios.post(`http://${Config.DB_IP}/user/sign-in`, {
+            email: email,
+            password: password
+          }
+          ).then(response => { console.log(response.data); })
+          .catch(error => { console.log(error.response.status); }
+        )
+        }}
         disabled={!(emailCheck(email) && passwordCheck(password))}>
         <Text
           style={[
