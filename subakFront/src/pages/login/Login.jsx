@@ -75,7 +75,7 @@ const Login = ({ navigation }) => {
               email: email,
               password: password,
             }, {
-              timeout: 1000,
+              timeout: 2000,
             }
             ).then(response => { console.log(response.data); })
             .catch(error => { 
