@@ -53,8 +53,7 @@ const LocationSearch = ({ navigation }) => {
                 Geolocation.getCurrentPosition(
                   position => { // 위치 요청 성공 시
                     // 좌표를 주소로 변환
-                    axios
-                      .get('https://dapi.kakao.com/v2/local/geo/coord2address', {
+                    axios.get('https://dapi.kakao123.com/v2/local/geo/coord2address', {
                         // x: 경도, y: 위도
                         params: {x: position.coords.longitude, y: position.coords.latitude},
                         headers: {Authorization: Config.KAKAO_REST_API_KEY},
