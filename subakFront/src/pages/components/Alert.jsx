@@ -23,7 +23,9 @@ const Alert = props => {
       useNativeDriver: true
     }).start(() => {
       // 3.5초 후 사라지기
-      setTimeout(() => { scaleOpacityOut(); }, 3500);
+      setTimeout(() => { 
+        scaleOpacityOut();
+      }, 3500);
     })
   }
 
@@ -51,12 +53,21 @@ const Alert = props => {
     scaleIn();
   })
 
+  // return (
+  //   <Animated.View style={{...styles.container, transform: [{ scale: scale }], opacity: opacity}}>
+  //     <Text style={styles.Text}>
+  //       {message}
+  //     </Text>
+  //   </Animated.View>
+  // );
   return (
-    <Animated.View style={{...styles.container, transform: [{ scale: scale }], opacity: opacity}}>
-      <Text style={styles.Text}>
-        {message}
-      </Text>
-    </Animated.View>
+    <>
+      <Animated.View style={{...styles.container, transform: [{ scale: scale }], opacity: opacity}}>
+        <Text style={styles.Text}>
+          {message}
+        </Text>
+      </Animated.View>
+    </>
   );
 }
 

@@ -94,7 +94,10 @@ const Login = ({ navigation }) => {
         </Text>
         {/* <TouchableOpacity onPress={() => console.log('이메일 찾기 버튼 클릭')}> */}
         <TouchableOpacity onPress={() => {
-          showAlert ? setShowAlert(false) : setShowAlert(true);
+            setShowAlert(true);
+            setTimeout(() => {
+              setShowAlert(false);
+            }, 6000);
         }}>
           <Text style={styles.hyperText}>이메일 찾기</Text>
         </TouchableOpacity>
