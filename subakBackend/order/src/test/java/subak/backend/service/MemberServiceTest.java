@@ -1,31 +1,36 @@
 package subak.backend.service;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 import subak.backend.domain.Member;
+import subak.backend.dto.request.member.UpdatePasswordRequest;
 import subak.backend.repository.MemberRepository;
+
 import javax.transaction.Transactional;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 class MemberServiceTest {
 
     @Autowired
     MemberRepository memberRepository;
     @Autowired
     MemberService memberService;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
 
     @Test
-    @Transactional
     @Rollback(value = true)
     void 회원가입() throws Exception { // jUnit5부터는 public을 붙이지 않아도 된다.
+        System.out.println("회원가입 테스트 시작");
 
         Member member = new Member();
 
@@ -33,16 +38,19 @@ class MemberServiceTest {
         member.setPassword("0");
         member.setName("0");
         member.setPhone("01000000000");
-        Long savedMember = memberService.join(member);
+        Long savedMemberId = memberService.join(member);
 
-        Assertions.assertEquals(member, memberRepository.findOne(savedMember));
+        Optional<Member> savedMember = memberRepository.findById(savedMemberId);
+        assertTrue(savedMember.isPresent());
+
+        System.out.println("회원가입 끝");
     }
 
 
     @Test // jUnit5에서는 @Test에 expected 속성이 지원되지 않는다.
-    @Transactional
     @Rollback
     void 중복회원검증() throws Exception {
+        System.out.println("회원중복검증 테스트 시작");
 
         Member member1 = createMember("0004@gmail.com", "0", "0", "01000000000");
         memberService.join(member1);
@@ -53,23 +61,28 @@ class MemberServiceTest {
         assertThrows(IllegalStateException.class, () -> {
             memberService.join(member2);
         });
+
+        System.out.println("회원중복검증 테스트 끝");
     }
 
     @Test
-    @Transactional
     @Rollback
     void 이메일찾기() throws Exception {
+        System.out.println("이메일 찾기 테스트 시작");
         Member member = createMember("0004@gmail.com", "0", "0", "01000000000");
         memberService.join(member);
 
         String findEmail = memberService.findMemberEmail(member.getName(), member.getPhone());
         assertEquals("0004@gmail.com", findEmail);
+
+        System.out.println("이메일 찾기 테스트 끝");
     }
 
     @Test
-    @Transactional
     @Rollback
     void 이메일찾기_일치하는회원없음_예외() throws Exception {
+        System.out.println("이메일찾기_일치하는회원없음_예외 테스트 시작");
+
         Member member = createMember("0004@gmail.com", "0", "0", "01000000000");
         memberService.join(member);
 
@@ -77,38 +90,58 @@ class MemberServiceTest {
         assertThrows(IllegalArgumentException.class,
                 () -> memberService.findMemberEmail("nonUser", "01012345678"));
 
+        System.out.println("이메일찾기_일치하는회원없음_예외 테스트 끝");
     }
 
     @Test
-    @Transactional
     @Rollback
-    void 비밀번호찾기_일치하는회원() throws Exception {
-        Member member = createMember("0004@gmail.com", "0", "0", "01000000000");
+    void 회원비밀번호_수정() throws Exception {
+        System.out.println("비밀번호 수정 테스트 시작");
+
+        Member member = createMember("test1@gmail.com", "TestUser", "password", "01012345678");
         memberService.join(member);
 
+        // 비밀번호 수정
         String newPassword = "newPassword";
-        memberService.findPassword(member.getEmail(), member.getName(), member.getPhone(), newPassword);
+        String updateResult = memberService.updatePassword("test1@gmail.com", "TestUser", "01012345678", newPassword);
+        assertEquals("비밀번호 수정 성공", updateResult);
 
         // 업데이트된 비밀번호로 로그인이 가능한지 확인
-        Optional<Member> updatedMemberOptional = memberRepository.findByEmail(member.getEmail());
+        Optional<Member> updatedMemberOptional = memberRepository.findById(member.getId());
         assertTrue(updatedMemberOptional.isPresent());
 
-        // BCryptPasswordEncoder를 사용하여 암호화된 비밀번호를 확인
+        // 새로운 비밀번호로 업데이트되었는지 확인
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         assertTrue(passwordEncoder.matches(newPassword, updatedMemberOptional.get().getPassword()));
+
+        System.out.println("비밀번호 수정 테스트 끝");
+
+
     }
 
     @Test
-    @Transactional
     @Rollback
-    void 로그인_성공() throws Exception{
-        Member member = createMember("0004@gmail.com", "0", "0", "01000000000");
+    void 로그인_성공() throws Exception {
+        System.out.println("로그인 성공 테스트 시작");
+
+        // Given
+        String email = "0004@gmail.com";
+        String password = "password123";
+        String name = "name";
+        String phone = "01012345678";
+
+        Member member = new Member();
+        member.setEmail(email);
+        member.setPassword(password);
+        member.setName(name);
+        member.setPhone(phone);
+
         memberService.join(member);
 
-        String newPassword = "newPassword";
-        memberService.findPassword(member.getEmail(), member.getName(), member.getPhone(), newPassword);
-        String result = memberService.login("0004@gmail.com", newPassword);
+        // When
+        String result = memberService.login(email, password);
 
+        // Then
         assertEquals("로그인 성공", result);
     }
 
@@ -119,7 +152,17 @@ class MemberServiceTest {
         member.setName(name);
         member.setPassword(password);
         member.setPhone(phone);
+
         return member;
+    }
+
+    private UpdatePasswordRequest createUpdatePasswordRequest(Member member, String newPassword) {
+        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest();
+        updatePasswordRequest.setEmail(member.getEmail());
+        updatePasswordRequest.setName(member.getName());
+        updatePasswordRequest.setPhone(member.getPhone());
+        updatePasswordRequest.setNewPassword(newPassword);
+        return updatePasswordRequest;
     }
 
 

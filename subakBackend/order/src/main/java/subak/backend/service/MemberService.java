@@ -4,14 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import subak.backend.domain.Member;
 import subak.backend.repository.MemberRepository;
+
 import java.util.Optional;
 
 @Service
 @Slf4j
-@Transactional(readOnly = true) // 읽기 전용일 경우 최적화
+//@Transactional(readOnly = true) // 읽기 전용일 경우 최적화
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -21,10 +21,13 @@ public class MemberService {
     /**
      * 회원가입
      */
-    @Transactional
     public Long join(Member member) {
         validateDuplicateMember(member);
         validateRequiredFields(member);
+
+        String encodedPassword = passwordEncoder.encode(member.getPassword());
+        member.setPassword(encodedPassword);
+
         memberRepository.save(member);
         log.info(member.getEmail() + " 님이 회원가입 하였습니다.");
         return member.getId();
@@ -34,27 +37,30 @@ public class MemberService {
      * 아이디(Email) 찾기
      */
     public String findMemberEmail(String name, String phone) {
-        Optional<Member> foundMember = memberRepository.findByNamePhone(name, phone);
+        Optional<Member> foundMember = memberRepository.findByNameAndPhone(name, phone);
         Member member = foundMember.orElseThrow(() -> new IllegalArgumentException("일치하는 회원 정보가 없습니다."));
         return member.getEmail();
     }
 
 
     /**
-     * 비밀번호(Password) 찾기
+     * 비밀번호(Password) 수정
      */
-    public String findPassword(String email, String name, String phone, String newPassword) {
-        Optional<Member> foundMember = memberRepository.findByEmailNamePhone(email, name, phone);
-        Member member = foundMember.orElseThrow(() -> new IllegalArgumentException("일치하는 회원 정보가 없습니다."));
+    public String updatePassword(String email, String name, String phone, String newPassword) {
+        Optional<Member> foundMember = memberRepository.findByEmailAndNameAndPhone(email, name, phone);
 
-        // 비밀번호 재설정
-        String encodedNewPassword = passwordEncoder.encode(newPassword);
+        if (foundMember.isPresent()) {
+            Member member = foundMember.get();
+            String encodedNewPassword = passwordEncoder.encode(newPassword);
+            member.setPassword(encodedNewPassword);
+            memberRepository.save(member);
 
-        // 비밀번호 업데이트
-        memberRepository.updatePassword(member.getId(), encodedNewPassword);
-
-        return "비밀번호 재설정 성공";
+            return "비밀번호 수정 성공";
+        } else {
+            throw new IllegalArgumentException("일치하는 회원 정보가 없습니다.");
+        }
     }
+
 
     /**
      * 로그인 (Email, Password 필요)
@@ -80,7 +86,7 @@ public class MemberService {
         }
     }
 
-    // 필수 필드 검증
+    //필수 필드 검증
     private void validateRequiredFields(Member member) {
         if (member.getEmail() == null || member.getEmail().trim().isEmpty() ||
                 member.getName() == null || member.getName().trim().isEmpty() ||
