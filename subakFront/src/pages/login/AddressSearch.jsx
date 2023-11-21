@@ -10,14 +10,12 @@ import Config from 'react-native-config';
 
 import shared from '../../styles/shared';
 import styles from '../../styles/login/AddressSearch'
-import Alert from '../components/Alert';
 
 import React, { Component } from 'react'
 
 const LocationSearch = ({ navigation }) => {
   const [userAddress, setUserAddress] = useState(''); // 사용자 위치
   const [currentAddress, setCurrentAddress] = useState([]); // 주소 변환
-  const [showAlert, setShowAlert] = useState(false); // 주소 변환 실패 시 알림창
 
   return (
     <View style={{ flex: 1 }}>
@@ -101,7 +99,6 @@ const LocationSearch = ({ navigation }) => {
           ))}
         </View>
       </KeyboardAwareScrollView>
-      {setShowAlert && <Alert message="현재 위치를 찾을 수 없습니다." openModal={true} />}
     </View>
   );
 }

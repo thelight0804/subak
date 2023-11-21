@@ -8,7 +8,6 @@ import styles from './../../styles/components/alert';
 
 const Alert = props => {
   const [message, setMessage] = useState(props.message);
-  const [openModal, setOpenModal] = useState(props.openModal);
 
   return (
     <View style={styles.container}>

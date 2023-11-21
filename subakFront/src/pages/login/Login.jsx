@@ -8,7 +8,10 @@ import Config from 'react-native-config';
 import shared from '../../styles/shared';
 import styles from '../../styles/login/signUp';
 
+import Alert from '../components/Alert';
+
 const Login = ({ navigation }) => {
+  const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [email, setEmail] = useState(''); //이메일
   const [password, setPassword] = useState(''); //비밀번호
 
@@ -26,76 +29,82 @@ const Login = ({ navigation }) => {
   }
 
   return (
-    <KeyboardAwareScrollView style={shared.container}>
-      <TouchableOpacity
-        style={[shared.backButton, styles.backButton]}
-        onPress={() => navigation.goBack()}>
-        <Ionicon name="chevron-back" size={20} color="#FFFFFF" />
-      </TouchableOpacity>
-      <Text style={styles.headerText}>안녕하세요!</Text>
-      <Text style={styles.headerText}>이메일과 비밀번호로 로그인해주세요.</Text>
-      <Text style={styles.text}>
-        휴대폰 번호는 안전하게 보관되며 이웃들에게 공개되지 않아요.
-      </Text>
-      <View style={{marginTop: 10}}>
-        <TextInput
-          style={styles.textInput}
-          onChangeText={text => setEmail(text)}
-          value={email}
-          inputMode="email"
-          keyboardType="email-address"
-          placeholder="이메일 주소"
-          placeholderTextColor="#676c74"
-        />
-        <TextInput
-          style={styles.textInput}
-          onChangeText={text => setPassword(text)}
-          value={password}
-          inputMode="text"
-          placeholder="비밀번호"
-          placeholderTextColor="#676c74"
-          secureTextEntry={true}
-        />
-        {!passwordCheck(password) && password.length > 0 && (
-          <Text style={{color: '#dc645b'}}>
-            비밀번호는 8자 이상 20자 미만이며{'\n'}영문, 숫자, 특수문자를 포함해야
-            합니다.
-          </Text>
-        )}
-      </View>
-      <TouchableOpacity
-        style={styles.button}
-        // onPress={() => console.log(email, password)}
-        onPress={() => {
-          axios.post(`http://${Config.DB_IP}/user/sign-in`, {
-            email: email,
-            password: password
-          }
-          ).then(response => { console.log(response.data); })
-          .catch(error => { console.log(error.response.status); }
-        )
-        }}
-        disabled={!(emailCheck(email) && passwordCheck(password))}>
-        <Text
-          style={[
-            styles.startText,
-            emailCheck(email) && passwordCheck(password)
-              ? styles.enabled
-              : styles.disabled,
-          ]}>
-          로그인 하기
+    <View style={{ flex: 1 }}>
+      <KeyboardAwareScrollView style={shared.container}>
+        <TouchableOpacity
+          style={[shared.backButton, styles.backButton]}
+          onPress={() => navigation.goBack()}>
+          <Ionicon name="chevron-back" size={20} color="#FFFFFF" />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>안녕하세요!</Text>
+        <Text style={styles.headerText}>이메일과 비밀번호로 로그인해주세요.</Text>
+        <Text style={styles.text}>
+          휴대폰 번호는 안전하게 보관되며 이웃들에게 공개되지 않아요.
         </Text>
-      </TouchableOpacity>
-      <Text style={[styles.text, styles.text2]}>
-        이메일 또는 비밀번호를 잊으셨나요?
-      </Text>
-      <TouchableOpacity onPress={() => console.log('이메일 찾기 버튼 클릭')}>
-        <Text style={styles.hyperText}>이메일 찾기</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => console.log('비밀번호 찾기 버튼 클릭')}>
-        <Text style={styles.hyperText}>비밀번호 찾기</Text>
-      </TouchableOpacity>
-    </KeyboardAwareScrollView>
+        <View style={{marginTop: 10}}>
+          <TextInput
+            style={styles.textInput}
+            onChangeText={text => setEmail(text)}
+            value={email}
+            inputMode="email"
+            keyboardType="email-address"
+            placeholder="이메일 주소"
+            placeholderTextColor="#676c74"
+          />
+          <TextInput
+            style={styles.textInput}
+            onChangeText={text => setPassword(text)}
+            value={password}
+            inputMode="text"
+            placeholder="비밀번호"
+            placeholderTextColor="#676c74"
+            secureTextEntry={true}
+          />
+          {!passwordCheck(password) && password.length > 0 && (
+            <Text style={{color: '#dc645b'}}>
+              비밀번호는 8자 이상 20자 미만이며{'\n'}영문, 숫자, 특수문자를 포함해야
+              합니다.
+            </Text>
+          )}
+        </View>
+        <TouchableOpacity
+          style={styles.button}
+          // onPress={() => console.log(email, password)}
+          onPress={() => {
+            axios.post(`http://${Config.DB_IP}/user/sign-in`, {
+              email: email,
+              password: password
+            }
+            ).then(response => { console.log(response.data); })
+            .catch(error => { console.log(error.response.status); }
+          )
+          }}
+          disabled={!(emailCheck(email) && passwordCheck(password))}>
+          <Text
+            style={[
+              styles.startText,
+              emailCheck(email) && passwordCheck(password)
+                ? styles.enabled
+                : styles.disabled,
+            ]}>
+            로그인 하기
+          </Text>
+        </TouchableOpacity>
+        <Text style={[styles.text, styles.text2]}>
+          이메일 또는 비밀번호를 잊으셨나요?
+        </Text>
+        {/* <TouchableOpacity onPress={() => console.log('이메일 찾기 버튼 클릭')}> */}
+        <TouchableOpacity onPress={() => {
+          showAlert ? setShowAlert(false) : setShowAlert(true);
+        }}>
+          <Text style={styles.hyperText}>이메일 찾기</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => console.log('비밀번호 찾기 버튼 클릭')}>
+          <Text style={styles.hyperText}>비밀번호 찾기</Text>
+        </TouchableOpacity>
+      </KeyboardAwareScrollView>
+      {showAlert && <Alert message="현재 위치를 찾을 수 없습니다." />}
+    </View>
   );
 };
 
