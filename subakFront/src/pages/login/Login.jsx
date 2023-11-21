@@ -69,7 +69,6 @@ const Login = ({ navigation }) => {
         </View>
         <TouchableOpacity
           style={styles.button}
-          // onPress={() => console.log(email, password)}
           onPress={() => {
             axios.post(`http://${Config.DB_IP}/user/sign-in`, {
               email: email,
