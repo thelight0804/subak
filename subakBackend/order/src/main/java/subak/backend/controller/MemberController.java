@@ -2,8 +2,8 @@ package subak.backend.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import subak.backend.domain.Member;
@@ -24,9 +24,14 @@ public class MemberController {
      * 회원가입
      */
     @PostMapping("/user")
-    public Long joinMember(@RequestBody @Validated JoinRequest request) {
-        Member member = mapToMember(request);
-        return memberService.join(member);
+    public ResponseEntity<String> joinMember(@RequestBody @Validated JoinRequest request) {
+        try {
+            Member member = mapToMember(request);
+            memberService.join(member);
+            return ResponseEntity.ok("sign-up success");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("sign-up failed");
+        }
     }
 
     /**
@@ -49,9 +54,9 @@ public class MemberController {
     }
 
     /**
-     * 회원 비밀번호 수정 (찾기)
+     * 회원 비밀번호 재설정 (찾기)
      */
-    @PostMapping("/find-password")
+    @PostMapping("/user/password")
     public ResponseEntity<String> findMemberPassword(@RequestBody UpdatePasswordRequest request) {
         String result = memberService.updatePassword(
                 request.getEmail(),
