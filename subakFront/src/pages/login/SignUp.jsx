@@ -4,6 +4,7 @@ import {React, useState} from 'react'
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons';
+import axios from 'axios';
 
 import shared from '../../styles/shared';
 import styles from '../../styles/login/login';
@@ -13,14 +14,14 @@ const SignUp = ({ navigation, route }) => {
   const [phone, setPhone] = useState(''); // 휴대폰 번호
   const [email, setEmail] = useState(''); // 이메일
   const [password, setPassword] = useState(''); // 비밀번호
-  const [location, setLocation] = useState(route.params.location); // 위치
+  const [address, setAddress] = useState(route.params.address); // 위치
 
 
   // 입력 값 체크 정규식
   const nameRegEx = /^[가-힣a-zA-Zぁ-んァ-ン一-龯]{1,20}$/;
   const phoneRegEx = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/
   const emailRegEx = /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
-  const passwordRegEx = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
+  const passwordRegEx = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^*+=-]).{8,20}$/;
 
   // 유효성 검사
   const nameCheck = (nameValue) => {
@@ -107,7 +108,28 @@ const SignUp = ({ navigation, route }) => {
       </View>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => console.log(email, password, name, phone, location)}
+        onPress={() => {
+          
+          axios.post(`http://${Config.DB_IP}/user`,{
+            email: email,
+            password: password,
+            name: name,
+            phone: phone,
+          })
+          .then(response => {
+            //"status": 200
+            //"name\":\"라라라\
+            // "data": "sign-up success"
+            if (response.status === 200) {
+              // navigation.navigate('Login');
+              console.log(response.status)
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+          // TODO: n초 동안 응답이 없으면 실패 처리 서버가 닫힐 때 에러 코드 확인하기
+        }}
         disabled={!(emailCheck(email) && passwordCheck(password) && nameCheck(name) && phoneCheck(phone))}>
         <Text
           style={[
