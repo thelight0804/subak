@@ -52,14 +52,6 @@ const Alert = props => {
   useEffect(() => {
     scaleIn();
   })
-
-  // return (
-  //   <Animated.View style={{...styles.container, transform: [{ scale: scale }], opacity: opacity}}>
-  //     <Text style={styles.Text}>
-  //       {message}
-  //     </Text>
-  //   </Animated.View>
-  // );
   return (
     <>
       <Animated.View style={{...styles.container, transform: [{ scale: scale }], opacity: opacity}}>

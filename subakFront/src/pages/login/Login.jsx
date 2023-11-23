@@ -12,6 +12,7 @@ import Alert from '../components/Alert';
 
 const Login = ({ navigation }) => {
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
+  const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
   const [email, setEmail] = useState(''); //이메일
   const [password, setPassword] = useState(''); //비밀번호
 
@@ -72,10 +73,34 @@ const Login = ({ navigation }) => {
           onPress={() => {
             axios.post(`http://${Config.DB_IP}/user/sign-in`, {
               email: email,
-              password: password
+              password: password,
+            }, {
+              timeout: 2000,
             }
             ).then(response => { console.log(response.data); })
-            .catch(error => { console.log(error.response.status); }
+            .catch(error => { 
+                if (error.response) { // 요청은 성공했으나 응답은 실패
+                  setAlertMessage(`오류가 발생했습니다. \n[${error.response.status}]`);
+                  setShowAlert(true);
+                  setTimeout(() => {
+                    setShowAlert(false);
+                  }, 6000);
+                  console.log('Login error.response', error.response);
+                } else if (error.request) { // timeout으로 요청 실패
+                  setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.'); // 오류 메시지
+                  setShowAlert(true); // 오류 알림창
+                  setTimeout(() => {
+                    setShowAlert(false);
+                  }, 6000); // 6초 후 알림창 사라짐
+                } else { // 기타 오류 발생
+                  setAlertMessage(`오류가 발생했습니다. \n[${error.message}]`);
+                  setShowAlert(true);
+                  setTimeout(() => {
+                    setShowAlert(false);
+                  }, 6000);
+                  console.log('Login Unexpected error', error.message);
+                }
+             }
           )
           }}
           disabled={!(emailCheck(email) && passwordCheck(password))}>
@@ -105,7 +130,7 @@ const Login = ({ navigation }) => {
           <Text style={styles.hyperText}>비밀번호 찾기</Text>
         </TouchableOpacity>
       </KeyboardAwareScrollView>
-      {showAlert && <Alert message="현재 위치를 찾을 수 없습니다." />}
+      {showAlert && <Alert message={alertMessage} />}
     </View>
   );
 };
