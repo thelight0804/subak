@@ -7,7 +7,7 @@ import axios from 'axios';
 import Config from 'react-native-config';
 
 import shared from '../../styles/shared';
-import styles from '../../styles/login/login';
+import styles from '../../styles/login/findEmail';
 import Alert from '../components/Alert';
 
 const SignUp = ({ navigation, route }) => {
@@ -44,7 +44,7 @@ const SignUp = ({ navigation, route }) => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{flex: 1}}>
       <KeyboardAwareScrollView style={shared.container}>
         <TouchableOpacity
           style={[shared.backButton, styles.backButton]}
@@ -60,7 +60,7 @@ const SignUp = ({ navigation, route }) => {
           <TextInput
             style={[
               styles.textInput,
-              !nameCheck(name) && name.length > 0 && {borderColor: '#dc645b', borderWidth: 1}
+              !nameCheck(name) && name.length > 0 && {borderColor: '#dc645b', borderWidth: 1},
             ]}
             onChangeText={text => setName(text)}
             value={name}
@@ -71,7 +71,7 @@ const SignUp = ({ navigation, route }) => {
           <TextInput
             style={[
               styles.textInput,
-              !phoneCheck(phone) && phone.length > 0 && {borderColor: '#dc645b', borderWidth: 1}
+              !phoneCheck(phone) &&  phone.length > 0 && {borderColor: '#dc645b', borderWidth: 1},
             ]}
             onChangeText={text => setPhone(text)}
             value={phone}
@@ -82,7 +82,7 @@ const SignUp = ({ navigation, route }) => {
           <TextInput
             style={[
               styles.textInput,
-              !emailCheck(email) && email.length > 0 && {borderColor: '#dc645b', borderWidth: 1}
+              !emailCheck(email) && email.length > 0 && {borderColor: '#dc645b', borderWidth: 1},
             ]}
             onChangeText={text => setEmail(text)}
             value={email}
@@ -91,78 +91,93 @@ const SignUp = ({ navigation, route }) => {
             placeholder="이메일 주소"
             placeholderTextColor="#676c74"
           />
-          <TextInput
-            style={[
-              styles.textInput,
-              !passwordCheck(newPassword) && newPassword.length > 0 && {borderColor: '#dc645b', borderWidth: 1}
-            ]}
-            onChangeText={text => setNewPassword(text)}
-            value={newPassword}
-            inputMode="text"
-            placeholder="변경할 비밀번호"
-            placeholderTextColor="#676c74"
-            secureTextEntry={true}
-          />
-          {!passwordCheck(newPassword) && newPassword.length > 0 && (
-            <Text style={{color: '#dc645b'}}>
-              비밀번호는 8자 이상 20자 미만이며{'\n'}영문, 숫자, 특수문자를 포함해야
-              합니다.
-            </Text>
-          )}
+
+          {emailCheck(email) &&
+            nameCheck(name) &&
+            phoneCheck(phone) && ( // 이메일, 이름, 휴대폰 번호 유효성 검사 통과 시
+              <>
+                <TextInput
+                  style={[
+                    styles.textInput,
+                    !passwordCheck(newPassword) && 
+                    newPassword.length > 0 && 
+                    {
+                      borderColor: '#dc645b',
+                      borderWidth: 1,
+                    },
+                  ]}
+                  onChangeText={text => setNewPassword(text)}
+                  value={newPassword}
+                  inputMode="text"
+                  placeholder="변경할 비밀번호"
+                  placeholderTextColor="#676c74"
+                  secureTextEntry={true}
+                />
+                {!passwordCheck(newPassword) && newPassword.length > 0 && (
+                  <Text style={{color: '#dc645b'}}>
+                    비밀번호는 8자 이상 20자 미만이며{'\n'}영문, 숫자, 특수문자를 포함해야 합니다.
+                  </Text>
+                )}
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    axios
+                      .post(`http://${Config.DB_IP}/password`,
+                        {
+                          email: email,
+                          newPassword: newPassword,
+                          name: name,
+                          phone: phone,
+                        },
+                        {timeout: 2000},
+                      )
+                      .then(response => {
+                        if (response.status === 200) {
+                          console.log(response.status);
+                        }
+                      })
+                      .catch(error => {
+                        if (error.response) {
+                          // 요청은 성공했으나 응답은 실패
+                          setAlertMessage(`오류가 발생했습니다. \n[${error.response.status}]`);
+                          setShowAlert(true);
+                          setTimeout(() => {
+                            setShowAlert(false);
+                          }, 6000);
+                          console.log('SignUp error.response', error.response);
+                        } else if (error.request) {
+                          // timeout으로 요청 실패
+                          // 오류 Toast
+                          setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.');
+                          setShowAlert(true);
+                          setTimeout(() => {
+                            setShowAlert(false);
+                          }, 6000);
+                        } else {
+                          // 기타 오류 발생
+                          setAlertMessage(`오류가 발생했습니다. \n[${error.message}]`);
+                          setShowAlert(true);
+                          setTimeout(() => {
+                            setShowAlert(false);
+                          }, 6000);
+                          console.log('SignUp Unexpected error', error.message);
+                        }
+                      });
+                  }}
+                  disabled={!(emailCheck(email) && passwordCheck(newPassword) && nameCheck(name) && phoneCheck(phone))}>
+                  <Text
+                    style={[
+                      styles.startText,
+                      emailCheck(email) && passwordCheck(newPassword) && nameCheck(name) && phoneCheck(phone)
+                        ? styles.enabled
+                        : styles.disabled,
+                    ]}>
+                    비밀번호 변경하기
+                  </Text>
+                </TouchableOpacity>
+              </>
+            )}
         </View>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            
-            axios.post(`http://${Config.DB_IP}/password`,{
-              email: email,
-              newPassword: newPassword,
-              name: name,
-              phone: phone,
-            },
-            {timeout: 2000})
-            .then(response => {
-              if (response.status === 200) {
-                console.log(response.status)
-              }
-            })
-            .catch(error => { 
-              if (error.response) { // 요청은 성공했으나 응답은 실패
-                setAlertMessage(`오류가 발생했습니다. \n[${error.response.status}]`);
-                setShowAlert(true);
-                setTimeout(() => {
-                  setShowAlert(false);
-                }, 6000);
-                console.log('SignUp error.response', error.response);
-              } else if (error.request) { // timeout으로 요청 실패
-                // 오류 Toast
-                setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.');
-                setShowAlert(true);
-                setTimeout(() => {
-                  setShowAlert(false);
-                }, 6000);
-              } else { // 기타 오류 발생
-                setAlertMessage(`오류가 발생했습니다. \n[${error.message}]`);
-                setShowAlert(true);
-                setTimeout(() => {
-                  setShowAlert(false);
-                }, 6000);
-                console.log('SignUp Unexpected error', error.message);
-                }
-            }
-          )
-          }}
-          disabled={!(emailCheck(email) && passwordCheck(newPassword) && nameCheck(name) && phoneCheck(phone))}>
-          <Text
-            style={[
-              styles.startText,
-              emailCheck(email) && passwordCheck(newPassword) && nameCheck(name) && phoneCheck(phone)
-                ? styles.enabled
-                : styles.disabled,
-            ]}>
-            비밀번호 변경하기
-          </Text>
-        </TouchableOpacity>
       </KeyboardAwareScrollView>
       {showAlert && <Alert message={alertMessage} />}
     </View>
