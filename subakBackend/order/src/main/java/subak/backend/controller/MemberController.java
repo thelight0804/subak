@@ -1,5 +1,6 @@
 package subak.backend.controller;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,14 +17,13 @@ import subak.backend.service.MemberService;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/user")
 public class MemberController {
 
     private final MemberService memberService;
 
-    /**
-     * 회원가입
-     */
-    @PostMapping("/user")
+    @ApiOperation(value = "회원가입", notes = "필수값 : 아이디(이메일), 이름, 비밀번호, 휴대폰번호")
+    @PostMapping("/") // ("/") == ("")
     public ResponseEntity<String> joinMember(@RequestBody @Validated JoinRequest request) {
         try {
             Member member = mapToMember(request);
@@ -34,29 +34,24 @@ public class MemberController {
         }
     }
 
-    /**
-     * 로그인
-     */
-    @PostMapping("/user/sign-in")
+    @ApiOperation(value = "로그인", notes = "Email, PW를 통해 로그인한다.")
+    @PostMapping("/sign-in")
     public ResponseEntity<String> loginMember(@RequestBody LoginRequest loginRequest) {
         String result = memberService.login(loginRequest.getEmail(), loginRequest.getPassword());
         return ResponseEntity.ok(result);
     }
 
 
-    /**
-     * 회원 이메일 찾기
-     */
-    @PostMapping("/user/email")
+    @ApiOperation(value = "회원 아이디(이메일) 찾기", notes = "회원 이름, 휴대폰 번호를 통해 회원 아이디를 찾는다.")
+    @PostMapping("/email")
     public ResponseEntity<String> findMemberEmail(@RequestBody FindMemberEmailRequest request) {
         String email = memberService.findMemberEmail(request.getName(), request.getPhone());
         return ResponseEntity.ok(email);
     }
 
-    /**
-     * 회원 비밀번호 재설정 (찾기)
-     */
-    @PostMapping("/user/password")
+
+    @ApiOperation(value = "회원 비밀번호 재설정", notes = "회원 아이디(이메일), 이름, 휴대폰 번호를 통해 비밀번호를 재설정한다.")
+    @PostMapping("/password")
     public ResponseEntity<String> findMemberPassword(@RequestBody UpdatePasswordRequest request) {
         String result = memberService.updatePassword(
                 request.getEmail(),
