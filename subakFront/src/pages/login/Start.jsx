@@ -1,5 +1,5 @@
 // 로그인이 되어 있지 않을 때 시작 화면
-import { react, useState } from 'react';
+import { useState } from 'react';
 import {Image, Text, View, TouchableOpacity, Modal, TouchableWithoutFeedback} from 'react-native';
 import WheelPicker from 'react-native-wheely';
 
