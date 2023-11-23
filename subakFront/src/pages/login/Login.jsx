@@ -80,15 +80,25 @@ const Login = ({ navigation }) => {
             ).then(response => { console.log(response.data); })
             .catch(error => { 
                 if (error.response) { // 요청은 성공했으나 응답은 실패
-                  console.log(error.response.status); 
+                  setAlertMessage(`오류가 발생했습니다. \n[${error.response.status}]`);
+                  setShowAlert(true);
+                  setTimeout(() => {
+                    setShowAlert(false);
+                  }, 6000);
+                  console.log('Login error.response', error.response);
                 } else if (error.request) { // timeout으로 요청 실패
-                  setAlertMessage('서버와의 연결이 원활하지 않습니다. 잠시 후 다시 시도해주세요.'); // 오류 메시지
+                  setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.'); // 오류 메시지
                   setShowAlert(true); // 오류 알림창
                   setTimeout(() => {
                     setShowAlert(false);
                   }, 6000); // 6초 후 알림창 사라짐
                 } else { // 기타 오류 발생
-                  console.log('Unexpected error', error.message);
+                  setAlertMessage(`오류가 발생했습니다. \n[${error.message}]`);
+                  setShowAlert(true);
+                  setTimeout(() => {
+                    setShowAlert(false);
+                  }, 6000);
+                  console.log('Login Unexpected error', error.message);
                 }
              }
           )
