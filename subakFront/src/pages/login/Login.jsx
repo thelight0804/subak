@@ -121,7 +121,7 @@ const Login = ({ navigation }) => {
         <TouchableOpacity onPress={() =>  navigation.navigate('FindEmail')}>
           <Text style={styles.hyperText}>이메일 찾기</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('FindEmail')}>
+        <TouchableOpacity onPress={() => navigation.navigate('FindPassword')}>
           <Text style={styles.hyperText}>비밀번호 찾기</Text>
         </TouchableOpacity>
       </KeyboardAwareScrollView>

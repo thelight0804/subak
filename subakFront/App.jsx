@@ -8,6 +8,7 @@ import AddressSearch from './src/pages/login/AddressSearch';
 import Login from './src/pages/login/Login';
 import SignUp from './src/pages/login/SignUp';
 import FindEmail from './src/pages/login/FindEmail';
+import FindPassword from './src/pages/login/FindPassword';
 
 const App = () => {
   const Stack = createNativeStackNavigator(); //React navigation stack
@@ -25,6 +26,7 @@ const App = () => {
           <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
           <Stack.Screen name="SignUp" component={SignUp} options={{headerShown: false}}/>
           <Stack.Screen name="FindEmail" component={FindEmail} options={{headerShown: false}}/>
+          <Stack.Screen name="FindPassword" component={FindPassword} options={{headerShown: false}}/>
         </Stack.Navigator>
       </NavigationContainer>
   );

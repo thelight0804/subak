@@ -37,7 +37,7 @@ const FindEmail = ({ navigation }) => {
           onPress={() => navigation.goBack()}>
           <Ionicon name="chevron-back" size={20} color="#FFFFFF" />
         </TouchableOpacity>
-        <Text style={styles.headerText}>이름과 휴대폰 번호를 알려주세요.</Text>
+        <Text style={styles.headerText}>이름과 휴대폰 번호로 이메일을 찾습니다.</Text>
         <View style={{marginTop: 10}}>
           <TextInput
             style={[
