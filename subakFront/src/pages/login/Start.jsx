@@ -45,7 +45,7 @@ const Start = ({navigation}) => {
       <View style={styles.footer}>
         <TouchableOpacity
           style={shared.button}
-          onPress={() => navigation.navigate('LocationSearch')}>
+          onPress={() => navigation.navigate('AddressSearch')}>
           <Text style={[styles.text, styles.startText]}>시작하기</Text>
         </TouchableOpacity>
         <Text style={[styles.text, styles.text2]}>
