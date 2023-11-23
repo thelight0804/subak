@@ -1,5 +1,5 @@
 // 사용자의 위치 선택 페이지
-import {useState, useEffect} from 'react';
+import {useState, React} from 'react';
 import { View, TouchableOpacity, TextInput, Text, PermissionsAndroid } from 'react-native';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -11,9 +11,11 @@ import Config from 'react-native-config';
 import shared from '../../styles/shared';
 import styles from '../../styles/login/AddressSearch'
 
-import React, { Component } from 'react'
+import Alert from '../components/Alert';
 
 const LocationSearch = ({ navigation }) => {
+  const [showAlert, setShowAlert] = useState(false); // 오류 알림창
+  const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
   const [userAddress, setUserAddress] = useState(''); // 사용자 위치
   const [currentAddress, setCurrentAddress] = useState([]); // 주소 변환
 
@@ -53,12 +55,13 @@ const LocationSearch = ({ navigation }) => {
                 Geolocation.getCurrentPosition(
                   position => { // 위치 요청 성공 시
                     // 좌표를 주소로 변환
-                    axios
-                      .get('https://dapi.kakao.com/v2/local/geo/coord2address', {
+                    axios.get('https://dapi.kakao.com/v2/local/geo/coord2address', {
                         // x: 경도, y: 위도
                         params: {x: position.coords.longitude, y: position.coords.latitude},
                         headers: {Authorization: Config.KAKAO_REST_API_KEY},
-                      })
+                      }, 
+                      {timeout: 2000}
+                      )
                       .then(response => { // 주소 변환 성공 시
                         // 현재 위치 주소 저장
                         var address = response.data.documents[0].road_address.address_name;
@@ -68,16 +71,43 @@ const LocationSearch = ({ navigation }) => {
                         addressArr = Array.from(addressArr); // Set to Array
                         setCurrentAddress(addressArr);
                       })
-                      .catch(error => { console.log(error);});
+                      .catch(error => { 
+                        if (error.response) { // 요청은 성공했으나 응답은 실패
+                          setAlertMessage(`오류가 발생했습니다. \n[${error.response.status}]`);
+                          setShowAlert(true);
+                          setTimeout(() => {
+                            setShowAlert(false);
+                          }, 6000);
+                          console.log('Login error.response', error.response);
+                        } else if (error.request) { // timeout으로 요청 실패
+                          setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.');
+                          setShowAlert(true);
+                          setTimeout(() => {
+                            setShowAlert(false);
+                          }, 6000);
+                        } else { // 기타 오류 발생
+                          setAlertMessage(`오류가 발생했습니다. \n[${error.message}]`);
+                          setShowAlert(true);
+                          setTimeout(() => {
+                            setShowAlert(false);
+                          }, 6000);
+                          console.log('Address Unexpected error', error.message);
+                        }
+                     }
+                  )
                   },
                   error => {
                     // 위치 요청 실패 시
+                    setAlertMessage(`위치를 확인할 수 없습니다. ${error.code} : ${error.message}`);
+                    setShowAlert(true);
+                    setTimeout(() => {
+                      setShowAlert(false);
+                    }, 6000);
                     console.log('getCurrentPosition ERROR: ', error.code, error.message);
                     setShowAlert(true);
                   },
                   {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
                 );
-                // console.log(longitude, latitude)
 
               }
             }>
@@ -99,6 +129,7 @@ const LocationSearch = ({ navigation }) => {
           ))}
         </View>
       </KeyboardAwareScrollView>
+      {showAlert && <Alert message={alertMessage} />}
     </View>
   );
 }

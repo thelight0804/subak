@@ -1,15 +1,19 @@
 // 회원 가입 페이지
-
 import {React, useState} from 'react'
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
+import Config from 'react-native-config';
 
 import shared from '../../styles/shared';
 import styles from '../../styles/login/login';
+import Alert from '../components/Alert';
 
 const SignUp = ({ navigation, route }) => {
+  const [showAlert, setShowAlert] = useState(false); // 오류 알림창
+  const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
+
   const [name, setName] = useState(''); // 본명
   const [phone, setPhone] = useState(''); // 휴대폰 번호
   const [email, setEmail] = useState(''); // 이메일
@@ -41,107 +45,133 @@ const SignUp = ({ navigation, route }) => {
   }
 
   return (
-    <KeyboardAwareScrollView style={shared.container}>
-      <TouchableOpacity
-        style={[shared.backButton, styles.backButton]}
-        onPress={() => navigation.goBack()}>
-        <Ionicon name="chevron-back" size={20} color="#FFFFFF" />
-      </TouchableOpacity>
-      <Text style={styles.headerText}>안녕하세요!</Text>
-      <Text style={styles.headerText}>이메일과 비밀번호로 가입해주세요.</Text>
-      <Text style={styles.text}>
-        휴대폰 번호는 안전하게 보관되며 이웃들에게 공개되지 않아요.
-      </Text>
-      <View style={{marginTop: 10}}>
-        <TextInput
-          style={[
-            styles.textInput,
-            !nameCheck(name) && name.length > 0 && {borderColor: '#dc645b', borderWidth: 1}
-          ]}
-          onChangeText={text => setName(text)}
-          value={name}
-          inputMode="text"
-          placeholder="이름"
-          placeholderTextColor="#676c74"
-        />
-        <TextInput
-          style={[
-            styles.textInput,
-            !phoneCheck(phone) && phone.length > 0 && {borderColor: '#dc645b', borderWidth: 1}
-          ]}
-          onChangeText={text => setPhone(text)}
-          value={phone}
-          inputMode="numeric"
-          placeholder="휴대폰 번호(- 없이 숫자만 입력)"
-          placeholderTextColor="#676c74"
-        />
-        <TextInput
-          style={[
-            styles.textInput,
-            !emailCheck(email) && email.length > 0 && {borderColor: '#dc645b', borderWidth: 1}
-          ]}
-          onChangeText={text => setEmail(text)}
-          value={email}
-          inputMode="email"
-          keyboardType="email-address"
-          placeholder="이메일 주소"
-          placeholderTextColor="#676c74"
-        />
-        <TextInput
-          style={[
-            styles.textInput,
-            !passwordCheck(password) && password.length > 0 && {borderColor: '#dc645b', borderWidth: 1}
-          ]}
-          onChangeText={text => setPassword(text)}
-          value={password}
-          inputMode="text"
-          placeholder="비밀번호"
-          placeholderTextColor="#676c74"
-          secureTextEntry={true}
-        />
-        {!passwordCheck(password) && password.length > 0 && (
-          <Text style={{color: '#dc645b'}}>
-            비밀번호는 8자 이상 20자 미만이며{'\n'}영문, 숫자, 특수문자를 포함해야
-            합니다.
-          </Text>
-        )}
-      </View>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
-          
-          axios.post(`http://${Config.DB_IP}/user`,{
-            email: email,
-            password: password,
-            name: name,
-            phone: phone,
-          })
-          .then(response => {
-            //"status": 200
-            //"name\":\"라라라\
-            // "data": "sign-up success"
-            if (response.status === 200) {
-              // navigation.navigate('Login');
-              console.log(response.status)
-            }
-          })
-          .catch(error => {
-            console.log(error);
-          });
-          // TODO: n초 동안 응답이 없으면 실패 처리 서버가 닫힐 때 에러 코드 확인하기
-        }}
-        disabled={!(emailCheck(email) && passwordCheck(password) && nameCheck(name) && phoneCheck(phone))}>
-        <Text
-          style={[
-            styles.startText,
-            emailCheck(email) && passwordCheck(password) && nameCheck(name) && phoneCheck(phone)
-              ? styles.enabled
-              : styles.disabled,
-          ]}>
-          가입 하기
+    <View style={{ flex: 1 }}>
+      <KeyboardAwareScrollView style={shared.container}>
+        <TouchableOpacity
+          style={[shared.backButton, styles.backButton]}
+          onPress={() => navigation.goBack()}>
+          <Ionicon name="chevron-back" size={20} color="#FFFFFF" />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>안녕하세요!</Text>
+        <Text style={styles.headerText}>이메일과 비밀번호로 가입해주세요.</Text>
+        <Text style={styles.text}>
+          휴대폰 번호는 안전하게 보관되며 이웃들에게 공개되지 않아요.
         </Text>
-      </TouchableOpacity>
-    </KeyboardAwareScrollView>
+        <View style={{marginTop: 10}}>
+          <TextInput
+            style={[
+              styles.textInput,
+              !nameCheck(name) && name.length > 0 && {borderColor: '#dc645b', borderWidth: 1}
+            ]}
+            onChangeText={text => setName(text)}
+            value={name}
+            inputMode="text"
+            placeholder="이름"
+            placeholderTextColor="#676c74"
+          />
+          <TextInput
+            style={[
+              styles.textInput,
+              !phoneCheck(phone) && phone.length > 0 && {borderColor: '#dc645b', borderWidth: 1}
+            ]}
+            onChangeText={text => setPhone(text)}
+            value={phone}
+            inputMode="numeric"
+            placeholder="휴대폰 번호(- 없이 숫자만 입력)"
+            placeholderTextColor="#676c74"
+          />
+          <TextInput
+            style={[
+              styles.textInput,
+              !emailCheck(email) && email.length > 0 && {borderColor: '#dc645b', borderWidth: 1}
+            ]}
+            onChangeText={text => setEmail(text)}
+            value={email}
+            inputMode="email"
+            keyboardType="email-address"
+            placeholder="이메일 주소"
+            placeholderTextColor="#676c74"
+          />
+          <TextInput
+            style={[
+              styles.textInput,
+              !passwordCheck(password) && password.length > 0 && {borderColor: '#dc645b', borderWidth: 1}
+            ]}
+            onChangeText={text => setPassword(text)}
+            value={password}
+            inputMode="text"
+            placeholder="비밀번호"
+            placeholderTextColor="#676c74"
+            secureTextEntry={true}
+          />
+          {!passwordCheck(password) && password.length > 0 && (
+            <Text style={{color: '#dc645b'}}>
+              비밀번호는 8자 이상 20자 미만이며{'\n'}영문, 숫자, 특수문자를 포함해야
+              합니다.
+            </Text>
+          )}
+        </View>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            
+            axios.post(`http://${Config.DB_IP}/user`,{
+              email: email,
+              password: password,
+              name: name,
+              phone: phone,
+            },
+            {timeout: 2000})
+            .then(response => {
+              //"status": 200
+              //"name\":\"라라라\
+              // "data": "sign-up success"
+              if (response.status === 200) {
+                // navigation.navigate('Login');
+                console.log(response.status)
+                // TODO: 회원가입 성공
+              }
+            })
+            .catch(error => { 
+              if (error.response) { // 요청은 성공했으나 응답은 실패
+                setAlertMessage(`오류가 발생했습니다. \n[${error.response.status}]`);
+                setShowAlert(true);
+                setTimeout(() => {
+                  setShowAlert(false);
+                }, 6000);
+                console.log('SignUp error.response', error.response);
+              } else if (error.request) { // timeout으로 요청 실패
+                // 오류 Toast
+                setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.');
+                setShowAlert(true);
+                setTimeout(() => {
+                  setShowAlert(false);
+                }, 6000);
+              } else { // 기타 오류 발생
+                setAlertMessage(`오류가 발생했습니다. \n[${error.message}]`);
+                setShowAlert(true);
+                setTimeout(() => {
+                  setShowAlert(false);
+                }, 6000);
+                console.log('SignUp Unexpected error', error.message);
+                }
+            }
+          )
+          }}
+          disabled={!(emailCheck(email) && passwordCheck(password) && nameCheck(name) && phoneCheck(phone))}>
+          <Text
+            style={[
+              styles.startText,
+              emailCheck(email) && passwordCheck(password) && nameCheck(name) && phoneCheck(phone)
+                ? styles.enabled
+                : styles.disabled,
+            ]}>
+            가입 하기
+          </Text>
+        </TouchableOpacity>
+      </KeyboardAwareScrollView>
+      {showAlert && <Alert message={alertMessage} />}
+    </View>
   );
 };
 
