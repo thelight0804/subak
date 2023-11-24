@@ -139,10 +139,19 @@ class MemberServiceTest {
         memberService.join(member);
 
         // When
-        String result = memberService.login(email, password);
+        Member loginMember  = memberService.login(email, password);
 
         // Then
-        assertEquals("로그인 성공", result);
+        assertNotNull(loginMember, "로그인 실패");
+        assertEquals(email, loginMember.getEmail(), "로그인한 사용자의 이메일이 일치하지 않습니다.");
+        assertEquals(name, loginMember.getName(), "로그인한 사용자의 이름이 일치하지 않습니다.");
+        assertEquals(phone, loginMember.getPhone(), "로그인한 사용자의 전화번호가 일치하지 않습니다.");
+    }
+
+    @Test
+    @Rollback
+    void 회원탈퇴() throws Exception{
+
     }
 
 
