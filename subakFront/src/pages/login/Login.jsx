@@ -118,15 +118,10 @@ const Login = ({ navigation }) => {
           이메일 또는 비밀번호를 잊으셨나요?
         </Text>
         {/* <TouchableOpacity onPress={() => console.log('이메일 찾기 버튼 클릭')}> */}
-        <TouchableOpacity onPress={() => {
-            setShowAlert(true);
-            setTimeout(() => {
-              setShowAlert(false);
-            }, 6000);
-        }}>
+        <TouchableOpacity onPress={() =>  navigation.navigate('FindEmail')}>
           <Text style={styles.hyperText}>이메일 찾기</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => console.log('비밀번호 찾기 버튼 클릭')}>
+        <TouchableOpacity onPress={() => navigation.navigate('FindPassword')}>
           <Text style={styles.hyperText}>비밀번호 찾기</Text>
         </TouchableOpacity>
       </KeyboardAwareScrollView>
