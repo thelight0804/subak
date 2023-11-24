@@ -13,6 +13,10 @@ import subak.backend.dto.request.member.JoinRequest;
 import subak.backend.dto.request.member.LoginRequest;
 import subak.backend.dto.request.member.UpdatePasswordRequest;
 import subak.backend.service.MemberService;
+import subak.backend.session.SessionConst;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Slf4j
 @RestController
@@ -28,17 +32,36 @@ public class MemberController {
         try {
             Member member = mapToMember(request);
             memberService.join(member);
-            return ResponseEntity.ok("sign-up success");
+            return ResponseEntity.ok("Sign-up success");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("sign-up failed");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Sign-up error"); // 500
         }
     }
 
     @ApiOperation(value = "로그인", notes = "Email, PW를 통해 로그인한다.")
     @PostMapping("/sign-in")
-    public ResponseEntity<String> loginMember(@RequestBody LoginRequest loginRequest) {
-        String result = memberService.login(loginRequest.getEmail(), loginRequest.getPassword());
-        return ResponseEntity.ok(result);
+    public ResponseEntity<String> loginMember(@RequestBody LoginRequest loginRequest, HttpServletRequest httpServletRequest) {
+        Member loginMember = memberService.login(loginRequest.getEmail(), loginRequest.getPassword());
+
+        if(loginMember == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");  // 401
+        }
+
+        HttpSession session = httpServletRequest.getSession(true);
+        session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
+        return ResponseEntity.ok("Sign-in success");
+    }
+
+
+    @ApiOperation(value = "로그아웃", notes = "로그아웃 버튼을 통해 로그아웃한다.")
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+
+        if(session != null){
+            session.invalidate();
+        }
+        return ResponseEntity.ok("Logout successful");
     }
 
 

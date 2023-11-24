@@ -4,14 +4,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import subak.backend.domain.Comment;
 import subak.backend.domain.Member;
+import subak.backend.domain.Post;
+import subak.backend.domain.enumType.MemberStatus;
 import subak.backend.repository.MemberRepository;
+import subak.backend.repository.PostRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @Slf4j
-//@Transactional(readOnly = true) // 읽기 전용일 경우 최적화
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -65,15 +69,28 @@ public class MemberService {
     /**
      * 로그인 (Email, Password 필요)
      */
-    public String login(String email, String password) {
+    public Member login(String email, String password) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         // 패스워드 일치 여부 확인
         if (passwordEncoder.matches(password, member.getPassword())) {
-            return "로그인 성공";
+            return member;
         } else {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    /**
+     * 회원 탈퇴
+     */
+    public void withdraw(String email) {
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+            member.setStatus(MemberStatus.DELETE);
+            memberRepository.save(member);
         }
     }
 
@@ -81,8 +98,14 @@ public class MemberService {
     //중복 회원 검증
     private void validateDuplicateMember(Member member) {
         Optional<Member> findMember = memberRepository.findByEmail(member.getEmail());
+        Optional<Member> findMemberByNameAndPhone = memberRepository.findByNameAndPhone(member.getName(), member.getPhone());
+
         if (findMember.isPresent()) {
             throw new IllegalStateException("이미 존재하는 회원입니다.");
+        }
+
+        if (findMemberByNameAndPhone.isPresent()) {
+            throw new IllegalStateException("이름과 휴대폰 번호가 동일한 회원이 이미 존재합니다. 고객센터로 문의해 주세요.");
         }
     }
 
