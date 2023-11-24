@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 import subak.backend.domain.Member;
+import subak.backend.domain.enumType.MemberStatus;
 import subak.backend.dto.request.member.UpdatePasswordRequest;
 import subak.backend.repository.MemberRepository;
 
@@ -30,7 +31,6 @@ class MemberServiceTest {
     @Test
     @Rollback(value = true)
     void 회원가입() throws Exception { // jUnit5부터는 public을 붙이지 않아도 된다.
-        System.out.println("회원가입 테스트 시작");
 
         Member member = new Member();
 
@@ -42,15 +42,12 @@ class MemberServiceTest {
 
         Optional<Member> savedMember = memberRepository.findById(savedMemberId);
         assertTrue(savedMember.isPresent());
-
-        System.out.println("회원가입 끝");
     }
 
 
     @Test // jUnit5에서는 @Test에 expected 속성이 지원되지 않는다.
     @Rollback
     void 중복회원검증() throws Exception {
-        System.out.println("회원중복검증 테스트 시작");
 
         Member member1 = createMember("0004@gmail.com", "0", "0", "01000000000");
         memberService.join(member1);
@@ -61,27 +58,21 @@ class MemberServiceTest {
         assertThrows(IllegalStateException.class, () -> {
             memberService.join(member2);
         });
-
-        System.out.println("회원중복검증 테스트 끝");
     }
 
     @Test
     @Rollback
     void 이메일찾기() throws Exception {
-        System.out.println("이메일 찾기 테스트 시작");
         Member member = createMember("0004@gmail.com", "0", "0", "01000000000");
         memberService.join(member);
 
         String findEmail = memberService.findMemberEmail(member.getName(), member.getPhone());
         assertEquals("0004@gmail.com", findEmail);
-
-        System.out.println("이메일 찾기 테스트 끝");
     }
 
     @Test
     @Rollback
     void 이메일찾기_일치하는회원없음_예외() throws Exception {
-        System.out.println("이메일찾기_일치하는회원없음_예외 테스트 시작");
 
         Member member = createMember("0004@gmail.com", "0", "0", "01000000000");
         memberService.join(member);
@@ -89,15 +80,11 @@ class MemberServiceTest {
         //name과 phone을 다른 정보로 입력했을 때, 예외가 발생하는지
         assertThrows(IllegalArgumentException.class,
                 () -> memberService.findMemberEmail("nonUser", "01012345678"));
-
-        System.out.println("이메일찾기_일치하는회원없음_예외 테스트 끝");
     }
 
     @Test
     @Rollback
     void 회원비밀번호_수정() throws Exception {
-        System.out.println("비밀번호 수정 테스트 시작");
-
         Member member = createMember("test1@gmail.com", "TestUser", "password", "01012345678");
         memberService.join(member);
 
@@ -113,17 +100,11 @@ class MemberServiceTest {
         // 새로운 비밀번호로 업데이트되었는지 확인
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         assertTrue(passwordEncoder.matches(newPassword, updatedMemberOptional.get().getPassword()));
-
-        System.out.println("비밀번호 수정 테스트 끝");
-
-
     }
 
     @Test
     @Rollback
     void 로그인_성공() throws Exception {
-        System.out.println("로그인 성공 테스트 시작");
-
         // Given
         String email = "0004@gmail.com";
         String password = "password123";
@@ -151,7 +132,27 @@ class MemberServiceTest {
     @Test
     @Rollback
     void 회원탈퇴() throws Exception{
+        // Given
+        String email = "test5@gmail.com";
+        String password = "password123";
+        String name = "TestUser5";
+        String phone = "01012345678";
 
+        Member member = new Member();
+        member.setEmail(email);
+        member.setPassword(password);
+        member.setName(name);
+        member.setPhone(phone);
+
+        memberService.join(member);
+
+        // When
+        memberService.withdraw(email);
+
+        // Then
+        Optional<Member> withdrawnMemberOptional = memberRepository.findByEmail(email);
+        assertTrue(withdrawnMemberOptional.isPresent(), "탈퇴한 회원 정보를 찾을 수 없습니다.");
+        assertEquals(MemberStatus.DELETE, withdrawnMemberOptional.get().getStatus(), "회원 상태가 탈퇴 상태가 아닙니다.");
     }
 
 
