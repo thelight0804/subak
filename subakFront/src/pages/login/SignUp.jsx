@@ -114,7 +114,6 @@ const SignUp = ({ navigation, route }) => {
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            
             axios.post(`http://${Config.DB_IP}/user`,{
               email: email,
               password: password,

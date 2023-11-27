@@ -73,7 +73,7 @@ const FindEmail = ({ navigation }) => {
             }
             ).then(response => {
               if (response.status === 200) {
-                console.log(response.status)
+                console.log("response.data : ", response.data) //이메일 값
               }
             })
             .catch(error => {

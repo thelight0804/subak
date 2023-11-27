@@ -122,7 +122,7 @@ const SignUp = ({ navigation, route }) => {
                   style={styles.button}
                   onPress={() => {
                     axios
-                      .post(`http://${Config.DB_IP}/password`,
+                      .post(`http://${Config.DB_IP}/user/password`,
                         {
                           email: email,
                           newPassword: newPassword,
