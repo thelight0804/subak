@@ -4,14 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import subak.backend.domain.Comment;
 import subak.backend.domain.Member;
-import subak.backend.domain.Post;
 import subak.backend.domain.enumType.MemberStatus;
+import subak.backend.exception.MemberException;
 import subak.backend.repository.MemberRepository;
-import subak.backend.repository.PostRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,10 +39,9 @@ public class MemberService {
      */
     public String findMemberEmail(String name, String phone) {
         Optional<Member> foundMember = memberRepository.findByNameAndPhone(name, phone);
-        Member member = foundMember.orElseThrow(() -> new IllegalArgumentException("일치하는 회원 정보가 없습니다."));
+        Member member = foundMember.orElseThrow(() -> new MemberException.EmailFindFailedException("이메일 찾기에 실패하였습니다."));
         return member.getEmail();
     }
-
 
     /**
      * 비밀번호(Password) 수정
@@ -61,23 +57,20 @@ public class MemberService {
 
             return "비밀번호 수정 성공";
         } else {
-            throw new IllegalArgumentException("일치하는 회원 정보가 없습니다.");
+            throw new MemberException.PasswordUpdateFailedException("비밀번호 수정에 실패하였습니다.");
         }
     }
 
 
-    /**
-     * 로그인 (Email, Password 필요)
-     */
     public Member login(String email, String password) {
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new MemberException.MemberNotFoundException("존재하지 않는 회원입니다."));
 
         // 패스워드 일치 여부 확인
         if (passwordEncoder.matches(password, member.getPassword())) {
             return member;
         } else {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new MemberException.IncorrectPasswordException("회원정보가 일치하지 않습니다.");
         }
     }
 
@@ -101,11 +94,11 @@ public class MemberService {
         Optional<Member> findMemberByNameAndPhone = memberRepository.findByNameAndPhone(member.getName(), member.getPhone());
 
         if (findMember.isPresent()) {
-            throw new IllegalStateException("이미 존재하는 회원입니다.");
+            throw new MemberException.DuplicateMemberException("이미 존재하는 회원입니다.");
         }
 
         if (findMemberByNameAndPhone.isPresent()) {
-            throw new IllegalStateException("이름과 휴대폰 번호가 동일한 회원이 이미 존재합니다. 고객센터로 문의해 주세요.");
+            throw new MemberException.DuplicateMemberException("이름과 휴대폰 번호가 동일한 회원이 이미 존재합니다. 고객센터로 문의해 주세요.");
         }
     }
 
@@ -118,6 +111,5 @@ public class MemberService {
             throw new IllegalArgumentException("이메일, 이름, 비밀번호, 휴대폰은 필수 입력 값입니다. (공백 문자열 불가능)");
         }
     }
-
 
 }

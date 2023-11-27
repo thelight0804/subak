@@ -1,0 +1,53 @@
+package subak.backend.exception;
+
+public class MemberException {
+
+    /**
+     * 회원 중복 예외처리
+     */
+    public static class DuplicateMemberException extends RuntimeException {
+        public DuplicateMemberException(String message) {
+            super(message);
+        }
+    }
+
+    /**
+     * 이메일 불일치 예외 처리
+     */
+    public static class MemberNotFoundException extends RuntimeException {
+        public MemberNotFoundException(String message) {
+            super(message);
+        }
+    }
+
+    /**
+     * 비밀번호 불일치 예외 처리
+     */
+    public static class IncorrectPasswordException extends RuntimeException {
+        public IncorrectPasswordException(String message) {
+            super(message);
+        }
+    }
+
+
+
+    /**
+     * 이메일 찾기 실패 예외 처리
+     */
+    public static class EmailFindFailedException extends RuntimeException {
+        public EmailFindFailedException(String message) {
+            super(message);
+        }
+    }
+
+    /**
+     * 비밀번호 수정 실패 예외 처리
+     */
+    public static class PasswordUpdateFailedException extends RuntimeException {
+        public PasswordUpdateFailedException(String message) {
+            super(message);
+        }
+    }
+
+
+}

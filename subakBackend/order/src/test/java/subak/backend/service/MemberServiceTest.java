@@ -9,6 +9,7 @@ import org.springframework.test.annotation.Rollback;
 import subak.backend.domain.Member;
 import subak.backend.domain.enumType.MemberStatus;
 import subak.backend.dto.request.member.UpdatePasswordRequest;
+import subak.backend.exception.MemberException;
 import subak.backend.repository.MemberRepository;
 
 import javax.transaction.Transactional;
@@ -55,7 +56,7 @@ class MemberServiceTest {
         Member member2 = new Member();
         member2.setEmail("0004@gmail.com");
 
-        assertThrows(IllegalStateException.class, () -> {
+        assertThrows(MemberException.DuplicateMemberException.class, () -> {
             memberService.join(member2);
         });
     }
@@ -78,7 +79,7 @@ class MemberServiceTest {
         memberService.join(member);
 
         //name과 phone을 다른 정보로 입력했을 때, 예외가 발생하는지
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(MemberException.EmailFindFailedException.class,
                 () -> memberService.findMemberEmail("nonUser", "01012345678"));
     }
 
