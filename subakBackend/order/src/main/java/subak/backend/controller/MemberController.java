@@ -54,6 +54,14 @@ public class MemberController {
         return ResponseEntity.ok("Logout successful");
     }
 
+    @ApiOperation(value = "회원 탈퇴", notes = "회원 아이디를 통해 회원을 탈퇴시킨다.")
+    @DeleteMapping("/user/{userId}")
+    public ResponseEntity<String> withdraw(@PathVariable String email) {
+        memberService.withdraw(email);
+        return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
+    }
+
+
     @ApiOperation(value = "회원 아이디(이메일) 찾기", notes = "회원 이름, 휴대폰 번호를 통해 회원 아이디를 찾는다.")
     @PostMapping("/user/email")
     public ResponseEntity<String> findMemberEmail(@RequestBody FindMemberEmailRequest request) {

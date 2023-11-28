@@ -92,6 +92,8 @@ public class MemberService {
             Member member = optionalMember.get();
             member.setStatus(MemberStatus.DELETE);
             memberRepository.save(member);
+        } else {
+            throw new MemberException.MemberNotFoundException("회원을 찾을 수 없습니다.");
         }
     }
 
