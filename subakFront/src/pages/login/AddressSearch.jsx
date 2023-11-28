@@ -9,7 +9,7 @@ import axios from 'axios';
 import Config from 'react-native-config';
 
 import shared from '../../styles/shared';
-import styles from '../../styles/login/addressSearch'
+import styles from '../../styles/login/AddressSearch'
 
 import Alert from '../components/Alert';
 
@@ -98,7 +98,7 @@ const LocationSearch = ({ navigation }) => {
                   },
                   error => {
                     // 위치 요청 실패 시
-                    setAlertMessage(`위치를 확인할 수 없습니다. \n ${error.code} : ${error.message}`);
+                    setAlertMessage(`위치를 확인할 수 없습니다. \n 다시 시도해주세요.`);
                     setShowAlert(true);
                     setTimeout(() => {
                       setShowAlert(false);
