@@ -18,15 +18,10 @@ const Login = ({ navigation }) => {
 
   // 이메일, 비밀번호 정규식
   const emailRegEx = /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
-  const passwordRegEx = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
 
   // 이메일, 비밀번호 유효성 검사
   const emailCheck = (emailValue) => {
     return emailRegEx.test(emailValue);
-  }
-
-  const passwordCheck = (passwordValue) => {
-    return passwordRegEx.test(passwordValue);
   }
 
   return (
@@ -61,12 +56,6 @@ const Login = ({ navigation }) => {
             placeholderTextColor="#676c74"
             secureTextEntry={true}
           />
-          {!passwordCheck(password) && password.length > 0 && (
-            <Text style={{color: '#dc645b'}}>
-              비밀번호는 8자 이상 20자 미만이며{'\n'}영문, 숫자, 특수문자를 포함해야
-              합니다.
-            </Text>
-          )}
         </View>
         <TouchableOpacity
           style={styles.button}
@@ -80,12 +69,12 @@ const Login = ({ navigation }) => {
             ).then(response => { console.log(response.data); })
             .catch(error => { 
                 if (error.response) { // 요청은 성공했으나 응답은 실패
-                  setAlertMessage(`오류가 발생했습니다. \n[${error.response.status}]`);
+                  setAlertMessage(`${error.response.data}`);
                   setShowAlert(true);
                   setTimeout(() => {
                     setShowAlert(false);
                   }, 6000);
-                  console.log('Login error.response', error.response);
+                  console.log('Login error.response', error.response.data);
                 } else if (error.request) { // timeout으로 요청 실패
                   setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.'); // 오류 메시지
                   setShowAlert(true); // 오류 알림창
@@ -103,11 +92,11 @@ const Login = ({ navigation }) => {
              }
           )
           }}
-          disabled={!(emailCheck(email) && passwordCheck(password))}>
+          disabled={!emailCheck(email)}>
           <Text
             style={[
               styles.startText,
-              emailCheck(email) && passwordCheck(password)
+              emailCheck(email) && password
                 ? styles.enabled
                 : styles.disabled,
             ]}>

@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     color: text,
     fontWeight: 'bold',
     textDecorationLine: 'underline',
-  }
+  },
 })
 
 export default styles;

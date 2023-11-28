@@ -15,6 +15,7 @@ const FindEmail = ({ navigation }) => {
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
   const [name, setName] = useState(''); // 본명
   const [phone, setPhone] = useState(''); // 휴대폰 번호
+  const [findEmail, setFindEmail] = useState(''); // 찾은 이메일
 
   // 입력 값 체크 정규식
   const nameRegEx = /^[가-힣a-zA-Zぁ-んァ-ン一-龯]{1,20}$/; // 이름
@@ -73,13 +74,13 @@ const FindEmail = ({ navigation }) => {
             }
             ).then(response => {
               if (response.status === 200) {
-                console.log("response.data : ", response.data) //이메일 값
+                setFindEmail(response.data);
               }
             })
             .catch(error => {
               if (error.response) {
                 // 요청은 성공했으나 응답은 실패
-                setAlertMessage(`오류가 발생했습니다. \n[${error.response.status}]`);
+                setAlertMessage(`${error.response.data}`);
                 setShowAlert(true);
                 setTimeout(() => {
                   setShowAlert(false);

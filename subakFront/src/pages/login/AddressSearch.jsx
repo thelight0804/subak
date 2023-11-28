@@ -73,7 +73,7 @@ const LocationSearch = ({ navigation }) => {
                       })
                       .catch(error => { 
                         if (error.response) { // 요청은 성공했으나 응답은 실패
-                          setAlertMessage(`오류가 발생했습니다. \n[${error.response.status}]`);
+                          setAlertMessage(`오류가 발생했습니다. \n[${error.message}]`);
                           setShowAlert(true);
                           setTimeout(() => {
                             setShowAlert(false);
@@ -98,7 +98,7 @@ const LocationSearch = ({ navigation }) => {
                   },
                   error => {
                     // 위치 요청 실패 시
-                    setAlertMessage(`위치를 확인할 수 없습니다. ${error.code} : ${error.message}`);
+                    setAlertMessage(`위치를 확인할 수 없습니다. \n ${error.code} : ${error.message}`);
                     setShowAlert(true);
                     setTimeout(() => {
                       setShowAlert(false);

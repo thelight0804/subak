@@ -133,12 +133,13 @@ const SignUp = ({ navigation, route }) => {
             })
             .catch(error => { 
               if (error.response) { // 요청은 성공했으나 응답은 실패
-                setAlertMessage(`오류가 발생했습니다. \n[${error.response.status}]`);
+                if (error.response.data === '')
+                setAlertMessage(`${error.response.data}`);
                 setShowAlert(true);
                 setTimeout(() => {
                   setShowAlert(false);
                 }, 6000);
-                console.log('SignUp error.response', error.response);
+                console.log('SignUp error.response : ', error.response.data);
               } else if (error.request) { // timeout으로 요청 실패
                 // 오류 Toast
                 setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.');

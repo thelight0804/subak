@@ -139,7 +139,7 @@ const SignUp = ({ navigation, route }) => {
                       .catch(error => {
                         if (error.response) {
                           // 요청은 성공했으나 응답은 실패
-                          setAlertMessage(`오류가 발생했습니다. \n[${error.response.status}]`);
+                          setAlertMessage(`${error.response.data}`);
                           setShowAlert(true);
                           setTimeout(() => {
                             setShowAlert(false);
