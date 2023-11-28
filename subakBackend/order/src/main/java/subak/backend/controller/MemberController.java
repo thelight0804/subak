@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import subak.backend.domain.Member;
 import subak.backend.dto.request.member.FindMemberEmailRequest;
 import subak.backend.dto.request.member.JoinRequest;
@@ -70,6 +71,17 @@ public class MemberController {
                 request.getNewPassword());
         return ResponseEntity.ok(result);
     }
+
+    @ApiOperation(value = "회원 정보 수정", notes = "회원 아이디를 통해 이름과 프로필을 수정한다.")
+    @PutMapping("/user/{userId}")
+    public ResponseEntity<String> updateMember(@PathVariable Long userId,
+                                               @RequestParam String name,
+                                               @RequestParam MultipartFile file) {
+
+        memberService.updateMember(userId, name, file);
+        return ResponseEntity.ok("MemberUpdate successful");
+    }
+
 
     private Member mapToMember(JoinRequest request) {
         Member member = new Member();
