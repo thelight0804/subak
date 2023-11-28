@@ -1,10 +1,8 @@
 package subak.backend.domain;
 
-import com.sun.istack.NotNull;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import subak.backend.domain.enumType.MemberStatus;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -37,7 +35,10 @@ public class Member {
     @Column(name = "member_picture")
     private String picture; //프로필 사진
 
-    @OneToMany(mappedBy = "member")
+    @Enumerated(EnumType.STRING)
+    private MemberStatus status = MemberStatus.ACTIVE; // 멤버상태 활동중
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")

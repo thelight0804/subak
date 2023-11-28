@@ -12,8 +12,12 @@ spring:
     username: root
     password: '0000'
 
-
 logging.level:
   org.hibernate:
     SQL: debug
     type: trace
+
+server:
+  servlet:
+    session:
+      tracking-modes: cookie

@@ -18,7 +18,6 @@ import static javax.persistence.FetchType.*;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post {
 
     @Id @GeneratedValue
@@ -35,8 +34,6 @@ public class Post {
     private String postTitle; //글 제목
 
     private int price;
-
-    private int likes; // 즐겨찾기
 
     @Column(name = "post_date_time")
     private LocalDateTime postDateTime; // 글 게시 시간
@@ -61,9 +58,46 @@ public class Post {
     @OneToMany(mappedBy = "member")
     private List<Review> reviews = new ArrayList<>();
 
+    public static Post createPost(Member member,
+                                  String category,
+                                  String postTitle,
+                                  int price,
+                                  int views,
+                                  String postImage) {
+        Post post = new Post();
+        post.setMember(member);
+        post.setCategory(category);
+        post.setPostTitle(postTitle);
+        post.setPrice(price);
+        post.setPostDateTime(LocalDateTime.now());
+        post.setViews(views);
+        post.setPostImage(postImage);
+        post.setProductStatus(ProductStatus.SALE);
+        post.setPostStatus(PostStatus.BASIC);
+        return post;
+    }
 
+    // 글 수정
+    public void updatePostInfo(String category,
+                               String postTitle,
+                               int price,
+                               String postImage) {
+        this.category = category;
+        this.postTitle = postTitle;
+        this.price = price;
+        this.postImage = postImage;
+        this.postDateTime = LocalDateTime.now();
+    }
 
+    //상품 상태 수정
+    public void updateProductStatus(ProductStatus productStatus) {
+        this.productStatus = productStatus;
+        this.postDateTime = LocalDateTime.now();
+    }
 
-
-
+    //게시글 상태 수정
+    public void updatePostStatus(PostStatus postStatus) {
+        this.postStatus = postStatus;
+        this.postDateTime = LocalDateTime.now();
+    }
 }
