@@ -2,9 +2,12 @@ package subak.backend.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 import subak.backend.domain.enumType.MemberStatus;
+import subak.backend.exception.MemberException;
 
 import javax.persistence.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,11 +35,13 @@ public class Member {
     @Column(name = "member_temp")
     private float temp; // 매너온도
 
+    @Lob
     @Column(name = "member_picture")
-    private String picture; //프로필 사진
+    private byte[] picture; //프로필 사진
 
+    @Column(name = "member_status")
     @Enumerated(EnumType.STRING)
-    private MemberStatus status = MemberStatus.ACTIVE; // 멤버상태 활동중
+    private MemberStatus status = MemberStatus.ACTIVE; // 멤버상태 [활동중]
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Post> posts = new ArrayList<>();
@@ -50,7 +55,13 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Review> reviews = new ArrayList<>();
 
-
-    //인증타입
+    //
+    public void setProfileImage(MultipartFile file) {
+        try {
+            this.picture = file.getBytes();
+        } catch (IOException e) {
+            throw new MemberException.FileUploadException("업로드 실패", e);
+        }
+    }
 
 }
