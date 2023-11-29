@@ -5,8 +5,8 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Config from 'react-native-config';
 
-import shared from '../../styles/shared';
-import styles from '../../styles/login/signUp';
+import shared from '../../styles/Shared';
+import styles from '../../styles/login/Login';
 
 import Alert from '../components/Alert';
 

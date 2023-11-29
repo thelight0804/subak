@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {Text, Animated} from 'react-native';
 
-import styles from './../../styles/components/alert';
+import styles from '../../styles/components/Alert';
 
 /**
  * 

@@ -6,8 +6,8 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Config from 'react-native-config';
 
-import shared from '../../styles/shared';
-import styles from '../../styles/login/login';
+import shared from '../../styles/Shared';
+import styles from '../../styles/login/SignUp';
 import Alert from '../components/Alert';
 
 const SignUp = ({ navigation, route }) => {
@@ -126,9 +126,8 @@ const SignUp = ({ navigation, route }) => {
               //"name\":\"라라라\
               // "data": "sign-up success"
               if (response.status === 200) {
-                // navigation.navigate('Login');
-                console.log(response.status)
-                // TODO: 회원가입 성공
+                navigation.navigate('PostsList');
+                // console.log(response.status)
               }
             })
             .catch(error => { 

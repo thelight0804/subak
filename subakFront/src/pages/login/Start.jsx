@@ -3,8 +3,8 @@ import { useState } from 'react';
 import {Image, Text, View, TouchableOpacity, Modal, TouchableWithoutFeedback} from 'react-native';
 import WheelPicker from 'react-native-wheely';
 
-import shared from '../../styles/shared';
-import styles from '../../styles/login/start';
+import shared from '../../styles/Shared';
+import styles from '../../styles/login/Start';
 
 const Start = ({navigation}) => {
   // 국가 선택 버튼
@@ -45,7 +45,11 @@ const Start = ({navigation}) => {
       <View style={styles.footer}>
         <TouchableOpacity
           style={shared.button}
-          onPress={() => navigation.navigate('AddressSearch')}>
+          // onPress={() => navigation.navigate('AddressSearch')}>
+          onPress={() => {
+            // FIX: AddressSearch로 이동
+            navigation.navigate('PostsList')
+          }}>
           <Text style={[styles.text, styles.startText]}>시작하기</Text>
         </TouchableOpacity>
         <Text style={[styles.text, styles.text2]}>
