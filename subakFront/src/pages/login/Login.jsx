@@ -4,6 +4,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Config from 'react-native-config';
+import {AsyncStorage} from '@react-native-async-storage/async-storage';
 
 import shared from '../../styles/Shared';
 import styles from '../../styles/login/Login';
@@ -15,6 +16,15 @@ const Login = ({ navigation }) => {
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
   const [email, setEmail] = useState(''); //이메일
   const [password, setPassword] = useState(''); //비밀번호
+  const [cookies, setCookies] = useState(''); //쿠키
+
+  const storeData = async (value) => {
+    try {
+      await AsyncStorage.setItem('0001', value);
+    } catch (e) {
+      // saving error
+    }
+  };
 
   // 이메일, 비밀번호 정규식
   const emailRegEx = /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
@@ -66,7 +76,11 @@ const Login = ({ navigation }) => {
             }, {
               timeout: 2000,
             }
-            ).then(response => { console.log(response.data); })
+            // ).then(response => { console.log(response.data); })
+            ).then(response => { 
+              console.log(response);
+              // storeData(value);
+            })
             .catch(error => { 
                 if (error.response) { // 요청은 성공했으나 응답은 실패
                   setAlertMessage(`${error.response.data}`);

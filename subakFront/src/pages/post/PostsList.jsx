@@ -7,17 +7,19 @@ import FooterMenu from '../components/FooterMenu';
 
 const PostsList = () => {
   return (
-    <View style={shared.container}>
-      <View style={styles.header}>
+    <>
+      <View style={shared.container}>
+        <View style={styles.header}>
 
-      </View>
-      <View style={styles.content}>
-        
+        </View>
+        <View style={styles.content}>
+          
+        </View>
       </View>
       <View style={styles.footer}>
-        <FooterMenu />
+        <FooterMenu selectedIndex={0} />
       </View>
-    </View>
+    </>
   )
 };
 
