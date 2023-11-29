@@ -32,4 +32,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handlePasswordUpdateFailedException(MemberException.PasswordUpdateFailedException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+
+    @ExceptionHandler(MemberException.FileUploadException.class)
+    public ResponseEntity<String> handleFileUploadException(MemberException.FileUploadException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
 }

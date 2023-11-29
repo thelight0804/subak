@@ -4,11 +4,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
 import subak.backend.domain.Member;
 import subak.backend.domain.enumType.MemberStatus;
 import subak.backend.exception.MemberException;
 import subak.backend.repository.MemberRepository;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -61,7 +67,9 @@ public class MemberService {
         }
     }
 
-
+    /**
+     * 로그인
+     */
     public Member login(String email, String password) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberException.MemberNotFoundException("존재하지 않는 회원입니다."));
@@ -84,7 +92,22 @@ public class MemberService {
             Member member = optionalMember.get();
             member.setStatus(MemberStatus.DELETE);
             memberRepository.save(member);
+        } else {
+            throw new MemberException.MemberNotFoundException("회원을 찾을 수 없습니다.");
         }
+    }
+
+    /**
+     * 회원 수정 (이름, 프로필)
+     */
+    public Member updateMember(Long userId, String name, MultipartFile file) {
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new MemberException.MemberNotFoundException("해당 사용자가 존재하지 않습니다. userId=" + userId));
+
+        member.setName(name);
+        member.setProfileImage(file);
+
+        return memberRepository.save(member);
     }
 
 
@@ -111,5 +134,29 @@ public class MemberService {
             throw new IllegalArgumentException("이메일, 이름, 비밀번호, 휴대폰은 필수 입력 값입니다. (공백 문자열 불가능)");
         }
     }
+
+    //    /**
+//     * AWS S3 프로필 수정
+//     */
+//    public String S3uploadFile(MultipartFile file) {
+//        String bucketName = "bucket-name";
+//        String key = "profile-pictures/" + file.getOriginalFilename();  // 저장할 위치와 파일 이름
+//
+//        S3Client s3 = S3Client.create();  // S3 클라이언트 생성
+//
+//        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+//                .bucket(bucketName)
+//                .key(key)
+//                .build();
+//
+//        try {
+//            PutObjectResponse putObjectResponse = s3.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
+//
+//            // 업로드에 성공하면 파일의 URL을 반환
+//            return "https://" + bucketName + ".s3.amazonaws.com/" + key;
+//        } catch (IOException e) {
+//            throw new MemberException.FileUploadException("업로드 실패", e);
+//        }
+//    }
 
 }
