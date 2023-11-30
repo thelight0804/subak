@@ -5,7 +5,7 @@ import styles from '../../styles/post/PostsList';
 
 import FooterMenu from '../components/FooterMenu';
 
-const PostsList = () => {
+const PostsList = ({navigation}) => {
   return (
     <>
       <View style={shared.container}>
@@ -17,7 +17,7 @@ const PostsList = () => {
         </View>
       </View>
       <View style={styles.footer}>
-        <FooterMenu selectedIndex={0} />
+        <FooterMenu selectedIndex={0}/>
       </View>
     </>
   )

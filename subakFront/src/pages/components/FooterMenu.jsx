@@ -17,6 +17,7 @@ const FooterMenu = (props) => {
         ) : (
           <Icon name="home-outline" size={25} color="#ffffff" />
         ),
+      link: 'Home',
     },
     {
       label: '동네생활',
@@ -26,6 +27,7 @@ const FooterMenu = (props) => {
         ) : (
           <Icon name="newspaper-outline" size={25} color="#ffffff" />
         ),
+      link: 'NearNews'
     },
     {
       label: '내 근처',
@@ -35,6 +37,7 @@ const FooterMenu = (props) => {
         ) : (
           <Icon name="location-outline" size={25} color="#ffffff" />
         ),
+      link: 'Near'
     },
     {
       label: '나의 수박',
@@ -44,9 +47,14 @@ const FooterMenu = (props) => {
         ) : (
           <Icon name="person-outline" size={25} color="#ffffff" />
         ),
+      link: 'MyPage'
     },
   ];
 
+  const navigateHandler = (index) => {
+    setSelectedIndex(index);
+    // navigation.navigate(menuItems[index].link);
+  }
 
   return (
     <View style = {styles.container}>
@@ -54,7 +62,7 @@ const FooterMenu = (props) => {
         <TouchableOpacity 
           key={i} 
           style={styles.menuBox}
-          onPress={() => setSelectedIndex(i)}
+          onPress={() => navigateHandler(i)}
         >
           <View style={styles.icon}>{item.icon}</View>
           <Text style={[shared.text, styles.label]}>{item.label}</Text>

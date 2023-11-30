@@ -2,14 +2,10 @@ import { useEffect } from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Provider } from 'react-redux';
 
-import Start from './src/pages/login/Start';
-import AddressSearch from './src/pages/login/AddressSearch';
-import Login from './src/pages/login/Login';
-import SignUp from './src/pages/login/SignUp';
-import FindEmail from './src/pages/login/FindEmail';
-import FindPassword from './src/pages/login/FindPassword';
-import PostsList from './src/pages/post/PostsList';
+import DrawerNavigator from './src/navigators/DrawerNavigator';
+import store from './src/data/store/store';
 
 const App = () => {
   const Stack = createNativeStackNavigator(); //React navigation stack
@@ -20,17 +16,11 @@ const App = () => {
   }, []);
 
   return (
+    <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="Start" component={Start} options={{headerShown: false}}/>
-          <Stack.Screen name="AddressSearch" component={AddressSearch} options={{headerShown: false}}/>
-          <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
-          <Stack.Screen name="SignUp" component={SignUp} options={{headerShown: false}}/>
-          <Stack.Screen name="FindEmail" component={FindEmail} options={{headerShown: false}}/>
-          <Stack.Screen name="FindPassword" component={FindPassword} options={{headerShown: false}}/>
-          <Stack.Screen name="PostsList" component={PostsList} options={{headerShown: false}}/>
-        </Stack.Navigator>
+        <DrawerNavigator />
       </NavigationContainer>
+    </Provider>
   );
 }
 
