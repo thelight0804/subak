@@ -48,7 +48,7 @@ const Start = ({navigation}) => {
           // onPress={() => navigation.navigate('AddressSearch')}>
           onPress={() => {
             // FIX: AddressSearch로 이동
-            navigation.navigate('PostsList')
+            navigation.navigate('PostPage')
           }}>
           <Text style={[styles.text, styles.startText]}>시작하기</Text>
         </TouchableOpacity>

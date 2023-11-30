@@ -6,8 +6,8 @@ const PostStack = () => {
   const Stack = createNativeStackNavigator(); //React navigation stack
 
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="PostsList" component={PostsList} options={{headerShown: false}}/>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="PostsList" component={PostsList}/>
     </Stack.Navigator>
   )
 }

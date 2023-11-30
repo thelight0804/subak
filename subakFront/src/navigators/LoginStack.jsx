@@ -11,13 +11,13 @@ const LoginStack = () => {
   const Stack = createNativeStackNavigator(); //React navigation stack
 
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Start" component={Start} options={{headerShown: false}}/>
-      <Stack.Screen name="AddressSearch" component={AddressSearch} options={{headerShown: false}}/>
-      <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
-      <Stack.Screen name="SignUp" component={SignUp} options={{headerShown: false}}/>
-      <Stack.Screen name="FindEmail" component={FindEmail} options={{headerShown: false}}/>
-      <Stack.Screen name="FindPassword" component={FindPassword} options={{headerShown: false}}/>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Start" component={Start}/>
+      <Stack.Screen name="AddressSearch" component={AddressSearch}/>
+      <Stack.Screen name="Login" component={Login}/>
+      <Stack.Screen name="SignUp" component={SignUp}/>
+      <Stack.Screen name="FindEmail" component={FindEmail}/>
+      <Stack.Screen name="FindPassword" component={FindPassword}/>
     </Stack.Navigator>
   )
 }

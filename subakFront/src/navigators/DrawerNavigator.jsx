@@ -1,23 +1,18 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {useSelector} from 'react-redux';
 
-import LoginStack from './loginStack';
+import LoginStack from './LoginStack';
 import PostStack from './PostStack';
 
 const DrawerNavigator = () => {
-  const Tab = createBottomTabNavigator(); //React navigation Tab
+  const Stack = createNativeStackNavigator(); //React navigation stack
   const userLoggedIn = useSelector((state) => state.userData.token);
-  // const [userLoggedIn, setUserLoggedIn] = useState(false);
 
   return (
-    <Tab.Navigator>
-      {console.log(userLoggedIn)}
-      {userLoggedIn ? (
-        <Tab.Screen name="Post" component={PostStack} options={{headerShown: false}} />
-      ) : (
-        <Tab.Screen name="Login" component={LoginStack} options={{headerShown: false}} />
-      )}
-    </Tab.Navigator>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="LoginPage" component={LoginStack}/>
+      <Stack.Screen name="PostPage" component={PostStack}/>
+    </Stack.Navigator>
   );
 }
 
