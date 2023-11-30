@@ -80,7 +80,7 @@ const LocationSearch = ({ navigation }) => {
                           }, 6000);
                           console.log('Login error.response', error.response);
                         } else if (error.request) { // timeout으로 요청 실패
-                          setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.');
+                          setAlertMessage('서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
                           setShowAlert(true);
                           setTimeout(() => {
                             setShowAlert(false);
@@ -98,7 +98,7 @@ const LocationSearch = ({ navigation }) => {
                   },
                   error => {
                     // 위치 요청 실패 시
-                    setAlertMessage(`위치를 확인할 수 없습니다. \n 다시 시도해주세요.`);
+                    setAlertMessage(`위치를 확인할 수 없습니다.\n다시 시도해주세요.`);
                     setShowAlert(true);
                     setTimeout(() => {
                       setShowAlert(false);

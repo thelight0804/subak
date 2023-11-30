@@ -2,9 +2,18 @@
 import {React, useState} from 'react'
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Config from 'react-native-config';
+import {useSelector, useDispatch} from 'react-redux';
+import {
+  setName as setUserName, 
+  setPhone as setUserPhone, 
+  setEmail as setUserEmail, 
+  setAddress as setUserAddress, 
+  setToken as setToken
+} from '../../data/store/userSlice'
 
 import shared from '../../styles/Shared';
 import styles from '../../styles/login/SignUp';
@@ -19,6 +28,10 @@ const SignUp = ({ navigation, route }) => {
   const [email, setEmail] = useState(''); // 이메일
   const [password, setPassword] = useState(''); // 비밀번호
   const [address, setAddress] = useState(route.params.address); // 위치
+
+  //Redux
+  const userData = useSelector((state) => state.userData); // 로그인 여부
+  const dispatch = useDispatch();
 
 
   // 입력 값 체크 정규식
@@ -126,6 +139,12 @@ const SignUp = ({ navigation, route }) => {
               //"name\":\"라라라\
               // "data": "sign-up success"
               if (response.status === 200) {
+                dispatch(setUserName(name));
+                dispatch(setUserPhone(phone));
+                dispatch(setUserEmail(email));
+                dispatch(setUserAddress(address));
+                // dispatch(setToken(response.data.token));
+                dispatch(setToken(ture));
                 navigation.navigate('PostsList');
                 // console.log(response.status)
               }

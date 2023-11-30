@@ -6,10 +6,14 @@ import PostStack from './PostStack';
 
 const DrawerNavigator = () => {
   const Stack = createNativeStackNavigator(); //React navigation stack
-  const userLoggedIn = useSelector((state) => state.userData.token);
+  const userLoggedIn = useSelector((state) => state.userData.token); // 로그인 여부
+  console.log(useSelector((state) => state.userData));
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator 
+      initialRouteName={userLoggedIn ? "PostPage" : "LoginPage"}
+      screenOptions={{ headerShown: false }}
+    >
       <Stack.Screen name="LoginPage" component={LoginStack}/>
       <Stack.Screen name="PostPage" component={PostStack}/>
     </Stack.Navigator>
