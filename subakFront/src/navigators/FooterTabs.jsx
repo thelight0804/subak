@@ -4,7 +4,7 @@ import FooterMenu from '../pages/components/FooterMenu';
 import PostsList from '../pages/post/PostsList';
 import LikesList from '../pages/likes/LikesList';
 import ItemHistoryList from '../pages/itemHistory/ItemHistoryList';
-import MyPage from '../pages/user/MyPage';
+import MyPageList from '../pages/user/MyPageList';
 
 const FooterTabs = () => {
   const Tab = createBottomTabNavigator();
@@ -18,7 +18,7 @@ const FooterTabs = () => {
       <Tab.Screen name="PostsList" component={PostsList}/>
       <Tab.Screen name="LikesList" component={LikesList}/>
       <Tab.Screen name="ItemHistoryList" component={ItemHistoryList}/>
-      <Tab.Screen name="MyPage" component={MyPage}/>
+      <Tab.Screen name="MyPageList" component={MyPageList}/>
     </Tab.Navigator>
   )
 }

@@ -48,7 +48,7 @@ const FooterMenu = ({navigation, state}) => {
         ) : (
           <Icon name="person-outline" size={25} color="#ffffff" />
         ),
-      link: 'MyPage'
+      link: 'MyPageList'
     },
   ];
 

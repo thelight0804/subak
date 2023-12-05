@@ -37,11 +37,13 @@ const Login = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       <KeyboardAwareScrollView style={shared.container}>
-        <TouchableOpacity
-          style={[shared.backButton, styles.backButton]}
-          onPress={() => navigation.goBack()}>
-          <Ionicon name="chevron-back" size={20} color="#FFFFFF" />
-        </TouchableOpacity>
+        <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
+          <TouchableOpacity
+            style={[shared.iconButton, styles.backButton]}
+            onPress={() => navigation.goBack()}>
+            <Ionicon name="chevron-back" size={30} color="#FFFFFF" />
+          </TouchableOpacity>
+        </View>
         <Text style={styles.headerText}>안녕하세요!</Text>
         <Text style={styles.headerText}>이메일과 비밀번호로 로그인해주세요.</Text>
         <Text style={styles.text}>

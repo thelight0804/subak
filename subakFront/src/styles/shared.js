@@ -17,7 +17,7 @@ const shared = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
   },
-  button: {
+  redButton: {
     width: 'auto',
     padding: 10,
     marginTop: 10,
@@ -29,10 +29,22 @@ const shared = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  backButton: {
-    paddingRight: 15,
-    paddingTop: 10,
-    paddingBottom: 10,
+  grayButton: {
+    width: 'auto',
+    padding: 10,
+    marginTop: 10,
+    marginBottom: 10,
+
+    backgroundColor: '#37373a',
+    borderRadius: 5,
+
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconButton: {
+    display: 'flex',
+    paddingBottom: 15,
+    paddingRight: 15
   },
   textInput: {
     width: '100%',

@@ -23,11 +23,13 @@ const LocationSearch = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       <KeyboardAwareScrollView style={shared.container}>
         <View style={styles.header}>
-          <TouchableOpacity
-            style={shared.backButton}
-            onPress={() => navigation.goBack()}>
-            <Ionicon name="chevron-back" size={20} color="#FFFFFF" />
-          </TouchableOpacity>
+          <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
+            <TouchableOpacity
+              style={shared.iconButton}
+              onPress={() => navigation.goBack()}>
+              <Ionicon name="chevron-back" size={30} color="#FFFFFF" />
+            </TouchableOpacity>
+            </View>
           <TextInput
             style={[shared.textInput, styles.text]}
             onChangeText={text => setUserAddress(text)}
@@ -41,7 +43,7 @@ const LocationSearch = ({ navigation }) => {
 
         <View style={styles.button}>
           <TouchableOpacity
-            style={shared.button}
+            style={shared.redButton}
             onPress={() =>
               // 현재 위치 좌표 가져오기
               {

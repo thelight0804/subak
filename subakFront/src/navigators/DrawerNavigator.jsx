@@ -7,7 +7,6 @@ import FooterTabs from './FooterTabs';
 const DrawerNavigator = () => {
   const Stack = createNativeStackNavigator(); //React navigation stack
   const userLoggedIn = useSelector((state) => state.userData.token); // 로그인 여부
-  console.log(useSelector((state) => state.userData));
 
   return (
     <Stack.Navigator 

@@ -44,7 +44,7 @@ const Start = ({navigation}) => {
 
       <View style={styles.footer}>
         <TouchableOpacity
-          style={shared.button}
+          style={shared.redButton}
           onPress={() => navigation.navigate('AddressSearch')}>
           <Text style={[styles.text, styles.startText]}>시작하기</Text>
         </TouchableOpacity>
@@ -92,7 +92,7 @@ const SelectContryModal = props => {
             itemTextStyle={styles.itemText}
           />
           <TouchableOpacity
-            style={shared.button}
+            style={shared.redButton}
             onPress={() => {
               props.setCountryIndex(index);
               props.setOpenModal(false);
