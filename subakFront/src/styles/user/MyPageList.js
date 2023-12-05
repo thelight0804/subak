@@ -8,11 +8,15 @@ var colorError = '#DC3F3E';
 
 const styles = StyleSheet.create({
   header: {
-    paddingBottom: 15,
+    borderBottomWidth: 1,
+    borderColor: '#37373a',
+    paddingBottom: 5,
+    marginBottom: 15,
   },
   inlineContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    alignItems: 'center',
   },
   iconButton: {
     paddingBottom: 15,
@@ -32,10 +36,15 @@ const styles = StyleSheet.create({
     height: 40,
     marginRight: 10,
   },
-  paragraph: {
+  text: {
     textAlign: 'left',
-    fontSize: 16,
+    fontSize: 18,
+    paddingTop: 12,
+    paddingBottom: 12,
   },
+  icon: {
+    marginRight: 10,
+  }
 })
 
 export default styles;

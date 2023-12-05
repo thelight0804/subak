@@ -1,5 +1,4 @@
 // 홈, 관심목록, 판매내역, 나의 당근 메뉴 footer
-import {useState} from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
