@@ -3,8 +3,6 @@ import { View, Text } from 'react-native';
 import shared from '../../styles/Shared';
 import styles from '../../styles/likes/LikesList';
 
-import FooterMenu from '../components/FooterMenu';
-
 const LikesList = ({navigation}) => {
   return (
     <>
@@ -15,9 +13,6 @@ const LikesList = ({navigation}) => {
         <View style={styles.content}>
           <Text style={shared.text}>LikesList</Text>
         </View>
-      </View>
-      <View style={styles.footer}>
-        <FooterMenu selectedIndex={1} navigation={navigation}/>
       </View>
     </>
   )
