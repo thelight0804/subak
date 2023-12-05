@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {useSelector} from 'react-redux';
 
 import LoginStack from './LoginStack';
-import PostStack from './PostStack';
+import MainStack from './MainStack';
 
 const DrawerNavigator = () => {
   const Stack = createNativeStackNavigator(); //React navigation stack
@@ -11,11 +11,11 @@ const DrawerNavigator = () => {
 
   return (
     <Stack.Navigator 
-      initialRouteName={userLoggedIn ? "PostPage" : "LoginPage"}
+      initialRouteName={userLoggedIn ? "MainStack" : "LoginPage"}
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="LoginPage" component={LoginStack}/>
-      <Stack.Screen name="PostPage" component={PostStack}/>
+      <Stack.Screen name="MainStack" component={MainStack}/>
     </Stack.Navigator>
   );
 }

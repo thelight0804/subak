@@ -1,10 +1,13 @@
 import { useEffect } from 'react';
-import SplashScreen from 'react-native-splash-screen';
-import { NavigationContainer } from '@react-navigation/native';
-import { Provider } from 'react-redux';
 
+import { NavigationContainer } from '@react-navigation/native';
 import DrawerNavigator from './src/navigators/DrawerNavigator';
-import store from './src/data/store/store';
+
+import { Provider } from 'react-redux';
+import { Persistor, store } from './src/data/store/store';
+import { PersistGate } from 'redux-persist/integration/react';
+
+import SplashScreen from 'react-native-splash-screen';
 
 const App = () => {
   // splash-screen
@@ -14,9 +17,11 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <DrawerNavigator />
-      </NavigationContainer>
+      {/* <PersistGate loading={null} persistor={Persistor} > */}
+        <NavigationContainer>
+          <DrawerNavigator />
+        </NavigationContainer>
+      {/* </PersistGate> */}
     </Provider>
   );
 }

@@ -1,11 +1,11 @@
 import { View, Text } from 'react-native';
 
 import shared from '../../styles/Shared';
-import styles from '../../styles/post/PostsList';
+import styles from '../../styles/likes/LikesList';
 
 import FooterMenu from '../components/FooterMenu';
 
-const PostsList = ({navigation}) => {
+const LikesList = ({navigation}) => {
   return (
     <>
       <View style={shared.container}>
@@ -13,14 +13,14 @@ const PostsList = ({navigation}) => {
 
         </View>
         <View style={styles.content}>
-          <Text style={shared.text}>PostsList</Text>
+          <Text style={shared.text}>LikesList</Text>
         </View>
       </View>
       <View style={styles.footer}>
-        <FooterMenu selectedIndex={0} navigation={navigation}/>
+        <FooterMenu selectedIndex={1} navigation={navigation}/>
       </View>
     </>
   )
 };
 
-export default PostsList;
+export default LikesList;

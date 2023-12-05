@@ -7,7 +7,7 @@ const userData = createSlice({
     phone : '',
     email : '',
     address : '',
-    token : false,
+    token : true,
   },
   reducers: {
     setName : (state, action) => {

@@ -78,7 +78,8 @@ const Login = ({ navigation }) => {
             }
             // ).then(response => { console.log(response.data); })
             ).then(response => { 
-              console.log(response);
+              console.log(response.data);
+              // console.log(jwt.decode(response.data));
               // storeData(value);
             })
             .catch(error => { 

@@ -6,43 +6,43 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import shared from '../../styles/Shared';
 import styles from '../../styles/components/FooterMenu';
 
-const FooterMenu = (props) => {
-  const [selectedIndex, setSelectedIndex] = useState(props.selectedIndex); // 선택된 메뉴 인덱스
+const FooterMenu = ({selectedIndex, navigation}) => {
+  const [selectIndex, setSelectIndex] = useState(selectedIndex); // 선택된 메뉴 인덱스
   const menuItems = [
     {
       label: '홈',
       icon:
-        selectedIndex === 0 ? (
+        selectIndex === 0 ? (
           <Icon name="home-sharp" size={25} color="#ffffff" />
         ) : (
           <Icon name="home-outline" size={25} color="#ffffff" />
         ),
-      link: 'Home',
+      link: 'PostsList',
     },
     {
-      label: '동네생활',
+      label: '관심목록',
       icon:
-        selectedIndex === 1 ? (
-          <Icon name="newspaper-sharp" size={25} color="#ffffff" />
+        selectIndex === 1 ? (
+          <Icon name="heart-sharp" size={25} color="#ffffff" />
         ) : (
-          <Icon name="newspaper-outline" size={25} color="#ffffff" />
+          <Icon name="heart-outline" size={25} color="#ffffff" />
         ),
-      link: 'NearNews'
+      link: 'LikesList'
     },
     {
-      label: '내 근처',
+      label: '판매내역',
       icon:
-        selectedIndex === 2 ? (
-          <Icon name="location-sharp" size={25} color="#ffffff" />
+        selectIndex === 2 ? (
+          <Icon name="receipt-sharp" size={25} color="#ffffff" />
         ) : (
-          <Icon name="location-outline" size={25} color="#ffffff" />
+          <Icon name="receipt-outline" size={25} color="#ffffff" />
         ),
-      link: 'Near'
+      link: 'ItemHistoryList'
     },
     {
       label: '나의 수박',
       icon:
-        selectedIndex === 3 ? (
+        selectIndex === 3 ? (
           <Icon name="person-sharp" size={25} color="#ffffff" />
         ) : (
           <Icon name="person-outline" size={25} color="#ffffff" />
@@ -52,8 +52,9 @@ const FooterMenu = (props) => {
   ];
 
   const navigateHandler = (index) => {
-    setSelectedIndex(index);
-    // navigation.navigate(menuItems[index].link);
+    console.log(index);
+    setSelectIndex(index);
+    navigation.navigate(menuItems[index].link);
   }
 
   return (
