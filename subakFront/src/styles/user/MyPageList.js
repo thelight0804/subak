@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 // color palette
 var colorBackground = '#212123';
 var text = 'white';
+var grayText = '#868b94';
 var colorMain = '#dc645b';
 var colorError = '#DC3F3E';
 
@@ -12,11 +13,6 @@ const styles = StyleSheet.create({
     borderColor: '#37373a',
     paddingBottom: 5,
     marginBottom: 15,
-  },
-  inlineContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
   },
   iconButton: {
     paddingBottom: 15,

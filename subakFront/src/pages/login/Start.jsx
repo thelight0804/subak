@@ -54,7 +54,7 @@ const Start = ({navigation}) => {
             onPress={() => navigation.navigate('Login')}
           >
             <Text style={[styles.text, styles.hyperlink]}>
-              로그인
+              {` 로그인`}
             </Text>
           </TouchableOpacity>
         </Text>

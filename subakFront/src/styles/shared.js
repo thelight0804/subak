@@ -3,6 +3,7 @@ import {StyleSheet} from "react-native";
 // color palette
 var colorBackground = '#212123';
 var text = 'white';
+var grayText = '#868b94';
 var colorMain = '#dc645b';
 var colorError = '#DC3F3E';
 
@@ -51,6 +52,11 @@ const shared = StyleSheet.create({
     backgroundColor: '#2a2e32',
     borderRadius: 8,
     paddingLeft: 10,
+  },
+  inlineContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
 });
 

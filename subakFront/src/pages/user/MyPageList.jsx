@@ -6,8 +6,8 @@ import shared from '../../styles/Shared';
 import styles from '../../styles/user/MyPageList';
 
 const MyPage = ({navigation}) => {
-  const [userName, setUserName] = useState('카레');
-  const profileImg = '../../assets/image/user-profile.png';
+  const [userName, setUserName] = useState('카레'); // 유저 이름
+  const profileImg = '../../assets/image/user-profile.png'; // 프로필 이미지
 
   return (
     <>
@@ -20,7 +20,10 @@ const MyPage = ({navigation}) => {
               <Icon name="settings-outline" size={25} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.profile} onPress={() => console.log("프로필 보기")}>
+          <TouchableOpacity 
+            style={styles.profile} 
+            onPress={() => navigation.navigate('UserStack', 'Profile')}
+          >
             <View style={styles.leftContainer}>
               <Image 
                 style={styles.profileImage}
@@ -35,15 +38,15 @@ const MyPage = ({navigation}) => {
         </View>
         <View style={styles.content}>
           <Text style={[shared.text, styles.text]}>나의 거래</Text>
-          <TouchableOpacity style={[styles.inlineContainer, styles.listButton]} onPress={() => console.log("관심목록")}>
+          <TouchableOpacity style={[shared.inlineContainer, styles.listButton]} onPress={() => console.log("관심목록")}>
             <Icon name="heart-outline" size={25} color="#ffffff" style={styles.icon}/>
             <Text style={[shared.text, styles.text]}>관심목록</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.inlineContainer, styles.listButton]} onPress={() => console.log("판매내역")}>
+          <TouchableOpacity style={[shared.inlineContainer, styles.listButton]} onPress={() => console.log("판매내역")}>
             <Icon name="receipt-outline" size={25} color="#ffffff" style={styles.icon}/>
             <Text style={[shared.text, styles.text]}>판매내역</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.inlineContainer, styles.listButton]} onPress={() => console.log("구매내역")}>
+          <TouchableOpacity style={[shared.inlineContainer, styles.listButton]} onPress={() => console.log("구매내역")}>
             <Icon name="bag-outline" size={25} color="#ffffff" style={styles.icon}/>
             <Text style={[shared.text, styles.text]}>구매내역</Text>
           </TouchableOpacity>

@@ -2,7 +2,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {useSelector} from 'react-redux';
 
 import LoginStack from './LoginStack';
+import UserStack from './UserStack';
 import FooterTabs from './FooterTabs';
+
 
 const DrawerNavigator = () => {
   const Stack = createNativeStackNavigator(); //React navigation stack
@@ -14,6 +16,7 @@ const DrawerNavigator = () => {
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="LoginPage" component={LoginStack}/>
+      <Stack.Screen name="UserStack" component={UserStack}/>
       <Stack.Screen name="FooterTabs" component={FooterTabs}/>
     </Stack.Navigator>
   );
