@@ -35,6 +35,9 @@ public class JwtTokenProvider {
 
     // 주어진 토큰에서 이메일을 추출하는 메서드
     public String getEmail(String token) {
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
         return Jwts.parser().setSigningKey(jwtProperties.getSecretKey()).parseClaimsJws(token).getBody().getSubject();
     }
 
