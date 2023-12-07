@@ -2,8 +2,8 @@ import {useState} from 'react';
 import { View, Text, TouchableOpacity, Image, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import shared from '../../styles/Shared';
-import styles from '../../styles/user/EditProfile';
+import shared from '../../styles/shared';
+import styles from '../../styles/user/editProfile';
 import Alert from '../components/Alert';
 
 

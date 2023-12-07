@@ -15,8 +15,8 @@ import {
   setToken as setToken
 } from '../../data/store/userSlice'
 
-import shared from '../../styles/Shared';
-import styles from '../../styles/login/SignUp';
+import shared from '../../styles/shared';
+import styles from '../../styles/login/signUp';
 import Alert from '../components/Alert';
 
 const SignUp = ({ navigation, route }) => {

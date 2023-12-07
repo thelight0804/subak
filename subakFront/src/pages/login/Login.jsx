@@ -6,8 +6,8 @@ import axios from 'axios';
 import Config from 'react-native-config';
 import {AsyncStorage} from '@react-native-async-storage/async-storage';
 
-import shared from '../../styles/Shared';
-import styles from '../../styles/login/Login';
+import shared from '../../styles/shared';
+import styles from '../../styles/login/login';
 
 import Alert from '../components/Alert';
 

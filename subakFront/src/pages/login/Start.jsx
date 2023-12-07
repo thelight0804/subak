@@ -3,8 +3,8 @@ import { useState } from 'react';
 import {Image, Text, View, TouchableOpacity, Modal, TouchableWithoutFeedback} from 'react-native';
 import WheelPicker from 'react-native-wheely';
 
-import shared from '../../styles/Shared';
-import styles from '../../styles/login/Start';
+import shared from '../../styles/shared';
+import styles from '../../styles/login/start';
 
 const Start = ({navigation}) => {
   // 국가 선택 버튼

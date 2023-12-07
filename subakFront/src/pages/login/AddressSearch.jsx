@@ -8,8 +8,8 @@ import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
 import Config from 'react-native-config';
 
-import shared from '../../styles/Shared';
-import styles from '../../styles/login/AddressSearch'
+import shared from '../../styles/shared';
+import styles from '../../styles/login/addressSearch'
 
 import Alert from '../components/Alert';
 

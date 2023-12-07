@@ -2,8 +2,8 @@ import {useState} from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import shared from '../../styles/Shared';
-import styles from '../../styles/user/MyPageList';
+import shared from '../../styles/shared';
+import styles from '../../styles/user/myPageList';
 
 const MyPage = ({navigation}) => {
   const [userName, setUserName] = useState('카레'); // 유저 이름

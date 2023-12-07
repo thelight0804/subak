@@ -2,8 +2,8 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import shared from '../../styles/Shared';
-import styles from '../../styles/components/FooterMenu';
+import shared from '../../styles/shared';
+import styles from '../../styles/components/footerMenu';
 
 const FooterMenu = ({navigation, state}) => {
   const index = state.index; // 현재 화면의 인덱스

@@ -1,8 +1,8 @@
 import {useState, useEffect} from 'react';
 import { View, Text } from 'react-native';
 
-import shared from '../../styles/Shared';
-import styles from '../../styles/post/PostsList';
+import shared from '../../styles/shared';
+import styles from '../../styles/post/postsList';
 import Alert from '../components/Alert';
 
 const PostsList = ({navigation}) => {

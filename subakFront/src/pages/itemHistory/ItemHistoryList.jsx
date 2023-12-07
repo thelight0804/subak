@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native';
 
-import shared from '../../styles/Shared';
-import styles from '../../styles/itemHistory/ItemHistoryList';
+import shared from '../../styles/shared';
+import styles from '../../styles/itemHistory/itemHistoryList';
 
 const ItemHistoryList = ({navigation}) => {
   return (
