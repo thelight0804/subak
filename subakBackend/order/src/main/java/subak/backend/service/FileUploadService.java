@@ -5,7 +5,6 @@ import com.cloudinary.utils.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import subak.backend.config.CloudinaryConfig;
-import subak.backend.domain.Member;
 
 import java.io.IOException;
 import java.util.Map;

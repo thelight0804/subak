@@ -3,7 +3,6 @@ package subak.backend.dto.request.member;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
 import lombok.Data;
-import org.springframework.http.HttpStatus;
 
 @Data
 public class JoinRequest {

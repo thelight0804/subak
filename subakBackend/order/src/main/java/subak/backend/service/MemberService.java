@@ -16,8 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.cloudinary.AccessControlRule.AccessType.token;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor

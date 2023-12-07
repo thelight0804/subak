@@ -12,11 +12,9 @@ import subak.backend.dto.request.member.FindMemberEmailRequest;
 import subak.backend.dto.request.member.JoinRequest;
 import subak.backend.dto.request.member.LoginRequest;
 import subak.backend.dto.request.member.UpdatePasswordRequest;
-import subak.backend.repository.MemberRepository;
 import subak.backend.service.MemberService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @Slf4j
