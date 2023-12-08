@@ -48,4 +48,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
+    @ExceptionHandler(MemberException.EssentialMemberException.class)
+    public ResponseEntity<String> handleMemberWithdrawException(MemberException.EssentialMemberException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
 }
