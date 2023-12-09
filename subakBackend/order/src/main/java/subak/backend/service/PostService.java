@@ -44,6 +44,16 @@ public class PostService {
     }
 
     /**
+     * 끌어올리기
+     */
+    public void recentPost(Long postId){
+        Post post = getPostById(postId);
+        post.updatePostDateTime();
+        postRepository.save(post);
+    }
+
+
+    /**
      * 글 생성
      */
     public void createPost(CreatePostRequest createPostRequest, Member member, List<MultipartFile> images) throws IOException {

@@ -120,4 +120,9 @@ public class Post {
         this.postStatus = postStatus;
         this.postDateTime = LocalDateTime.now();
     }
+
+    //끌어올리기
+    public void updatePostDateTime() {
+        this.postDateTime = LocalDateTime.now();
+    }
 }

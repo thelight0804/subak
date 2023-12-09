@@ -77,6 +77,15 @@ public class PostController {
         return ResponseEntity.ok("Success Delete post");
     }
 
+    @ApiOperation(value = "끌어올리기", notes = "필수값 : 게시글 ID")
+    @PutMapping("/post/{postId}/recent")
+    public ResponseEntity<String> recentPost(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
+        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
+        postService.recentPost(postId);
+        return ResponseEntity.ok("Post updated to recent success");
+    }
+
+
 
     @GetMapping("/posts")
     public List<Post> getPosts() {
