@@ -86,7 +86,7 @@ public class PostController {
     }
 
     @ApiOperation(value = "좋아요 추가", notes = "필수값 : 게시글 ID")
-    @PostMapping("/{postId}/hearts/{memberId}")
+    @PostMapping("/post/{postId}/hearts/")
     public ResponseEntity<Void> addHeart(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
         Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
         postService.addHeart(postId, loginMember);
@@ -94,7 +94,7 @@ public class PostController {
     }
 
     @ApiOperation(value = "좋아요 삭제", notes = "필수값 : 게시글 ID")
-    @DeleteMapping("/{postId}/hearts/{memberId}")
+    @DeleteMapping("/post/{postId}/hearts/")
     public ResponseEntity<Void> removeHeart(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
         Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
         postService.removeHeart(postId, loginMember);
