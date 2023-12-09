@@ -55,7 +55,14 @@ public class MemberException {
         public FileUploadException(String message, Throwable cause) {
             super(message, cause);
         }
+    }
 
-
+    /**
+     * 탈퇴한 회원이 로그인 시도할 경우 예외 처리
+     */
+    public static class MemberWithdrawException extends RuntimeException {
+        public MemberWithdrawException(String message) {
+            super(message);
+        }
     }
 }

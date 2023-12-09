@@ -5,17 +5,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.core.sync.RequestBody;
+import subak.backend.config.JwtTokenProvider;
 import subak.backend.domain.Member;
 import subak.backend.domain.enumType.MemberStatus;
+import subak.backend.dto.request.member.UpdatePasswordRequest;
 import subak.backend.exception.MemberException;
 import subak.backend.repository.MemberRepository;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Optional;
+
+import static com.cloudinary.AccessControlRule.AccessType.token;
 
 @Service
 @Slf4j
@@ -24,6 +25,9 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final FileUploadService fileUploadService;
+    private final AuthService authService;
 
     /**
      * 회원가입
@@ -52,12 +56,12 @@ public class MemberService {
     /**
      * 비밀번호(Password) 수정
      */
-    public String updatePassword(String email, String name, String phone, String newPassword) {
-        Optional<Member> foundMember = memberRepository.findByEmailAndNameAndPhone(email, name, phone);
+    public String updatePassword(UpdatePasswordRequest request) {
+        Optional<Member> foundMember = memberRepository.findByEmailAndNameAndPhone(request.getEmail(), request.getName(), request.getPhone());
 
         if (foundMember.isPresent()) {
             Member member = foundMember.get();
-            String encodedNewPassword = passwordEncoder.encode(newPassword);
+            String encodedNewPassword = passwordEncoder.encode(request.getNewPassword());
             member.setPassword(encodedNewPassword);
             memberRepository.save(member);
 
@@ -67,16 +71,23 @@ public class MemberService {
         }
     }
 
+
     /**
      * 로그인
      */
-    public Member login(String email, String password) {
+    public String login(String email, String password) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberException.MemberNotFoundException("존재하지 않는 회원입니다."));
 
+
+        // 회원 상태가 DELETE인 경우 로그인 불가
+        if (member.getStatus() == MemberStatus.DELETE) {
+            throw new MemberException.MemberWithdrawException("탈퇴한 회원입니다.");
+        }
+
         // 패스워드 일치 여부 확인
         if (passwordEncoder.matches(password, member.getPassword())) {
-            return member;
+            return jwtTokenProvider.createToken(email);
         } else {
             throw new MemberException.IncorrectPasswordException("회원정보가 일치하지 않습니다.");
         }
@@ -85,7 +96,8 @@ public class MemberService {
     /**
      * 회원 탈퇴
      */
-    public void withdraw(String email) {
+    public void withdraw(String email, HttpServletRequest request) {
+        authService.validateToken(request, email);
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
 
         if (optionalMember.isPresent()) {
@@ -100,15 +112,30 @@ public class MemberService {
     /**
      * 회원 수정 (이름, 프로필)
      */
-    public Member updateMember(Long userId, String name, MultipartFile file) {
+    public void updateMember(Long userId, String name, MultipartFile file, HttpServletRequest request) throws IOException { // 추가된 부분
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new MemberException.MemberNotFoundException("해당 사용자가 존재하지 않습니다. userId=" + userId));
 
-        member.setName(name);
-        member.setProfileImage(file);
+        authService.validateToken(request, member.getEmail());
 
-        return memberRepository.save(member);
+        member.setName(name);
+
+        if (file != null) {
+            try {
+                String newImageUrl = fileUploadService.updateProfileImage(member.getProfileImage(), file);
+                member.updateProfileImage(newImageUrl);
+                memberRepository.save(member);
+            } catch (IOException e) {
+                throw new MemberException.FileUploadException("프로필 이미지 업로드 실패", e);
+            }
+        }
     }
+
+    //회원 삭제 (Test용)
+    public void deleteMember(Long userId) {
+        memberRepository.deleteById(userId);
+    }
+
 
 
     //중복 회원 검증
@@ -135,28 +162,9 @@ public class MemberService {
         }
     }
 
-    //    /**
-//     * AWS S3 프로필 수정
-//     */
-//    public String S3uploadFile(MultipartFile file) {
-//        String bucketName = "bucket-name";
-//        String key = "profile-pictures/" + file.getOriginalFilename();  // 저장할 위치와 파일 이름
-//
-//        S3Client s3 = S3Client.create();  // S3 클라이언트 생성
-//
-//        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-//                .bucket(bucketName)
-//                .key(key)
-//                .build();
-//
-//        try {
-//            PutObjectResponse putObjectResponse = s3.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
-//
-//            // 업로드에 성공하면 파일의 URL을 반환
-//            return "https://" + bucketName + ".s3.amazonaws.com/" + key;
-//        } catch (IOException e) {
-//            throw new MemberException.FileUploadException("업로드 실패", e);
-//        }
-//    }
+    public Member findMemberById(Long userId) {
+        return memberRepository.findById(userId)
+                .orElseThrow(() -> new MemberException.MemberNotFoundException("해당 사용자가 존재하지 않습니다. userId=" + userId));
+    }
 
 }
