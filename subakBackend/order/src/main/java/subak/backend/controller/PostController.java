@@ -14,6 +14,7 @@ import subak.backend.dto.request.post.PostStatusUpdateRequest;
 import subak.backend.dto.request.post.ProductStatusUpdateRequest;
 import subak.backend.dto.request.post.UpdatePostRequest;
 import subak.backend.service.AuthService;
+import subak.backend.service.CommentService;
 import subak.backend.service.PostService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ public class PostController {
 
     private final PostService postService;
     private final AuthService authService;
+    private final CommentService commentService;
 
     @ApiOperation(value = "게시글 생성", notes = "필수값 : 제목, 카테고리, 가격")
     @PostMapping(value = "/post", consumes = {"multipart/form-data"})
@@ -85,22 +87,13 @@ public class PostController {
         return ResponseEntity.ok("Post updated to recent success");
     }
 
-    @ApiOperation(value = "좋아요 추가", notes = "필수값 : 게시글 ID")
-    @PostMapping("/{postId}/hearts/{memberId}")
-    public ResponseEntity<Void> addHeart(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
+    @ApiOperation(value = "좋아요 추가 또는 취소", notes = "필수값 : 게시글 ID")
+    @PostMapping("/post/{postId}/hearts")
+    public ResponseEntity<Void> addOrRemoveHeart(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
         Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
-        postService.addHeart(postId, loginMember);
+        postService.addOrRemoveHeart(postId, loginMember);
         return ResponseEntity.ok().build();
     }
-
-    @ApiOperation(value = "좋아요 삭제", notes = "필수값 : 게시글 ID")
-    @DeleteMapping("/{postId}/hearts/{memberId}")
-    public ResponseEntity<Void> removeHeart(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
-        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
-        postService.removeHeart(postId, loginMember);
-        return ResponseEntity.ok().build();
-    }
-
 
 
     @GetMapping("/posts")
