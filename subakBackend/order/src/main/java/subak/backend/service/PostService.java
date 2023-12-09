@@ -58,9 +58,8 @@ public class PostService {
     /**
      * 좋아요 추가
      */
-    public void addHeart(Long postId, Long memberId) {
+    public void addHeart(Long postId, Member member) {
         Post post = getPostById(postId);
-        Member member = memberService.findMemberById(memberId);
         Heart heart = new Heart(member, post);
         heartRepository.save(heart);
     }
@@ -68,9 +67,8 @@ public class PostService {
     /**
      * 좋아요 제거
      */
-    public void removeHeart(Long postId, Long memberId) {
+    public void removeHeart(Long postId, Member member) {
         Post post = getPostById(postId);
-        Member member = memberService.findMemberById(memberId);
         Heart heart = heartRepository.findByPostAndMember(post, member);
         if (heart != null) {
             heartRepository.delete(heart);

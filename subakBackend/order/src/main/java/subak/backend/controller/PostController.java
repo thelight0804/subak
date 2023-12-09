@@ -89,7 +89,7 @@ public class PostController {
     @PostMapping("/{postId}/hearts/{memberId}")
     public ResponseEntity<Void> addHeart(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
         Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
-        postService.addHeart(postId, loginMember.getId());
+        postService.addHeart(postId, loginMember);
         return ResponseEntity.ok().build();
     }
 
@@ -97,7 +97,7 @@ public class PostController {
     @DeleteMapping("/{postId}/hearts/{memberId}")
     public ResponseEntity<Void> removeHeart(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
         Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
-        postService.removeHeart(postId, loginMember.getId());
+        postService.removeHeart(postId, loginMember);
         return ResponseEntity.ok().build();
     }
 
