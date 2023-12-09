@@ -26,4 +26,9 @@ public class Heart {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
+
+    public Heart(Member member, Post post) {
+        this.member = member;
+        this.post = post;
+    }
 }

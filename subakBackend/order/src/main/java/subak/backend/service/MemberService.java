@@ -4,11 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import subak.backend.config.JwtTokenProvider;
 import subak.backend.domain.Member;
 import subak.backend.domain.enumType.MemberStatus;
+import subak.backend.dto.request.member.UpdatePasswordRequest;
 import subak.backend.exception.MemberException;
 import subak.backend.repository.MemberRepository;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -18,6 +23,9 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final FileUploadService fileUploadService;
+    private final AuthService authService;
 
     /**
      * 회원가입
@@ -46,12 +54,12 @@ public class MemberService {
     /**
      * 비밀번호(Password) 수정
      */
-    public String updatePassword(String email, String name, String phone, String newPassword) {
-        Optional<Member> foundMember = memberRepository.findByEmailAndNameAndPhone(email, name, phone);
+    public String updatePassword(UpdatePasswordRequest request) {
+        Optional<Member> foundMember = memberRepository.findByEmailAndNameAndPhone(request.getEmail(), request.getName(), request.getPhone());
 
         if (foundMember.isPresent()) {
             Member member = foundMember.get();
-            String encodedNewPassword = passwordEncoder.encode(newPassword);
+            String encodedNewPassword = passwordEncoder.encode(request.getNewPassword());
             member.setPassword(encodedNewPassword);
             memberRepository.save(member);
 
@@ -62,13 +70,22 @@ public class MemberService {
     }
 
 
-    public Member login(String email, String password) {
+    /**
+     * 로그인
+     */
+    public String login(String email, String password) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberException.MemberNotFoundException("존재하지 않는 회원입니다."));
 
+
+        // 회원 상태가 DELETE인 경우 로그인 불가
+        if (member.getStatus() == MemberStatus.DELETE) {
+            throw new MemberException.MemberWithdrawException("탈퇴한 회원입니다.");
+        }
+
         // 패스워드 일치 여부 확인
         if (passwordEncoder.matches(password, member.getPassword())) {
-            return member;
+            return jwtTokenProvider.createToken(email);
         } else {
             throw new MemberException.IncorrectPasswordException("회원정보가 일치하지 않습니다.");
         }
@@ -77,15 +94,46 @@ public class MemberService {
     /**
      * 회원 탈퇴
      */
-    public void withdraw(String email) {
+    public void withdraw(String email, HttpServletRequest request) {
+        authService.validateToken(request, email);
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
 
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
             member.setStatus(MemberStatus.DELETE);
             memberRepository.save(member);
+        } else {
+            throw new MemberException.MemberNotFoundException("회원을 찾을 수 없습니다.");
         }
     }
+
+    /**
+     * 회원 수정 (이름, 프로필)
+     */
+    public void updateMember(Long userId, String name, MultipartFile file, HttpServletRequest request) throws IOException { // 추가된 부분
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new MemberException.MemberNotFoundException("해당 사용자가 존재하지 않습니다. userId=" + userId));
+
+        authService.validateToken(request, member.getEmail());
+
+        member.setName(name);
+
+        if (file != null) {
+            try {
+                String newImageUrl = fileUploadService.updateProfileImage(member.getProfileImage(), file);
+                member.updateProfileImage(newImageUrl);
+                memberRepository.save(member);
+            } catch (IOException e) {
+                throw new MemberException.FileUploadException("프로필 이미지 업로드 실패", e);
+            }
+        }
+    }
+
+    //회원 삭제 (Test용)
+    public void deleteMember(Long userId) {
+        memberRepository.deleteById(userId);
+    }
+
 
 
     //중복 회원 검증
@@ -110,6 +158,11 @@ public class MemberService {
                 member.getPhone() == null || member.getPhone().trim().isEmpty()) {
             throw new IllegalArgumentException("이메일, 이름, 비밀번호, 휴대폰은 필수 입력 값입니다. (공백 문자열 불가능)");
         }
+    }
+
+    public Member findMemberById(Long userId) {
+        return memberRepository.findById(userId)
+                .orElseThrow(() -> new MemberException.MemberNotFoundException("해당 사용자가 존재하지 않습니다. userId=" + userId));
     }
 
 }

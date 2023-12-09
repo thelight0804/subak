@@ -32,4 +32,25 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handlePasswordUpdateFailedException(MemberException.PasswordUpdateFailedException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+
+    @ExceptionHandler(MemberException.FileUploadException.class)
+    public ResponseEntity<String> handleFileUploadException(MemberException.FileUploadException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
+
+    @ExceptionHandler(PostException.PostNotFoundException.class)
+    public ResponseEntity<String> handlePostNotFoundException(PostException.PostNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(MemberException.MemberWithdrawException.class)
+    public ResponseEntity<String> handleMemberWithdrawException(MemberException.MemberWithdrawException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
+    @ExceptionHandler(MemberException.EssentialMemberException.class)
+    public ResponseEntity<String> handleMemberWithdrawException(MemberException.EssentialMemberException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
 }

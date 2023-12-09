@@ -26,6 +26,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.jetbrains:annotations:24.0.0'
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6'
+	implementation 'software.amazon.awssdk:s3:2.17.230' // S3
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -33,8 +34,14 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	testImplementation 'org.mockito:mockito-core:4.8.0'
 
+	implementation 'org.springframework.boot:spring-boot-starter-security' // spring security
+	implementation 'org.springframework.security:spring-security-test' // spring security
+	implementation 'io.jsonwebtoken:jjwt:0.9.1' //jwt
+
 	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2' // swagger
 	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2' //swagger
+
+	implementation 'com.cloudinary:cloudinary-http44:1.26.0' // cloudinary
 }
 
 tasks.named('test') {

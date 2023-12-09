@@ -30,7 +30,6 @@ public class MemberException {
     }
 
 
-
     /**
      * 이메일 찾기 실패 예외 처리
      */
@@ -49,5 +48,21 @@ public class MemberException {
         }
     }
 
+    /**
+     * 파일 업로드 실패 예외 처리
+     */
+    public static class FileUploadException extends RuntimeException {
+        public FileUploadException(String message, Throwable cause) {
+            super(message, cause);
+        }
+    }
 
+    /**
+     * 탈퇴한 회원이 로그인 시도할 경우 예외 처리
+     */
+    public static class MemberWithdrawException extends RuntimeException {
+        public MemberWithdrawException(String message) {
+            super(message);
+        }
+    }
 }
