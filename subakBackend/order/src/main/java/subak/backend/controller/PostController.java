@@ -85,6 +85,22 @@ public class PostController {
         return ResponseEntity.ok("Post updated to recent success");
     }
 
+    @ApiOperation(value = "좋아요 추가", notes = "필수값 : 게시글 ID")
+    @PostMapping("/{postId}/hearts/{memberId}")
+    public ResponseEntity<Void> addHeart(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
+        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
+        postService.addHeart(postId, loginMember.getId());
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "좋아요 삭제", notes = "필수값 : 게시글 ID")
+    @DeleteMapping("/{postId}/hearts/{memberId}")
+    public ResponseEntity<Void> removeHeart(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
+        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
+        postService.removeHeart(postId, loginMember.getId());
+        return ResponseEntity.ok().build();
+    }
+
 
 
     @GetMapping("/posts")

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import subak.backend.domain.Heart;
 import subak.backend.domain.Member;
 import subak.backend.domain.Post;
 import subak.backend.domain.PostImage;
@@ -12,6 +13,7 @@ import subak.backend.domain.enumType.ProductStatus;
 import subak.backend.dto.request.post.CreatePostRequest;
 import subak.backend.dto.request.post.UpdatePostRequest;
 import subak.backend.exception.PostException;
+import subak.backend.repository.HeartRepository;
 import subak.backend.repository.PostRepository;
 
 import java.io.IOException;
@@ -26,7 +28,8 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final FileUploadService fileUploadService;
-
+    private final MemberService memberService;
+    private final HeartRepository heartRepository;
 
 
     /**
@@ -52,6 +55,27 @@ public class PostService {
         postRepository.save(post);
     }
 
+    /**
+     * 좋아요 추가
+     */
+    public void addHeart(Long postId, Long memberId) {
+        Post post = getPostById(postId);
+        Member member = memberService.findMemberById(memberId);
+        Heart heart = new Heart(member, post);
+        heartRepository.save(heart);
+    }
+
+    /**
+     * 좋아요 제거
+     */
+    public void removeHeart(Long postId, Long memberId) {
+        Post post = getPostById(postId);
+        Member member = memberService.findMemberById(memberId);
+        Heart heart = heartRepository.findByPostAndMember(post, member);
+        if (heart != null) {
+            heartRepository.delete(heart);
+        }
+    }
 
     /**
      * 글 생성
