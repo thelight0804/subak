@@ -55,23 +55,27 @@ public class PostService {
         postRepository.save(post);
     }
 
-    /**
-     * 좋아요 추가
-     */
-    public void addHeart(Long postId, Member member) {
-        Post post = getPostById(postId);
-        Heart heart = new Heart(member, post);
-        heartRepository.save(heart);
-    }
 
     /**
-     * 좋아요 제거
+     * 좋아요 추가, 취소
      */
-    public void removeHeart(Long postId, Member member) {
+    public void addOrRemoveHeart(Long postId, Member member) {
         Post post = getPostById(postId);
-        Heart heart = heartRepository.findByPostAndMember(post, member);
-        if (heart != null) {
-            heartRepository.delete(heart);
+        Heart alreadyHeart = null;
+        // 이미 좋아요를 눌렀는지 확인
+        for (Heart heart : post.getHearts()) {
+            if (heart.getMember().equals(member)) {
+                alreadyHeart = heart;
+                break;
+            }
+        }
+        if (alreadyHeart != null) {
+            // 이미 좋아요를 눌렀다면 좋아요 취소
+            heartRepository.delete(alreadyHeart);
+        } else {
+            // 아직 좋아요를 누르지 않았다면 좋아요 추가
+            Heart heart = new Heart(member, post);
+            heartRepository.save(heart);
         }
     }
 
