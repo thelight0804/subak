@@ -3,6 +3,7 @@ import {StyleSheet} from "react-native";
 // color palette
 var colorBackground = '#212123';
 var text = 'white';
+var grayText = '#868b94';
 var colorMain = '#dc645b';
 var colorError = '#DC3F3E';
 
@@ -17,7 +18,7 @@ const shared = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
   },
-  button: {
+  redButton: {
     width: 'auto',
     padding: 10,
     marginTop: 10,
@@ -29,16 +30,33 @@ const shared = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  backButton: {
-    paddingRight: 15,
-    paddingTop: 10,
-    paddingBottom: 10,
+  grayButton: {
+    width: 'auto',
+    padding: 10,
+    marginTop: 10,
+    marginBottom: 10,
+
+    backgroundColor: '#37373a',
+    borderRadius: 5,
+
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconButton: {
+    display: 'flex',
+    paddingBottom: 15,
+    paddingRight: 15
   },
   textInput: {
     width: '100%',
     backgroundColor: '#2a2e32',
     borderRadius: 8,
     paddingLeft: 10,
+  },
+  inlineContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
 });
 

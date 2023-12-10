@@ -30,15 +30,16 @@ public class Member {
     private String phone;
 
     @Column(name = "member_temp")
-    private float temp; // 매너온도
+    private float temp = 36.5F; // 매너온도
 
-    @Column(name = "member_picture")
-    private String picture; //프로필 사진
+    @Column(name = "member_profileImage")
+    private String profileImage; //프로필 사진
 
+    @Column(name = "member_status")
     @Enumerated(EnumType.STRING)
-    private MemberStatus status = MemberStatus.ACTIVE; // 멤버상태 활동중
+    private MemberStatus status = MemberStatus.ACTIVE; // 멤버상태 [활동중]
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
@@ -50,7 +51,8 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Review> reviews = new ArrayList<>();
 
-
-    //인증타입
+    public void updateProfileImage(String newImageUrl) {
+        this.profileImage = newImageUrl;
+    }
 
 }

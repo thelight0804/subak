@@ -44,7 +44,7 @@ const Start = ({navigation}) => {
 
       <View style={styles.footer}>
         <TouchableOpacity
-          style={shared.button}
+          style={shared.redButton}
           onPress={() => navigation.navigate('AddressSearch')}>
           <Text style={[styles.text, styles.startText]}>시작하기</Text>
         </TouchableOpacity>
@@ -54,7 +54,7 @@ const Start = ({navigation}) => {
             onPress={() => navigation.navigate('Login')}
           >
             <Text style={[styles.text, styles.hyperlink]}>
-              로그인
+              {` 로그인`}
             </Text>
           </TouchableOpacity>
         </Text>
@@ -92,7 +92,7 @@ const SelectContryModal = props => {
             itemTextStyle={styles.itemText}
           />
           <TouchableOpacity
-            style={shared.button}
+            style={shared.redButton}
             onPress={() => {
               props.setCountryIndex(index);
               props.setOpenModal(false);

@@ -46,11 +46,13 @@ const SignUp = ({ navigation, route }) => {
   return (
     <View style={{flex: 1}}>
       <KeyboardAwareScrollView style={shared.container}>
-        <TouchableOpacity
-          style={[shared.backButton, styles.backButton]}
-          onPress={() => navigation.goBack()}>
-          <Ionicon name="chevron-back" size={20} color="#FFFFFF" />
-        </TouchableOpacity>
+        <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
+          <TouchableOpacity
+            style={[shared.iconButton, styles.backButton]}
+            onPress={() => navigation.goBack()}>
+            <Ionicon name="chevron-back" size={30} color="#FFFFFF" />
+          </TouchableOpacity>
+        </View>
         <Text style={styles.headerText}>이름과 휴대폰 번호로</Text>
         <Text style={styles.headerText}>비밀번호를 재설정합니다.</Text>
         <Text style={styles.text}>

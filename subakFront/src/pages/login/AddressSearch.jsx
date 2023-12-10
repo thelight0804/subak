@@ -9,7 +9,7 @@ import axios from 'axios';
 import Config from 'react-native-config';
 
 import shared from '../../styles/shared';
-import styles from '../../styles/login/AddressSearch'
+import styles from '../../styles/login/addressSearch'
 
 import Alert from '../components/Alert';
 
@@ -23,11 +23,13 @@ const LocationSearch = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       <KeyboardAwareScrollView style={shared.container}>
         <View style={styles.header}>
-          <TouchableOpacity
-            style={shared.backButton}
-            onPress={() => navigation.goBack()}>
-            <Ionicon name="chevron-back" size={20} color="#FFFFFF" />
-          </TouchableOpacity>
+          <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
+            <TouchableOpacity
+              style={shared.iconButton}
+              onPress={() => navigation.goBack()}>
+              <Ionicon name="chevron-back" size={30} color="#FFFFFF" />
+            </TouchableOpacity>
+            </View>
           <TextInput
             style={[shared.textInput, styles.text]}
             onChangeText={text => setUserAddress(text)}
@@ -41,7 +43,7 @@ const LocationSearch = ({ navigation }) => {
 
         <View style={styles.button}>
           <TouchableOpacity
-            style={shared.button}
+            style={shared.redButton}
             onPress={() =>
               // 현재 위치 좌표 가져오기
               {
@@ -80,7 +82,7 @@ const LocationSearch = ({ navigation }) => {
                           }, 6000);
                           console.log('Login error.response', error.response);
                         } else if (error.request) { // timeout으로 요청 실패
-                          setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.');
+                          setAlertMessage('서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
                           setShowAlert(true);
                           setTimeout(() => {
                             setShowAlert(false);
@@ -98,7 +100,7 @@ const LocationSearch = ({ navigation }) => {
                   },
                   error => {
                     // 위치 요청 실패 시
-                    setAlertMessage(`위치를 확인할 수 없습니다. \n 다시 시도해주세요.`);
+                    setAlertMessage(`위치를 확인할 수 없습니다.\n다시 시도해주세요.`);
                     setShowAlert(true);
                     setTimeout(() => {
                       setShowAlert(false);
