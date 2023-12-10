@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     marginRight: 10,
+    borderRadius: 50, // 원형
   },
   cameraIcon: { // 카메라 아이콘
     position: 'absolute', // 자식
