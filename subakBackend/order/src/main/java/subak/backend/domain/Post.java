@@ -1,5 +1,7 @@
 package subak.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import subak.backend.domain.enumType.PostStatus;
@@ -22,6 +24,7 @@ public class Post {
     @Column(name = "post_id")
     private Long id;
 
+    @JsonBackReference
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -44,13 +47,15 @@ public class Post {
     @Enumerated(EnumType.STRING)
     private PostStatus postStatus; // 게시글 상태 [BASIC, HIDE]
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostImage> postImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "post")
     private List<Heart> hearts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post")
