@@ -7,6 +7,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Config from 'react-native-config';
 import {useSelector, useDispatch} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   setName as setUserName, 
   setPhone as setUserPhone, 
@@ -56,6 +57,16 @@ const SignUp = ({ navigation, route }) => {
   const passwordCheck = (passwordValue) => {
     return passwordRegEx.test(passwordValue);
   }
+
+  // 회원 정보 저장
+  const storeData = async (value) => {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem('userData', jsonValue);
+    } catch (e) {
+      // saving error
+    }
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -129,11 +140,13 @@ const SignUp = ({ navigation, route }) => {
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
+            console.log(email, password, name, phone, address)
             axios.post(`http://${Config.DB_IP}/user`,{
               email: email,
               password: password,
               name: name,
               phone: phone,
+              address: address,
             },
             {timeout: 2000})
             .then(response => {
@@ -141,14 +154,13 @@ const SignUp = ({ navigation, route }) => {
               //"name\":\"라라라\
               // "data": "sign-up success"
               if (response.status === 200) {
-                dispatch(setUserName(name));
-                dispatch(setUserPhone(phone));
-                dispatch(setUserEmail(email));
-                dispatch(setUserAddress(address));
+                // dispatch(setUserName(name));
+                // dispatch(setUserPhone(phone));
+                // dispatch(setUserEmail(email));
+                // dispatch(setUserAddress(address));
                 // dispatch(setToken(response.data.token));
-                dispatch(setToken(ture));
-                navigation.navigate('PostsList');
-                // console.log(response.status)
+                // dispatch(setToken(ture));
+                navigation.navigate('FooterTabs');
               }
             })
             .catch(error => { 

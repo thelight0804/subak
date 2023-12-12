@@ -7,7 +7,8 @@ const userData = createSlice({
     phone : '',
     email : '',
     address : '',
-    token : true,
+    logined : true,
+    token : '',
   },
   reducers: {
     setName : (state, action) => {
@@ -22,11 +23,14 @@ const userData = createSlice({
     setAddress : (state, action) => {
       state.address = action.payload
     },
+    setLogined : (state, action) => {
+      state.logined = action.payload
+    },
     setToken : (state, action) => {
       state.token = action.payload
     },
   }
 })
 
-export const {setName, setPhone, setEmail, setAddress, setToken} = userData.actions;
+export const {setName, setPhone, setEmail, setAddress, setLogined, setToken} = userData.actions;
 export default userData;

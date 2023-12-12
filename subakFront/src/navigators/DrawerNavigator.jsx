@@ -1,18 +1,36 @@
+import { useEffect, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import getStorageData from '../data/asyncStorage/getStorageData';
+import removeStorageData from '../data/asyncStorage/removeStorageData';
 
 import LoginStack from './LoginStack';
 import UserStack from './UserStack';
 import FooterTabs from './FooterTabs';
 
+import { setName, setPhone, setEmail, setAddress, setLogined, setToken } from '../data/store/userSlice';
+
 
 const DrawerNavigator = () => {
   const Stack = createNativeStackNavigator(); //React navigation stack
-  const userLoggedIn = useSelector((state) => state.userData.token); // 로그인 여부
+  const dispatch = useDispatch();
+  const userData = useSelector((state) => state.userData); // 유저 데이터
+
+  useEffect(() => {
+    const getUserData = getStorageData('userData');
+    if (getUserData) {
+      dispatch(setName(getUserData.name));
+      dispatch(setPhone(getUserData.phone));
+      dispatch(setEmail(getUserData.email));
+      dispatch(setAddress(getUserData.address));
+      dispatch(setLogined(false));
+      dispatch(setToken(getUserData.token));
+    }
+  }, []);
 
   return (
     <Stack.Navigator 
-      initialRouteName={userLoggedIn ? "FooterTabs" : "LoginPage"}
+      initialRouteName={userData.logined ? "FooterTabs" : "LoginPage"}
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="LoginPage" component={LoginStack}/>

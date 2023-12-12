@@ -4,7 +4,9 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Config from 'react-native-config';
-import {AsyncStorage} from '@react-native-async-storage/async-storage';
+import storeStorageData from '../../data/asyncStorage/storeStorageData';
+import { useSelector, useDispatch } from 'react-redux';
+import { setName , setPhone, setEmail as setUserEmail, setAddress, setLogined, setToken } from '../../data/store/userSlice';
 
 import shared from '../../styles/shared';
 import styles from '../../styles/login/login';
@@ -12,19 +14,13 @@ import styles from '../../styles/login/login';
 import Alert from '../components/Alert';
 
 const Login = ({ navigation }) => {
+  const userData = useSelector((state) => state.userData);
+  const dispatch = useDispatch();
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
   const [email, setEmail] = useState(''); //이메일
   const [password, setPassword] = useState(''); //비밀번호
   const [cookies, setCookies] = useState(''); //쿠키
-
-  const storeData = async (value) => {
-    try {
-      await AsyncStorage.setItem('0001', value);
-    } catch (e) {
-      // saving error
-    }
-  };
 
   // 이메일, 비밀번호 정규식
   const emailRegEx = /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
@@ -78,11 +74,17 @@ const Login = ({ navigation }) => {
             }, {
               timeout: 2000,
             }
-            // ).then(response => { console.log(response.data); })
-            ).then(response => { 
-              console.log(response.data);
-              // console.log(jwt.decode(response.data));
-              // storeData(value);
+            ).then(response => { // 로그인 성공 했을 때
+              // // Redux에 정보 저장
+              dispatch(setName(response.data.name));
+              dispatch(setPhone(response.data.phoneNumber));
+              dispatch(setUserEmail(response.data.email));
+              dispatch(setAddress(response.data.address));
+              dispatch(setLogined(true));
+              dispatch(setToken(response.data.token));
+              // AsyncStorage에 정보 저장
+              storeStorageData(userData, 'userData');
+              navigation.navigate('FooterTabs');
             })
             .catch(error => { 
                 if (error.response) { // 요청은 성공했으나 응답은 실패
