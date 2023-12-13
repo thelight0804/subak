@@ -32,10 +32,10 @@ const DrawerNavigator = () => {
 
   return (
     <Stack.Navigator 
-      initialRouteName={userData.logined ? "FooterTabs" : "LoginPage"}
+      initialRouteName={userData.logined ? "FooterTabs" : "LoginStack"}
       screenOptions={{ headerShown: false }}
     >
-      <Stack.Screen name="LoginPage" component={LoginStack}/>
+      <Stack.Screen name="LoginStack" component={LoginStack}/>
       <Stack.Screen name="UserStack" component={UserStack}/>
       <Stack.Screen name="FooterTabs" component={FooterTabs}/>
     </Stack.Navigator>

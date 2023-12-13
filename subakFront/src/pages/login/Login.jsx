@@ -6,7 +6,7 @@ import axios from 'axios';
 import Config from 'react-native-config';
 import storeStorageData from '../../data/asyncStorage/storeStorageData';
 import { useSelector, useDispatch } from 'react-redux';
-import { setName , setPhone, setEmail as setUserEmail, setAddress, setLogined, setToken } from '../../data/store/userSlice';
+import { setName, setPhone, setEmail as setUserEmail, setAddress, setLogined, setToken } from '../../data/store/userSlice';
 
 import { shared } from '../../styles/shared';
 import styles from '../../styles/login/login';
@@ -24,11 +24,6 @@ const Login = ({ navigation }) => {
 
   // 이메일, 비밀번호 정규식
   const emailRegEx = /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
-
-  // 이메일, 비밀번호 유효성 검사
-  const emailCheck = (emailValue) => {
-    return emailRegEx.test(emailValue);
-  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -137,5 +132,10 @@ const Login = ({ navigation }) => {
     </View>
   );
 };
+
+// 이메일, 비밀번호 유효성 검사
+const emailCheck = (emailValue) => {
+  return emailRegEx.test(emailValue);
+}
 
 export default Login;
