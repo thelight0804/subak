@@ -1,11 +1,5 @@
 import {StyleSheet} from "react-native";
-
-// color palette
-var colorBackground = '#212123';
-var text = 'white';
-var grayText = '#868b94';
-var colorMain = '#dc645b';
-var colorError = '#DC3F3E';
+import { colorPalette } from "../shared";
 
 const styles = StyleSheet.create({
   modalContainer: {
@@ -35,7 +29,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 3,
 
-    backgroundColor: colorBackground,
+    backgroundColor: colorPalette.background,
     borderRadius: 8,
 
     justifyContent: 'center',

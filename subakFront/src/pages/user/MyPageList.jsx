@@ -2,7 +2,7 @@ import {useState} from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import shared from '../../styles/shared';
+import { shared } from '../../styles/shared';
 import styles from '../../styles/user/myPageList';
 
 const MyPage = ({navigation}) => {
@@ -17,6 +17,7 @@ const MyPage = ({navigation}) => {
             <TouchableOpacity
               style={[shared.iconButton, {paddingRight: 0}]}
               onPress={() => console.log("설정 톱니바퀴")}>
+              {/* TODO: 설정 - 로그아웃 구현 */}
               <Icon name="settings-outline" size={25} color="#FFFFFF" />
             </TouchableOpacity>
           </View>

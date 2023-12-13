@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native';
 
-import shared from '../../styles/shared';
+import { shared } from '../../styles/shared';
 import styles from '../../styles/likes/likesList';
 
 const LikesList = ({navigation}) => {

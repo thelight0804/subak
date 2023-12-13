@@ -8,7 +8,7 @@ import storeStorageData from '../../data/asyncStorage/storeStorageData';
 import { useSelector, useDispatch } from 'react-redux';
 import { setName , setPhone, setEmail as setUserEmail, setAddress, setLogined, setToken } from '../../data/store/userSlice';
 
-import shared from '../../styles/shared';
+import { shared } from '../../styles/shared';
 import styles from '../../styles/login/login';
 
 import Alert from '../components/Alert';

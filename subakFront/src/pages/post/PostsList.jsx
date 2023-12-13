@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react';
 import { View, Text } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
-import shared from '../../styles/shared';
+import { shared } from '../../styles/shared';
 import styles from '../../styles/post/postsList';
 import Alert from '../components/Alert';
 

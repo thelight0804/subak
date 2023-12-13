@@ -16,7 +16,7 @@ import {
   setToken as setToken
 } from '../../data/store/userSlice'
 
-import shared from '../../styles/shared';
+import { shared } from '../../styles/shared';
 import styles from '../../styles/login/signUp';
 import Alert from '../components/Alert';
 

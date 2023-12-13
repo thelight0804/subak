@@ -2,7 +2,7 @@ import {useState} from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import shared from '../../styles/shared';
+import { shared } from '../../styles/shared';
 import styles from '../../styles/user/profile';
 import Alert from '../components/Alert';
 
