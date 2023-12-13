@@ -23,7 +23,9 @@ const DrawerNavigator = () => {
       dispatch(setPhone(getUserData.phone));
       dispatch(setEmail(getUserData.email));
       dispatch(setAddress(getUserData.address));
-      dispatch(setLogined(false));
+      // dispatch(setLogined(false));
+      // FIX: 테스트 환경으로 로그인 상태 true
+      dispatch(setLogined(true));
       dispatch(setToken(getUserData.token));
     }
   }, []);

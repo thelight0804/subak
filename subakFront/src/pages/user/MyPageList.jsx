@@ -16,14 +16,13 @@ const MyPage = ({navigation}) => {
           <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
             <TouchableOpacity
               style={[shared.iconButton, {paddingRight: 0}]}
-              onPress={() => console.log("설정 톱니바퀴")}>
-              {/* TODO: 설정 - 로그아웃 구현 */}
+              onPress={() => navigation.navigate('UserStack', {screen: 'Setting'})}>
               <Icon name="settings-outline" size={25} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
           <TouchableOpacity 
             style={styles.profile} 
-            onPress={() => navigation.navigate('UserStack', 'Profile')}
+            onPress={() => navigation.navigate('UserStack', {screen: 'Profile'})}
           >
             <View style={styles.leftContainer}>
               <Image 
