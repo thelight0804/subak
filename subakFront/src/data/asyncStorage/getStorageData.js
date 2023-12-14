@@ -3,17 +3,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 /**
  * AsyncStorage에서 userData를 가져옵니다.
  * @param {String} key AsyncStorage에 저장할 Key
- * @returns {Object} 얻은 userData
- * @returns {null} 실패 시 null
+ * @returns {log} 수행 성공 여부
  */
 const getStorageData = async (key) => {
   try {
     const jsonValue = await AsyncStorage.getItem(key);
-    console.log('getStorageData:', jsonValue); // 데이터 로그 출력
+    console.log('getStorageData Success: ', jsonValue); // 테스트용 로그
     return jsonValue != null ? JSON.parse(jsonValue) : null;
-    // return jsonValue ? jsonValue : null;
   } catch (e) {
-    return null;
+    return console.error('setStorageData Error:', e);
   }
 };
 
