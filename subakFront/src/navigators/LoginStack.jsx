@@ -5,6 +5,7 @@ import AddressSearch from '../pages/login/AddressSearch';
 import Login from '../pages/login/Login';
 import SignUp from '../pages/login/SignUp';
 import FindEmail from '../pages/login/FindEmail';
+import FindedEmail from '../pages/login/FindedEmail';
 import FindPassword from '../pages/login/FindPassword';
 
 const LoginStack = () => {
@@ -17,6 +18,7 @@ const LoginStack = () => {
       <Stack.Screen name="Login" component={Login}/>
       <Stack.Screen name="SignUp" component={SignUp}/>
       <Stack.Screen name="FindEmail" component={FindEmail}/>
+      <Stack.Screen name="FindedEmail" component={FindedEmail}/>
       <Stack.Screen name="FindPassword" component={FindPassword}/>
     </Stack.Navigator>
   )
