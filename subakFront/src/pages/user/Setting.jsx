@@ -6,7 +6,7 @@ import { shared } from '../../styles/shared';
 import styles from '../../styles/user/setting';
 import { useSelector, useDispatch } from 'react-redux';
 import { setName, setPhone, setEmail, setAddress, setLogined, setToken } from '../../data/store/userSlice';
-import storeStorageData from '../../data/asyncStorage/storeStorageData';
+import storeStorageData from '../../data/asyncStorage/setStorageData';
 
 const Setting = ({navigation}) => {
   const userData = useSelector((state) => state.userData);

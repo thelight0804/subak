@@ -4,7 +4,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Config from 'react-native-config';
-import storeStorageData from '../../data/asyncStorage/storeStorageData';
+import storeStorageData from '../../data/asyncStorage/setStorageData';
 import { useSelector, useDispatch } from 'react-redux';
 import { setName, setPhone, setEmail as setUserEmail, setAddress, setLogined, setToken } from '../../data/store/userSlice';
 
