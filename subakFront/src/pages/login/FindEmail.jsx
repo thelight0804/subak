@@ -17,19 +17,6 @@ const FindEmail = ({ navigation }) => {
   const [phone, setPhone] = useState(''); // 휴대폰 번호
   const [findEmail, setFindEmail] = useState(''); // 찾은 이메일
 
-  // 입력 값 체크 정규식
-  const nameRegEx = /^[가-힣a-zA-Zぁ-んァ-ン一-龯]{1,20}$/; // 이름
-  const phoneRegEx = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/ // 휴대폰 번호
-
-  // 유효성 검사
-  const nameCheck = (nameValue) => {
-    return nameRegEx.test(nameValue);
-  }
-  
-  const phoneCheck = (phoneValue) => {
-    return phoneRegEx.test(phoneValue);
-  }
-
   return (
     <View style={{ flex: 1 }}>
       <KeyboardAwareScrollView style={shared.container}>
@@ -124,6 +111,26 @@ const FindEmail = ({ navigation }) => {
       {showAlert && <Alert message={alertMessage} />}
     </View>
   )
+}
+
+/**
+ * 이름 유효성 검사
+ * @param {String} nameValue 이름
+ * @returns {Boolean} 이름 형식이 맞으면 true, 아니면 false
+ */
+const nameCheck = (nameValue) => {
+  const nameRegEx = /^[가-힣a-zA-Zぁ-んァ-ン一-龯]{1,20}$/;
+  return nameRegEx.test(nameValue);
+}
+
+/**
+ * 전화번호 유효성 검사
+ * @param {String} phoneValue 전화번호
+ * @returns {Boolean} 전화번호 형식이 맞으면 true, 아니면 false
+ */
+const phoneCheck = (phoneValue) => {
+  const phoneRegEx = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/
+  return phoneRegEx.test(phoneValue);
 }
 
 export default FindEmail;
