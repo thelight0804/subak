@@ -12,6 +12,8 @@ import java.util.List;
 public class CreatePostRequest {
     @ApiModelProperty(value = "게시글 제목", required = true, example = "")
     private String postTitle;
+    @ApiModelProperty(value = "게시글 내용", required = true, example = "판매합니다.")
+    private String content;
     @ApiModelProperty(value = "상품 가격", required = true, example = "10000")
     private String price;
     @ApiModelProperty(value = "상품 카테고리", required = true, example = "전자제품")
