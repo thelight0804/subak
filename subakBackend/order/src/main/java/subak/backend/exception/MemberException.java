@@ -65,4 +65,12 @@ public class MemberException {
             super(message);
         }
     }
+
+    /**
+     * 필수 검증 예외처리
+     */
+    public static class EssentialMemberException extends RuntimeException{
+        public EssentialMemberException(String message){
+            super(message);}
+    }
 }

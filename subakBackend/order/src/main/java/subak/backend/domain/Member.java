@@ -1,5 +1,6 @@
 package subak.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import subak.backend.domain.enumType.MemberStatus;
@@ -35,10 +36,14 @@ public class Member {
     @Column(name = "member_profileImage")
     private String profileImage; //프로필 사진
 
+    @Column(name = "member_address")
+    private String address;
+
     @Column(name = "member_status")
     @Enumerated(EnumType.STRING)
     private MemberStatus status = MemberStatus.ACTIVE; // 멤버상태 [활동중]
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 

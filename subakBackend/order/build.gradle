@@ -42,6 +42,8 @@ dependencies {
 	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2' //swagger
 
 	implementation 'com.cloudinary:cloudinary-http44:1.26.0' // cloudinary
+
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.9' // 시간 설정
 }
 
 tasks.named('test') {
