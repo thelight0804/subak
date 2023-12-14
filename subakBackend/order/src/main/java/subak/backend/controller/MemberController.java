@@ -7,11 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import subak.backend.config.JwtTokenProvider;
 import subak.backend.domain.Member;
-import subak.backend.dto.request.member.FindMemberEmailRequest;
-import subak.backend.dto.request.member.JoinRequest;
-import subak.backend.dto.request.member.LoginRequest;
-import subak.backend.dto.request.member.UpdatePasswordRequest;
+import subak.backend.dto.request.member.*;
+import subak.backend.dto.response.member.JoinResponse;
+import subak.backend.dto.response.member.LoginResponse;
 import subak.backend.service.MemberService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,20 +23,27 @@ import java.io.IOException;
 public class MemberController {
 
     private final MemberService memberService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @ApiOperation(value = "회원가입", notes = "필수값 : 아이디(이메일), 이름, 비밀번호, 휴대폰번호")
     @PostMapping("/user")
-    public ResponseEntity<String> joinMember(@RequestBody @Validated JoinRequest request) {
-        Member member = mapToMember(request);
-        memberService.join(member);
-        return ResponseEntity.ok("Sign-up success");
+    public ResponseEntity<JoinResponse> joinMember(@RequestBody @Validated JoinRequest request) {
+        Member member = memberService.join(request);
+        String token = jwtTokenProvider.createToken(member.getEmail());
+
+        JoinResponse joinResponse = JoinResponse.from(member, token);
+        return ResponseEntity.ok(joinResponse);
     }
 
     @ApiOperation(value = "로그인", notes = "Email, PW를 통해 로그인한다.")
     @PostMapping("/user/sign-in")
-    public ResponseEntity<String> loginMember(@RequestBody LoginRequest loginRequest) {
-        String token = memberService.login(loginRequest.getEmail(), loginRequest.getPassword());
-        return ResponseEntity.ok(token);
+    public ResponseEntity<LoginResponse> loginMember(@RequestBody LoginRequest loginRequest) {
+        Member member = memberService.login(loginRequest.getEmail(), loginRequest.getPassword());
+        String token = jwtTokenProvider.createToken(member.getEmail());
+
+        LoginResponse loginResponse = LoginResponse.from(member, token);
+
+        return ResponseEntity.ok(loginResponse);
     }
 
     @ApiOperation(value = "회원 탈퇴", notes = "회원 이메일을 통해 회원을 탈퇴시킨다.")
@@ -62,15 +69,11 @@ public class MemberController {
     }
 
 
-    @ApiOperation(value = "회원 프로필 수정", notes = "회원 아이디를 통해 프로필 사진을 수정한다.")
+    @ApiOperation(value = "회원 프로필 수정", notes = "현재 로그인된 회원의 프로필 사진을 수정한다.")
     @PutMapping("/user/{userId}/profile")
-    public ResponseEntity<String> updateProfile(@PathVariable Long userId,
-                                                @RequestParam String name,
-                                                @RequestParam MultipartFile profileImage,
+    public ResponseEntity<String> updateProfile(@ModelAttribute UpdateProfileRequest updateProfileRequest,
                                                 HttpServletRequest request) throws IOException {
-
-        Member member = memberService.findMemberById(userId);
-        memberService.updateMember(userId, name, profileImage, request);
+        memberService.updateMember(updateProfileRequest.getName(), updateProfileRequest.getProfileImage(), request);
         return ResponseEntity.ok("Profile Updated success");
     }
 
@@ -79,15 +82,5 @@ public class MemberController {
     public ResponseEntity<Void> deleteMember(@PathVariable Long userId) {
         memberService.deleteMember(userId);
         return ResponseEntity.noContent().build();
-    }
-
-
-    private Member mapToMember(JoinRequest request) {
-        Member member = new Member();
-        member.setEmail(request.getEmail());
-        member.setName(request.getName());
-        member.setPassword(request.getPassword());
-        member.setPhone(request.getPhone());
-        return member;
     }
 }

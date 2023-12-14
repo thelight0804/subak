@@ -4,7 +4,7 @@ import lombok.Data;
 import subak.backend.domain.Member;
 
 @Data
-public class JoinResponse {
+public class LoginResponse {
     private Long memberId;
     private String name;
     private String phoneNumber;
@@ -14,7 +14,7 @@ public class JoinResponse {
     private float temp;
     private String token;
 
-    public JoinResponse(Long memberId, String name, String phoneNumber, String email, String address, String profileImage, float temp, String token) {
+    public LoginResponse(Long memberId, String name, String phoneNumber, String email, String address, String profileImage, float temp, String token) {
         this.memberId = memberId;
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -26,8 +26,8 @@ public class JoinResponse {
     }
 
     //정적 팩토리 메서드
-    public static JoinResponse from(Member member, String token) {
-        return new JoinResponse(
+    public static LoginResponse from(Member member, String token) {
+        return new LoginResponse(
                 member.getId(),
                 member.getName(),
                 member.getPhone(),
