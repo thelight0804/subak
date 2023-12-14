@@ -12,6 +12,8 @@ import subak.backend.domain.enumType.PostStatus;
 import subak.backend.domain.enumType.ProductStatus;
 import subak.backend.dto.request.post.CreatePostRequest;
 import subak.backend.dto.request.post.UpdatePostRequest;
+import subak.backend.dto.response.comment.CommentResponse;
+import subak.backend.dto.response.post.PostDetailResponse;
 import subak.backend.exception.PostException;
 import subak.backend.repository.HeartRepository;
 import subak.backend.repository.PostRepository;
@@ -19,6 +21,7 @@ import subak.backend.repository.PostRepository;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -42,9 +45,11 @@ public class PostService {
     /**
      * 글 상세보기
      */
-    public Post getPostDetail(Long postId) {
-        return getPostById(postId);
+    public PostDetailResponse getPostDetail(Long postId) {
+        Post post = getPostById(postId);
+        return convertToPostDetailResponse(post);
     }
+
 
     /**
      * 끌어올리기
@@ -100,6 +105,7 @@ public class PostService {
                 member,
                 createPostRequest.getCategory(),
                 createPostRequest.getPostTitle(),
+                createPostRequest.getContent(),
                 createPostRequest.getPrice(),
                 imagePaths
         );
@@ -122,7 +128,12 @@ public class PostService {
             }
         }
 
-        post.updatePostInfo(updatePostRequest.getCategory(), updatePostRequest.getPostTitle(), updatePostRequest.getPrice(), imagePaths);
+        post.updatePostInfo(
+                updatePostRequest.getCategory(),
+                updatePostRequest.getPostTitle(),
+                updatePostRequest.getContent(),
+                updatePostRequest.getPrice(),
+                imagePaths);
 
         // 기존 이미지 삭제
         List<PostImage> oldPostImages = new ArrayList<>(post.getPostImages());
@@ -175,8 +186,33 @@ public class PostService {
         postRepository.deleteById(postId);
     }
 
+    // 상세페이지
+    private PostDetailResponse convertToPostDetailResponse(Post post) {
+        PostDetailResponse response = new PostDetailResponse();
+        response.setId(post.getId());
+        response.setPostTitle(post.getPostTitle());
+        response.setContent(post.getContent());
+        response.setMemberName(post.getMember().getName());
+        response.setProfileImage(post.getMember().getProfileImage());
+        response.setPostImages(post.getPostImages().stream().map(PostImage::getImagePath).collect(Collectors.toList()));
+        response.setPrice(post.getPrice());
+        response.setPostDateTime(post.getPostDateTime());
+        response.setAddress(post.getMember().getAddress());
+        response.setHeartCount(post.getHearts().size());
+        response.setCommentCount(post.getComments().size());
+        response.setComments(post.getComments().stream()
+                .map(comment -> new CommentResponse(
+                        comment.getId(),
+                        comment.getMember().getName(),
+                        comment.getContent(),
+                        comment.getCmDateTime(),
+                        comment.getMember().getProfileImage()))
+                .collect(Collectors.toList()));
+        return response;
+    }
+
     // 게시물이 존재하지 않는 경우 예외처리
-    private Post getPostById(Long postId) {
+    public Post getPostById(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new PostException.PostNotFoundException("존재하지 않는 게시글입니다."));
     }
