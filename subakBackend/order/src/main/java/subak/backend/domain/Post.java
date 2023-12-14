@@ -1,6 +1,7 @@
 package subak.backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,8 +35,12 @@ public class Post {
     @Column(name = "post_title")
     private String postTitle; //글 제목
 
+    @Column(name = "post_content", columnDefinition = "TEXT")
+    private String content; // 게시글 내용
+
     private int price;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     @Column(name = "post_date_time")
     private LocalDateTime postDateTime; // 글 게시 시간
 
@@ -56,6 +61,7 @@ public class Post {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    //@OrderBy("createdAt desc")
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post")
@@ -64,12 +70,14 @@ public class Post {
     public static Post createPost(Member member,
                                   String category,
                                   String postTitle,
+                                  String content,
                                   int price,
                                   List<String> imagePaths) {
         Post post = new Post();
         post.setMember(member);
         post.setCategory(category);
         post.setPostTitle(postTitle);
+        post.setContent(content);
         post.setPrice(price);
         post.setPostDateTime(LocalDateTime.now());
         post.setProductStatus(ProductStatus.SALE);
@@ -90,9 +98,10 @@ public class Post {
 
 
     // 글 수정
-    public void updatePostInfo(String category, String postTitle, int price, List<String> newImagePaths) {
+    public void updatePostInfo(String category, String postTitle, String content, int price, List<String> newImagePaths) {
         this.category = category;
         this.postTitle = postTitle;
+        this.content = content;
         this.price = price;
         this.postDateTime = LocalDateTime.now();
 

@@ -13,6 +13,7 @@ import subak.backend.dto.request.post.CreatePostRequest;
 import subak.backend.dto.request.post.PostStatusUpdateRequest;
 import subak.backend.dto.request.post.ProductStatusUpdateRequest;
 import subak.backend.dto.request.post.UpdatePostRequest;
+import subak.backend.dto.response.post.PostDetailResponse;
 import subak.backend.service.AuthService;
 import subak.backend.service.CommentService;
 import subak.backend.service.PostService;
@@ -30,7 +31,7 @@ public class PostController {
     private final AuthService authService;
     private final CommentService commentService;
 
-    @ApiOperation(value = "게시글 생성", notes = "필수값 : 제목, 카테고리, 가격")
+    @ApiOperation(value = "게시글 생성")
     @PostMapping(value = "/post", consumes = {"multipart/form-data"})
     public ResponseEntity<String> createPost(@ModelAttribute @Validated CreatePostRequest createPostRequest,
                                              @RequestPart("postImage") List<MultipartFile> images,
@@ -41,7 +42,7 @@ public class PostController {
         return ResponseEntity.ok("Success post");
     }
 
-    @ApiOperation(value = "게시글 수정", notes = "필수값 : 제목, 카테고리, 가격, 제품 사진")
+    @ApiOperation(value = "게시글 수정")
     @PutMapping("/post/{postId}")
     public ResponseEntity<String> updatePost(@PathVariable Long postId,
                                              @ModelAttribute @Validated UpdatePostRequest UpdatePostRequest,
@@ -101,8 +102,9 @@ public class PostController {
         return postService.getPosts();
     }
 
+    @ApiOperation(value = "게시글 상세페이지 출력")
     @GetMapping("/posts/{postId}")
-    public Post getPostDetail(@PathVariable Long id) {
-        return postService.getPostDetail(id);
+    public ResponseEntity<PostDetailResponse> getPostDetail(@PathVariable("postId") Long id) {
+        return ResponseEntity.ok(postService.getPostDetail(id));
     }
 }

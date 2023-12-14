@@ -36,7 +36,7 @@ public class Comment {
     @Column(name = "cm_content")
     private String content;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     @Column(name = "cm_date_time")
     private LocalDateTime cmDateTime; // 댓글 작성 시간
 
