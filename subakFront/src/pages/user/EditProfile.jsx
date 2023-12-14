@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {launchImageLibrary} from 'react-native-image-picker';
 import axios from 'axios';
 import Config from 'react-native-config';
+import { useSelector } from 'react-redux';
 
 import { shared } from '../../styles/shared';
 import styles from '../../styles/user/editProfile';
@@ -12,14 +13,13 @@ import ChoiceModal from '../components/ChoiceModal';
 
 
 const PostsList = ({navigation}) => {
-  // TODO: userData를 실제 서버를 통해서 받아와야 합니다
-  const [userData, setUserData] = useState({
-    name: '카레',
-    id: '#12345678',
-    mannersTemperature: 36.5,
-  }); // 유저 정보
+  const userData = useSelector((state) => state.userData); // 유저 데이터
   const prevProfileImg = '../../assets/image/user-profile.png'; // 기존 프로필 이미지
   const [profileImg, setProfileImg] = useState(null); // 업로드 되는 프로필 이미지
+
+  let [image, setImage] = useState({uri: profileImg, type: 'jpg', name: 'ILoveReact.jpg'});
+  let token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwMDFAZ21haWwuY29tIiwiaWF0IjoxNzAyNDY5Mjc2LCJleHAiOjE3MDI0NzI4NzZ9.g_9E-PbL0_N9-408J30VZ3S866OjCJ-e35lRuzzhwN0";
+
 
   const [prevName, setPrevName] = useState(userData.name); // 이전 닉네임
   const [newName, setNewName] = useState(userData.name); // 닉네임
@@ -43,7 +43,8 @@ const PostsList = ({navigation}) => {
     }, (response) => {
       if (response.assets){ // 사진을 선택 했을 때
         setProfileImg(response.assets[0].uri);
-        console.log(response);
+        setImage({uri: response.assets[0].uri, type: 'jpg', name: 'ILoveReact.jpg'});
+        // console.log(formData.getParts());
       }
       else if (response.didCancel){ // 취소 했을 때
         setAlertMessage(`사진 선택을 취소했습니다.`);
@@ -86,15 +87,29 @@ const PostsList = ({navigation}) => {
           <Text style={[shared.text, styles.mainText]}>프로필 수정</Text>
           <TouchableOpacity
             style={shared.iconButton}
-            onPress={() =>
-              axios.post(`http://${Config.DB_IP}/user/${userData.id}/profile`,
+            onPress={() =>{
+              let formData = new FormData(); // 사진은 formData를 사용한다
+              formData.append('name', newName);
+              formData.append('profileImage', {
+                uri: profileImg,
+                type: 'image/jpg',
+                name: 'ILoveReact.jpg'
+              });
+              console.log(formData);
+              // axios.post(`http://${Config.DB_IP}/user/${userData.id}/profile`,
+              axios.put(`http://${Config.DB_IP}/user/1008/profile`,
+              //TODO: 유저 id, 이미지 들고 오기
+                  formData,
                   {
-                    name: newName,
-                    profileImage: profileImg,
-                  },
-                  { timeout: 2000 },
+                    headers: {
+                      'Content-Type': 'multipart/form-data',
+                      'Authorization': `Bearer ${token}` // 토큰 값을 추가
+                    },
+                    timeout: 2000 // 타임아웃을 2초로 설정
+                  }
                 )
                 .then(response => {
+                  console.log(response.data);
                   navigation.goBack();
                 })
                 .catch(error => { 
@@ -120,7 +135,9 @@ const PostsList = ({navigation}) => {
                     console.log('Unexpected error', error.message);
                   }
                }
+               
               )
+            }
             }
             disabled={!changeData()}>
             <Text style={[shared.text, styles.mainText, !changeData() && styles.enabled]}>

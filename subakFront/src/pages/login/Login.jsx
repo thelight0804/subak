@@ -22,9 +22,6 @@ const Login = ({ navigation }) => {
   const [password, setPassword] = useState(''); //비밀번호
   const [cookies, setCookies] = useState(''); //쿠키
 
-  // 이메일, 비밀번호 정규식
-  const emailRegEx = /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
-
   return (
     <View style={{ flex: 1 }}>
       <KeyboardAwareScrollView style={shared.container}>
@@ -71,12 +68,12 @@ const Login = ({ navigation }) => {
             }
             ).then(response => { // 로그인 성공 했을 때
               // // Redux에 정보 저장
-              dispatch(setName(response.data.name));
-              dispatch(setPhone(response.data.phoneNumber));
-              dispatch(setUserEmail(response.data.email));
-              dispatch(setAddress(response.data.address));
-              dispatch(setLogined(true));
-              dispatch(setToken(response.data.token));
+              // dispatch(setName(response.data.name));
+              // dispatch(setPhone(response.data.phoneNumber));
+              // dispatch(setUserEmail(response.data.email));
+              // dispatch(setAddress(response.data.address));
+              // dispatch(setLogined(true));
+              // dispatch(setToken(response.data.token));
               // AsyncStorage에 정보 저장
               storeStorageData(userData, 'userData');
               navigation.navigate('FooterTabs');
@@ -135,6 +132,9 @@ const Login = ({ navigation }) => {
 
 // 이메일, 비밀번호 유효성 검사
 const emailCheck = (emailValue) => {
+  // 이메일, 비밀번호 정규식
+  const emailRegEx = /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
+  
   return emailRegEx.test(emailValue);
 }
 

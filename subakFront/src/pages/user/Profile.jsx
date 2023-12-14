@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useSelector } from 'react-redux';
 
 import { shared } from '../../styles/shared';
 import styles from '../../styles/user/profile';
@@ -8,11 +9,7 @@ import Alert from '../components/Alert';
 
 
 const PostsList = ({navigation}) => {
-  const [userData, setUserData] = useState({
-    name: '카레',
-    id: '#12345678',
-    mannersTemperature: 36.5,
-  }); // 유저 정보
+  const userData = useSelector((state) => state.userData); // 유저 데이터
   const profileImg = '../../assets/image/user-profile.png'; // 프로필 이미지
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지

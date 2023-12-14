@@ -1,12 +1,12 @@
-import {useState} from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useSelector } from 'react-redux';
 
 import { shared } from '../../styles/shared';
 import styles from '../../styles/user/myPageList';
 
 const MyPage = ({navigation}) => {
-  const [userName, setUserName] = useState('카레'); // 유저 이름
+  const userData = useSelector((state) => state.userData); // 유저 데이터
   const profileImg = '../../assets/image/user-profile.png'; // 프로필 이미지
 
   return (
@@ -29,7 +29,7 @@ const MyPage = ({navigation}) => {
                 style={styles.profileImage}
                 source={require(profileImg)}
               />
-              <Text style={[shared.text, {fontSize: 20}]}>{userName}</Text>
+              <Text style={[shared.text, {fontSize: 20}]}>{userData.name}</Text>
             </View>
             <View style={shared.grayButton}>
               <Text style={[shared.text, {fontSize: 12}]}>프로필 보기</Text>
