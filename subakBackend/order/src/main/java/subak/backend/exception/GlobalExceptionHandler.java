@@ -53,4 +53,21 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
+    @ExceptionHandler(CommentException.CommentNotFoundException.class)
+    public ResponseEntity<String> handleCommentNotFoundException(CommentException.CommentNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(CommentException.UnauthorizedCommentUpdateException.class)
+    public ResponseEntity<String> handleUnauthorizedCommentUpdateException(CommentException.UnauthorizedCommentUpdateException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
+    @ExceptionHandler(CommentException.UnauthorizedCommentDeletionException.class)
+    public ResponseEntity<String> handleUnauthorizedCommentDeletionException(CommentException.UnauthorizedCommentDeletionException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
+
+
 }
