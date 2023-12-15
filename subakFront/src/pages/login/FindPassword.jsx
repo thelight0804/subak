@@ -6,11 +6,11 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Config from 'react-native-config';
 
-import shared from '../../styles/shared';
+import { shared } from '../../styles/shared';
 import styles from '../../styles/login/findEmail';
 import Alert from '../components/Alert';
 
-const SignUp = ({ navigation, route }) => {
+const SignUp = ({ navigation }) => {
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
 
@@ -18,30 +18,6 @@ const SignUp = ({ navigation, route }) => {
   const [phone, setPhone] = useState(''); // 휴대폰 번호
   const [email, setEmail] = useState(''); // 이메일
   const [newPassword, setNewPassword] = useState(''); // 비밀번호
-
-
-  // 입력 값 체크 정규식
-  const nameRegEx = /^[가-힣a-zA-Zぁ-んァ-ン一-龯]{1,20}$/;
-  const phoneRegEx = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/
-  const emailRegEx = /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
-  const passwordRegEx = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^*+=-]).{8,20}$/;
-
-  // 유효성 검사
-  const nameCheck = (nameValue) => {
-    return nameRegEx.test(nameValue);
-  }
-  
-  const phoneCheck = (phoneValue) => {
-    return phoneRegEx.test(phoneValue);
-  }
-  
-  const emailCheck = (emailValue) => {
-    return emailRegEx.test(emailValue);
-  }
-
-  const passwordCheck = (passwordValue) => {
-    return passwordRegEx.test(passwordValue);
-  }
 
   return (
     <View style={{flex: 1}}>
@@ -135,12 +111,27 @@ const SignUp = ({ navigation, route }) => {
                       )
                       .then(response => {
                         if (response.status === 200) {
-                          console.log(response.status);
+                          if (response.data) {
+                            // TODO: 비밀번호 변경 백엔드 테스트
+                            //입력값 초기화
+                            setName('');
+                            setPhone('');
+                            setEmail('');
+                            setNewPassword('');
+
+                            // Toast 알림
+                            setAlertMessage('비밀번호 변경이 완료되었습니다.\n다시 로그인 해주세요.');
+                            setShowAlert(true);
+                            setTimeout(() => {
+                              setShowAlert(false);
+                            }, 6000);
+                          }
                         }
                       })
                       .catch(error => {
                         if (error.response) {
                           // 요청은 성공했으나 응답은 실패
+                          setNewPassword('');
                           setAlertMessage(`${error.response.data}`);
                           setShowAlert(true);
                           setTimeout(() => {
@@ -149,6 +140,7 @@ const SignUp = ({ navigation, route }) => {
                           console.log('SignUp error.response', error.response);
                         } else if (error.request) {
                           // timeout으로 요청 실패
+                          setNewPassword('');
                           // 오류 Toast
                           setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.');
                           setShowAlert(true);
@@ -157,6 +149,7 @@ const SignUp = ({ navigation, route }) => {
                           }, 6000);
                         } else {
                           // 기타 오류 발생
+                          setNewPassword('');
                           setAlertMessage(`오류가 발생했습니다. \n[${error.message}]`);
                           setShowAlert(true);
                           setTimeout(() => {
@@ -185,5 +178,45 @@ const SignUp = ({ navigation, route }) => {
     </View>
   );
 };
+
+/**
+ * 이름 유효성 검사
+ * @param {String} nameValue 이름
+ * @returns {Boolean} 이름 형식이 맞으면 true, 아니면 false
+ */
+const nameCheck = (nameValue) => {
+  const nameRegEx = /^[가-힣a-zA-Zぁ-んァ-ン一-龯]{1,20}$/;
+  return nameRegEx.test(nameValue);
+}
+
+/**
+ * 전화번호 유효성 검사
+ * @param {String} phoneValue 전화번호
+ * @returns {Boolean} 전화번호 형식이 맞으면 true, 아니면 false
+ */
+const phoneCheck = (phoneValue) => {
+  const phoneRegEx = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/
+  return phoneRegEx.test(phoneValue);
+}
+
+/**
+ * 이메일 유효성 검사
+ * @param {String} emailValue 이메일
+ * @returns {Boolean} 이메일 형식이 맞으면 true, 아니면 false
+ */
+const emailCheck = (emailValue) => {
+  const emailRegEx = /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
+  return emailRegEx.test(emailValue);
+}
+
+/**
+ * 비밀번호 유효성 검사
+ * @param {String} passwordValue 비밀번호
+ * @returns {Boolean} 비밀번호 형식이 맞으면 true, 아니면 false
+ */
+const passwordCheck = (passwordValue) => {
+  const passwordRegEx = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^*+=-]).{8,20}$/;
+  return passwordRegEx.test(passwordValue);
+}
 
 export default SignUp;

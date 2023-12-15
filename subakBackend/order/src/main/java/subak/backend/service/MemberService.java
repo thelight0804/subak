@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import subak.backend.config.JwtTokenProvider;
 import subak.backend.domain.Member;
 import subak.backend.domain.enumType.MemberStatus;
+import subak.backend.dto.request.member.JoinRequest;
 import subak.backend.dto.request.member.UpdatePasswordRequest;
 import subak.backend.exception.MemberException;
 import subak.backend.repository.MemberRepository;
@@ -23,23 +24,29 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
     private final FileUploadService fileUploadService;
     private final AuthService authService;
 
     /**
      * 회원가입
      */
-    public Long join(Member member) {
+    public Member join(JoinRequest request) {
+        Member member = new Member();
+        member.setEmail(request.getEmail());
+        member.setName(request.getName());
+        member.setPhone(request.getPhone());
+        member.setPassword(request.getPassword());
+        member.setAddress(request.getAddress());
+
         validateDuplicateMember(member);
         validateRequiredFields(member);
 
-        String encodedPassword = passwordEncoder.encode(member.getPassword());
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
         member.setPassword(encodedPassword);
 
         memberRepository.save(member);
         log.info(member.getEmail() + " 님이 회원가입 하였습니다.");
-        return member.getId();
+        return member;
     }
 
     /**
@@ -73,7 +80,7 @@ public class MemberService {
     /**
      * 로그인
      */
-    public String login(String email, String password) {
+    public Member login(String email, String password) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberException.MemberNotFoundException("존재하지 않는 회원입니다."));
 
@@ -84,11 +91,11 @@ public class MemberService {
         }
 
         // 패스워드 일치 여부 확인
-        if (passwordEncoder.matches(password, member.getPassword())) {
-            return jwtTokenProvider.createToken(email);
-        } else {
+        if (!passwordEncoder.matches(password, member.getPassword())) {
             throw new MemberException.IncorrectPasswordException("회원정보가 일치하지 않습니다.");
         }
+
+        return member;
     }
 
     /**
@@ -110,11 +117,8 @@ public class MemberService {
     /**
      * 회원 수정 (이름, 프로필)
      */
-    public void updateMember(Long userId, String name, MultipartFile file, HttpServletRequest request) throws IOException { // 추가된 부분
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new MemberException.MemberNotFoundException("해당 사용자가 존재하지 않습니다. userId=" + userId));
-
-        authService.validateToken(request, member.getEmail());
+    public void updateMember(String name, MultipartFile file, HttpServletRequest request) throws IOException {
+        Member member = authService.getAuthenticatedMember(request);
 
         member.setName(name);
 
@@ -156,7 +160,7 @@ public class MemberService {
                 member.getName() == null || member.getName().trim().isEmpty() ||
                 member.getPassword() == null || member.getPassword().trim().isEmpty() ||
                 member.getPhone() == null || member.getPhone().trim().isEmpty()) {
-            throw new IllegalArgumentException("이메일, 이름, 비밀번호, 휴대폰은 필수 입력 값입니다. (공백 문자열 불가능)");
+            throw new MemberException.EssentialMemberException("이메일, 이름, 비밀번호, 휴대폰은 필수 입력 값입니다. (공백 문자열 불가능)");
         }
     }
 

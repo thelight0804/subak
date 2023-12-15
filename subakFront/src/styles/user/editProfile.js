@@ -1,11 +1,6 @@
 import { StyleSheet } from 'react-native';
+import { colorPalette } from '../shared';
 
-// color palette
-var colorBackground = '#212123';
-var text = 'white';
-var grayText = '#868b94';
-var colorMain = '#dc645b';
-var colorError = '#DC3F3E';
 
 const styles = StyleSheet.create({
   inlineContainer: {
@@ -20,7 +15,7 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   enabled: {
-    color: grayText,
+    color: colorPalette.gray,
   },
   content: {
     marginTop: 10,
@@ -33,6 +28,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     marginRight: 10,
+    borderRadius: 50, // 원형
   },
   cameraIcon: { // 카메라 아이콘
     position: 'absolute', // 자식
@@ -50,7 +46,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingLeft: 10,
     marginBottom: 10,
-    color: text,
+    color: colorPalette.white,
   },
 })
 

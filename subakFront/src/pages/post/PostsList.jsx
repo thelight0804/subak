@@ -1,11 +1,14 @@
 import {useState, useEffect} from 'react';
 import { View, Text } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 
-import shared from '../../styles/shared';
+import { shared } from '../../styles/shared';
 import styles from '../../styles/post/postsList';
 import Alert from '../components/Alert';
 
 const PostsList = ({navigation}) => {
+  const userData = useSelector((state) => state.userData); // 유저 데이터
+  const dispatch = useDispatch(); // Redux dispatch
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
 
@@ -15,7 +18,7 @@ const PostsList = ({navigation}) => {
       setTimeout(() => {
         setShowAlert(false);
       }, 6000);
-  }, [])
+  }, []);
 
   return (
     <>

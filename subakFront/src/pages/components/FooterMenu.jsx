@@ -2,7 +2,7 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import shared from '../../styles/shared';
+import { shared } from '../../styles/shared';
 import styles from '../../styles/components/footerMenu';
 
 const FooterMenu = ({navigation, state}) => {
