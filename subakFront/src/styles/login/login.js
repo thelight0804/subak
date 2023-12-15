@@ -1,12 +1,6 @@
 // Login component styleSheet
 import { StyleSheet } from 'react-native';
-
-// color palette
-var colorBackground = '#212123';
-var text = 'white';
-var grayText = '#868b94';
-var colorMain = '#dc645b';
-var colorError = '#DC3F3E';
+import { colorPalette } from '../shared';
 
 const styles = StyleSheet.create({
   // 헤더
@@ -16,12 +10,12 @@ const styles = StyleSheet.create({
   headerText: {
     marginTop: 3,
     marginBottom: 3,
-    color: text,
+    color: colorPalette.white,
     fontSize: 20,
     fontWeight: 'bold',
   },
   text: {
-    color: text,
+    color: colorPalette.white,
     paddingTop: 15,
     paddingBottom: 15,
   },
@@ -34,7 +28,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingLeft: 10,
     marginBottom: 10,
-    color: text,
+    color: colorPalette.white,
   },
   button: {
     width: '100%',
@@ -57,12 +51,12 @@ const styles = StyleSheet.create({
     color: '#868b94',
   },
   enabled: {
-    color: text,
+    color: colorPalette.white,
   },
   // 이메일 & 비밀번호 찾기
   hyperText: {
     marginBottom: 5,
-    color: text,
+    color: colorPalette.white,
     fontWeight: 'bold',
     textDecorationLine: 'underline',
   }

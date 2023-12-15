@@ -7,17 +7,14 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Config from 'react-native-config';
 import {useSelector, useDispatch} from 'react-redux';
-import {
-  setName as setUserName, 
-  setPhone as setUserPhone, 
-  setEmail as setUserEmail, 
-  setAddress as setUserAddress, 
-  setToken as setToken
-} from '../../data/store/userSlice'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import shared from '../../styles/shared';
+
+import { shared } from '../../styles/shared';
 import styles from '../../styles/login/signUp';
 import Alert from '../components/Alert';
+import loginUser from '../../data/store/loginUser';
+import setStorageData from '../../data/asyncStorage/setStorageData';
 
 const SignUp = ({ navigation, route }) => {
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
@@ -32,30 +29,6 @@ const SignUp = ({ navigation, route }) => {
   //Redux
   const userData = useSelector((state) => state.userData); // 로그인 여부
   const dispatch = useDispatch();
-
-
-  // 입력 값 체크 정규식
-  const nameRegEx = /^[가-힣a-zA-Zぁ-んァ-ン一-龯]{1,20}$/;
-  const phoneRegEx = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/
-  const emailRegEx = /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
-  const passwordRegEx = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^*+=-]).{8,20}$/;
-
-  // 유효성 검사
-  const nameCheck = (nameValue) => {
-    return nameRegEx.test(nameValue);
-  }
-  
-  const phoneCheck = (phoneValue) => {
-    return phoneRegEx.test(phoneValue);
-  }
-  
-  const emailCheck = (emailValue) => {
-    return emailRegEx.test(emailValue);
-  }
-
-  const passwordCheck = (passwordValue) => {
-    return passwordRegEx.test(passwordValue);
-  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -134,21 +107,17 @@ const SignUp = ({ navigation, route }) => {
               password: password,
               name: name,
               phone: phone,
+              address: address,
             },
             {timeout: 2000})
             .then(response => {
-              //"status": 200
-              //"name\":\"라라라\
-              // "data": "sign-up success"
               if (response.status === 200) {
-                dispatch(setUserName(name));
-                dispatch(setUserPhone(phone));
-                dispatch(setUserEmail(email));
-                dispatch(setUserAddress(address));
-                // dispatch(setToken(response.data.token));
-                dispatch(setToken(ture));
-                navigation.navigate('PostsList');
-                // console.log(response.status)
+                // 백엔드로부터 데이터 받기
+                const data = response.data;
+                data.logined = true;
+                loginUser(data, dispatch); // Redux에 저장
+                setStorageData(userData, 'userData'); // AsyncStorage에 저장
+                navigation.navigate('FooterTabs'); // 메인 화면으로 이동
               }
             })
             .catch(error => { 
@@ -159,7 +128,7 @@ const SignUp = ({ navigation, route }) => {
                 setTimeout(() => {
                   setShowAlert(false);
                 }, 6000);
-                console.log('SignUp error.response : ', error.response.data);
+                console.error('SignUp error.response : ', error.response.data);
               } else if (error.request) { // timeout으로 요청 실패
                 // 오류 Toast
                 setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.');
@@ -173,7 +142,7 @@ const SignUp = ({ navigation, route }) => {
                 setTimeout(() => {
                   setShowAlert(false);
                 }, 6000);
-                console.log('SignUp Unexpected error', error.message);
+                console.error('SignUp Unexpected error', error.message);
                 }
             }
           )
@@ -194,5 +163,45 @@ const SignUp = ({ navigation, route }) => {
     </View>
   );
 };
+
+/**
+ * 이름 유효성 검사
+ * @param {String} nameValue 이름
+ * @returns {Boolean} 이름 형식이 맞으면 true, 아니면 false
+ */
+const nameCheck = (nameValue) => {
+  const nameRegEx = /^[가-힣a-zA-Zぁ-んァ-ン一-龯]{1,20}$/;
+  return nameRegEx.test(nameValue);
+}
+
+/**
+ * 전화번호 유효성 검사
+ * @param {String} phoneValue 전화번호
+ * @returns {Boolean} 전화번호 형식이 맞으면 true, 아니면 false
+ */
+const phoneCheck = (phoneValue) => {
+  const phoneRegEx = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/
+  return phoneRegEx.test(phoneValue);
+}
+
+/**
+ * 이메일 유효성 검사
+ * @param {String} emailValue 이메일
+ * @returns {Boolean} 이메일 형식이 맞으면 true, 아니면 false
+ */
+const emailCheck = (emailValue) => {
+  const emailRegEx = /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
+  return emailRegEx.test(emailValue);
+}
+
+/**
+ * 비밀번호 유효성 검사
+ * @param {String} passwordValue 비밀번호
+ * @returns {Boolean} 비밀번호 형식이 맞으면 true, 아니면 false
+ */
+const passwordCheck = (passwordValue) => {
+  const passwordRegEx = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^*+=-]).{8,20}$/;
+  return passwordRegEx.test(passwordValue);
+}
 
 export default SignUp;

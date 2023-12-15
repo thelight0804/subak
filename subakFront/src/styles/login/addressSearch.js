@@ -1,12 +1,6 @@
 // LocationSearch.jsx stylesheet
 import {StyleSheet} from "react-native";
-
-// color palette
-var colorBackground = '#212123';
-var text = 'white';
-var grayText = '#868b94';
-var colorMain = '#dc645b';
-var colorError = '#DC3F3E';
+import { colorPalette } from "../shared";
 
 const styles = StyleSheet.create({
   header: {
@@ -26,7 +20,7 @@ const styles = StyleSheet.create({
   listText: {
     marginTop: 10,
     marginBottom: 10,
-    color: text,
+    color: colorPalette.white,
   },
 })
 

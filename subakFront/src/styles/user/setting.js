@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { colorPalette } from '../shared';
 
 const styles = StyleSheet.create({
   inlineContainer: {
@@ -7,18 +8,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#37373a',
+    marginBottom: 16,
   },
   mainText: {
     fontSize: 16,
     paddingBottom: 8,
   },
-  profileImage: {
-    width: 70,
-    height: 70,
-    marginRight: 10,
+  text: {
+    textAlign: 'left',
+    fontSize: 14,
+    paddingTop: 12,
+    paddingBottom: 12,
   },
-  content: {
-    marginTop: 10,
+  languageBox: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  languageText: {
+    color: colorPalette.main,
   }
 })
 
