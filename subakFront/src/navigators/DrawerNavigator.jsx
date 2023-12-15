@@ -21,8 +21,8 @@ const DrawerNavigator = () => {
     // 비동기 함수 처리
     const initializeData = async () => {
       //FIX: 첫 접속 시 userData 임시 저장
-      // await setStorageData(userData, 'userData');
-      removeStorageData('userData');
+      await setStorageData(userData, 'userData');
+      // removeStorageData('userData');
 
       const getUserData = await getStorageData('userData'); // 로컬에 저장된 유저 데이터 가져오기
       if (getUserData) {

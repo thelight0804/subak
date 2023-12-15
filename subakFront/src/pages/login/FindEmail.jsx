@@ -13,9 +13,9 @@ import Alert from '../components/Alert';
 const FindEmail = ({ navigation }) => {
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
-  const [name, setName] = useState('니지카'); // 본명
+  const [name, setName] = useState(''); // 본명
   const [phone, setPhone] = useState(''); // 휴대폰 번호
-  const [findEmail, setFindEmail] = useState('test@gmail.com'); // 찾은 이메일
+  const [findEmail, setFindEmail] = useState(''); // 찾은 이메일
 
   return (
     <View style={{ flex: 1 }}>
@@ -69,6 +69,7 @@ const FindEmail = ({ navigation }) => {
                   navigation.navigate('FindedEmail', {name: name, email: findEmail}); // 페이지 이동
                 }
                 else {
+                  setPhone(''); // 휴대폰 번호 초기화
                   setAlertMessage('일치하는 이메일이 없습니다.');
                   setShowAlert(true);
                   setTimeout(() => {

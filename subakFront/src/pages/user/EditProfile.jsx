@@ -93,23 +93,20 @@ const PostsList = ({navigation}) => {
               formData.append('profileImage', {
                 uri: profileImg,
                 type: 'image/jpg',
-                name: 'ILoveReact.jpg'
+                name: 'profileImg.jpg'
               });
-              console.log(formData);
-              // axios.post(`http://${Config.DB_IP}/user/${userData.id}/profile`,
-              axios.put(`http://${Config.DB_IP}/user/1008/profile`,
+              axios.put(`http://${Config.DB_IP}/user/${userData.id}/profile`,
               //TODO: 유저 id, 이미지 들고 오기
                   formData,
                   {
                     headers: {
                       'Content-Type': 'multipart/form-data',
-                      'Authorization': `Bearer ${token}` // 토큰 값을 추가
+                      'Authorization': `Bearer ${userData.token}` // 토큰 값을 추가
                     },
                     timeout: 2000 // 타임아웃을 2초로 설정
                   }
                 )
                 .then(response => {
-                  console.log(response.data);
                   navigation.goBack();
                 })
                 .catch(error => { 

@@ -9,10 +9,10 @@ const userData = createSlice({
     phone : '01000000000', // 전화번호
     email : 'test@gmail.com', // 이메일
     address : '시모키타자와고등학교', // 주소
-    logined : false, // 로그인 여부
+    logined : true, // 로그인 여부
     mannerScore : 36.5, // 매너 온도
-    image : '', // 프로필 사진
-    token : '', // JWT 토큰
+    image : '../../assets/image/nijika.png', // 프로필 사진
+    token : 'tokenabc', // JWT 토큰
   },
   reducers: {
     setName(state, action){
