@@ -3,6 +3,8 @@ package subak.backend.controller;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,7 @@ import subak.backend.dto.request.post.CreatePostRequest;
 import subak.backend.dto.request.post.PostStatusUpdateRequest;
 import subak.backend.dto.request.post.ProductStatusUpdateRequest;
 import subak.backend.dto.request.post.UpdatePostRequest;
+import subak.backend.dto.response.post.MainResponse;
 import subak.backend.dto.response.post.PostDetailResponse;
 import subak.backend.service.AuthService;
 import subak.backend.service.CommentService;
@@ -97,9 +100,12 @@ public class PostController {
     }
 
 
+    @ApiOperation(value = "메인페이지 게시글 목록 출력")
     @GetMapping("/posts")
-    public List<Post> getPosts() {
-        return postService.getPosts();
+    public ResponseEntity<List<MainResponse>> getMainPosts(
+            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @RequestParam(value = "limit", defaultValue = "10") int limit) {
+        return ResponseEntity.ok(postService.getMainPosts(offset, limit));
     }
 
     @ApiOperation(value = "게시글 상세페이지 출력")

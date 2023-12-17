@@ -14,5 +14,6 @@ public class JoinRequest {
     private String password;
     @ApiModelProperty(value = "사용자 휴대폰 번호", required = true, example = "01012345678")
     private String phone;
+    @ApiModelProperty(value = "사용자 주소", required = true)
+    private String address;
 }
-
