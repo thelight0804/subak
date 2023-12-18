@@ -3,17 +3,22 @@ package subak.backend.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 import subak.backend.domain.Member;
+import subak.backend.domain.enumType.MemberStatus;
 import subak.backend.dto.request.member.UpdatePasswordRequest;
+import subak.backend.exception.MemberException;
 import subak.backend.repository.MemberRepository;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Transactional
@@ -29,75 +34,58 @@ class MemberServiceTest {
 
     @Test
     @Rollback(value = true)
-    void 회원가입() throws Exception { // jUnit5부터는 public을 붙이지 않아도 된다.
-        System.out.println("회원가입 테스트 시작");
-
-        Member member = new Member();
-
-        member.setEmail("0004@gmail.com");
-        member.setPassword("0");
-        member.setName("0");
-        member.setPhone("01000000000");
+    void 회원가입() throws Exception {
+        // given
+        Member member = createMember("0004@gmail.com", "0", "0", "01000000000");
         Long savedMemberId = memberService.join(member);
 
+        // then
         Optional<Member> savedMember = memberRepository.findById(savedMemberId);
         assertTrue(savedMember.isPresent());
-
-        System.out.println("회원가입 끝");
     }
 
 
-    @Test // jUnit5에서는 @Test에 expected 속성이 지원되지 않는다.
+    @Test
     @Rollback
     void 중복회원검증() throws Exception {
-        System.out.println("회원중복검증 테스트 시작");
-
+        // given
         Member member1 = createMember("0004@gmail.com", "0", "0", "01000000000");
         memberService.join(member1);
 
-        Member member2 = new Member();
-        member2.setEmail("0004@gmail.com");
+        // when
+        Member member2 = createMember("0004@gmail.com", "0", "0", "01000000000");
 
-        assertThrows(IllegalStateException.class, () -> {
+        // then
+        assertThrows(MemberException.DuplicateMemberException.class, () -> {
             memberService.join(member2);
         });
-
-        System.out.println("회원중복검증 테스트 끝");
     }
 
     @Test
     @Rollback
     void 이메일찾기() throws Exception {
-        System.out.println("이메일 찾기 테스트 시작");
         Member member = createMember("0004@gmail.com", "0", "0", "01000000000");
         memberService.join(member);
 
         String findEmail = memberService.findMemberEmail(member.getName(), member.getPhone());
         assertEquals("0004@gmail.com", findEmail);
-
-        System.out.println("이메일 찾기 테스트 끝");
     }
 
     @Test
     @Rollback
     void 이메일찾기_일치하는회원없음_예외() throws Exception {
-        System.out.println("이메일찾기_일치하는회원없음_예외 테스트 시작");
 
         Member member = createMember("0004@gmail.com", "0", "0", "01000000000");
         memberService.join(member);
 
         //name과 phone을 다른 정보로 입력했을 때, 예외가 발생하는지
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(MemberException.EmailFindFailedException.class,
                 () -> memberService.findMemberEmail("nonUser", "01012345678"));
-
-        System.out.println("이메일찾기_일치하는회원없음_예외 테스트 끝");
     }
 
     @Test
     @Rollback
     void 회원비밀번호_수정() throws Exception {
-        System.out.println("비밀번호 수정 테스트 시작");
-
         Member member = createMember("test1@gmail.com", "TestUser", "password", "01012345678");
         memberService.join(member);
 
@@ -113,17 +101,11 @@ class MemberServiceTest {
         // 새로운 비밀번호로 업데이트되었는지 확인
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         assertTrue(passwordEncoder.matches(newPassword, updatedMemberOptional.get().getPassword()));
-
-        System.out.println("비밀번호 수정 테스트 끝");
-
-
     }
 
     @Test
     @Rollback
     void 로그인_성공() throws Exception {
-        System.out.println("로그인 성공 테스트 시작");
-
         // Given
         String email = "0004@gmail.com";
         String password = "password123";
@@ -139,11 +121,56 @@ class MemberServiceTest {
         memberService.join(member);
 
         // When
-        String result = memberService.login(email, password);
+        Member loginMember  = memberService.login(email, password);
 
         // Then
-        assertEquals("로그인 성공", result);
+        assertNotNull(loginMember, "로그인 실패");
+        assertEquals(email, loginMember.getEmail(), "로그인한 사용자의 이메일이 일치하지 않습니다.");
+        assertEquals(name, loginMember.getName(), "로그인한 사용자의 이름이 일치하지 않습니다.");
+        assertEquals(phone, loginMember.getPhone(), "로그인한 사용자의 전화번호가 일치하지 않습니다.");
     }
+
+    @Test
+    @Rollback
+    void 회원탈퇴() throws Exception {
+        // given
+        Member member = createMember("test5@gmail.com", "password123", "TestUser5", "01012345678");
+        memberService.join(member);
+
+        // when
+        memberService.withdraw(member.getEmail());
+
+        // then
+        Optional<Member> withdrawnMemberOptional = memberRepository.findByEmail(member.getEmail());
+        assertTrue(withdrawnMemberOptional.isPresent());
+        assertEquals(MemberStatus.DELETE, withdrawnMemberOptional.get().getStatus());
+    }
+
+    @Test
+    @Rollback
+    public void 회원정보수정() throws Exception {
+        // given
+        String email = "test1@gmail.com";
+        String oldName = "Old Name";
+        String password = "password123";
+        String phone = "01012345678";
+
+        Member member = createMember(email, oldName, password, phone);
+        memberService.join(member);
+
+        String newName = "New Name";
+        MockMultipartFile newFile = new MockMultipartFile("file", "hello.png", MediaType.IMAGE_PNG_VALUE, "Hello, World!".getBytes());
+
+        // when
+        memberService.updateMember(member.getId(), newName, newFile);
+
+        // then
+        Optional<Member> updatedMemberOptional = memberRepository.findById(member.getId());
+        assertTrue(updatedMemberOptional.isPresent());
+        assertEquals(newName, updatedMemberOptional.get().getName());
+        assertArrayEquals(newFile.getBytes(), updatedMemberOptional.get().getPicture());
+    }
+
 
 
     private Member createMember(String email, String name, String password, String phone) {

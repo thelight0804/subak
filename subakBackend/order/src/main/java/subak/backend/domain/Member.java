@@ -1,10 +1,9 @@
 package subak.backend.domain;
 
-import com.sun.istack.NotNull;
-import lombok.AccessLevel;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import subak.backend.domain.enumType.MemberStatus;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -32,12 +31,20 @@ public class Member {
     private String phone;
 
     @Column(name = "member_temp")
-    private float temp; // 매너온도
+    private float temp = 36.5F; // 매너온도
 
-    @Column(name = "member_picture")
-    private String picture; //프로필 사진
+    @Column(name = "member_profileImage")
+    private String profileImage; //프로필 사진
 
-    @OneToMany(mappedBy = "member")
+    @Column(name = "member_address")
+    private String address;
+
+    @Column(name = "member_status")
+    @Enumerated(EnumType.STRING)
+    private MemberStatus status = MemberStatus.ACTIVE; // 멤버상태 [활동중]
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
@@ -49,7 +56,8 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Review> reviews = new ArrayList<>();
 
-
-    //인증타입
+    public void updateProfileImage(String newImageUrl) {
+        this.profileImage = newImageUrl;
+    }
 
 }

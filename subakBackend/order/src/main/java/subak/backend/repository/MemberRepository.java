@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
+
     Optional<Member> findByEmail(String email);
 
     Optional<Member> findByNameAndPhone(String name, String phone);
@@ -18,6 +19,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Transactional
     @Modifying
-    @Query("update Member m set m.password = :newPassword where m.id = :memberId")
-    void updatePassword(@Param("memberId") Long memberId, @Param("newPassword") String newPassword);
+    @Query("update Member m set m.password = :newPassword where m.email = :email and m.name = :name and m.phone = :phone")
+    void updatePassword(@Param("email") String email, @Param("name") String name, @Param("phone") String phone, @Param("newPassword") String newPassword);
 }

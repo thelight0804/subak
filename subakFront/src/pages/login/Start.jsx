@@ -1,9 +1,10 @@
 // 로그인이 되어 있지 않을 때 시작 화면
-import { react, useState } from 'react';
+import { useState } from 'react';
 import {Image, Text, View, TouchableOpacity, Modal, TouchableWithoutFeedback} from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import WheelPicker from 'react-native-wheely';
 
-import shared from '../../styles/shared';
+import { shared } from '../../styles/shared';
 import styles from '../../styles/login/start';
 
 const Start = ({navigation}) => {
@@ -44,8 +45,8 @@ const Start = ({navigation}) => {
 
       <View style={styles.footer}>
         <TouchableOpacity
-          style={shared.button}
-          onPress={() => navigation.navigate('LocationSearch')}>
+          style={shared.redButton}
+          onPress={() => navigation.navigate('AddressSearch')}>
           <Text style={[styles.text, styles.startText]}>시작하기</Text>
         </TouchableOpacity>
         <Text style={[styles.text, styles.text2]}>
@@ -54,7 +55,7 @@ const Start = ({navigation}) => {
             onPress={() => navigation.navigate('Login')}
           >
             <Text style={[styles.text, styles.hyperlink]}>
-              로그인
+              {` 로그인`}
             </Text>
           </TouchableOpacity>
         </Text>
@@ -92,7 +93,7 @@ const SelectContryModal = props => {
             itemTextStyle={styles.itemText}
           />
           <TouchableOpacity
-            style={shared.button}
+            style={shared.redButton}
             onPress={() => {
               props.setCountryIndex(index);
               props.setOpenModal(false);

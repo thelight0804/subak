@@ -1,38 +1,52 @@
 import {StyleSheet} from "react-native";
 
-// color palette
-var colorBackground = '#212123';
-var text = 'white';
-var colorMain = '#dc645b';
-var colorError = '#DC3F3E';
+const colorPalette = {
+  background: '#212123',
+  white: 'white',
+  gray: '#868b94',
+  main: '#dc645b',
+  error: '#DC3F3E',
+};
 
 const shared = StyleSheet.create({
   container: {
     flex: 1,
     padding: 12,
-    backgroundColor: colorBackground,
+    backgroundColor: colorPalette.background,
   },
   text: {
-    color: text,
+    color: colorPalette.white,
     textAlign: 'center',
     fontWeight: 'bold',
   },
-  button: {
+  redButton: {
     width: 'auto',
     padding: 10,
     marginTop: 10,
     marginBottom: 10,
 
-    backgroundColor: colorMain,
+    backgroundColor: colorPalette.main,
     borderRadius: 8,
 
     justifyContent: 'center',
     alignItems: 'center',
   },
-  backButton: {
-    paddingRight: 15,
-    paddingTop: 10,
-    paddingBottom: 10,
+  grayButton: {
+    width: 'auto',
+    padding: 10,
+    marginTop: 10,
+    marginBottom: 10,
+
+    backgroundColor: '#37373a',
+    borderRadius: 5,
+
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconButton: {
+    display: 'flex',
+    paddingBottom: 15,
+    paddingRight: 15
   },
   textInput: {
     width: '100%',
@@ -40,6 +54,11 @@ const shared = StyleSheet.create({
     borderRadius: 8,
     paddingLeft: 10,
   },
+  inlineContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
 });
 
-export default shared;
+export {shared, colorPalette};
