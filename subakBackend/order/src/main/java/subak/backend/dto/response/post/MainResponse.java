@@ -16,7 +16,6 @@ public class MainResponse {
     private String postTitle; // 게시글 제목
     private String firstImage; // 첫 번째 이미지
     private int price; // 가격
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private String postDateTime; // 게시글 작성 시간
     private String address; // 위치
     private int heartCount; // 좋아요 개수
