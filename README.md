@@ -169,8 +169,8 @@
 <table>
     <thead>
     <tr>
-        <th>박상현</th>
-        <th>윤성민</th>
+        <th>박상현(FE)</th>
+        <th>윤성민(BE)</th>
     </tr>
     </thead>
     <tbody>
