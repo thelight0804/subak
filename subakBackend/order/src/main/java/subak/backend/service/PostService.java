@@ -2,6 +2,10 @@ package subak.backend.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import subak.backend.domain.Heart;
@@ -13,12 +17,16 @@ import subak.backend.domain.enumType.ProductStatus;
 import subak.backend.dto.request.post.CreatePostRequest;
 import subak.backend.dto.request.post.UpdatePostRequest;
 import subak.backend.dto.response.comment.CommentResponse;
+import subak.backend.dto.response.post.MainResponse;
 import subak.backend.dto.response.post.PostDetailResponse;
 import subak.backend.exception.PostException;
 import subak.backend.repository.HeartRepository;
 import subak.backend.repository.PostRepository;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,15 +39,18 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final FileUploadService fileUploadService;
-    private final MemberService memberService;
     private final HeartRepository heartRepository;
 
 
     /**
      * 메인페이지 글 보기
      */
-    public List<Post> getPosts() {
-        return postRepository.findAllByOrderByPostDateTimeDesc();
+    public List<MainResponse> getMainPosts(int offset, int limit) {
+        Pageable pageable = PageRequest.of(offset / limit, limit, Sort.by(Sort.Direction.DESC, "postDateTime"));
+        Page<Post> posts = postRepository.findAll(pageable);
+        return posts.stream()
+                .map(this::convertToMainResponse)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -185,6 +196,24 @@ public class PostService {
 
         postRepository.deleteById(postId);
     }
+
+    // 메인페이지
+    private MainResponse convertToMainResponse(Post post){
+        MainResponse response = new MainResponse();
+
+        response.setId(post.getId());
+        response.setMemberName(post.getMember().getName());
+        response.setProfileImage(post.getMember().getProfileImage());
+        response.setPostTitle(post.getPostTitle());
+        response.setFirstImage(post.getPostImages().isEmpty() ? null : post.getPostImages().get(0).getImagePath());
+        response.setPrice(post.getPrice());
+        response.setPostDateTime(post.getPostDateTime());
+        response.setAddress(post.getMember().getAddress());
+        response.setHeartCount(post.getHearts().size());
+        response.setCommentCount(post.getComments().size());
+        return response;
+    }
+
 
     // 상세페이지
     private PostDetailResponse convertToPostDetailResponse(Post post) {
