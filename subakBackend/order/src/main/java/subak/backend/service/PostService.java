@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import subak.backend.domain.Heart;
@@ -40,6 +41,8 @@ public class PostService {
     private final PostRepository postRepository;
     private final FileUploadService fileUploadService;
     private final HeartRepository heartRepository;
+    private RedisTemplate<String, Object> redisTemplate;
+
 
 
     /**
@@ -58,6 +61,16 @@ public class PostService {
      */
     public PostDetailResponse getPostDetail(Long postId) {
         Post post = getPostById(postId);
+
+        // 인기 게시글일 경우에만 Redis에서 조회수를 증가시키고 가져오기
+        if (isPopularPost(post)) {
+            increaseAndSetViews(post);
+        } else {
+            // 인기 게시글이 아닌 경우에는 바로 DB에 조회수 증가
+            post.setViews(post.getViews() + 1);
+            postRepository.save(post); // DB에 조회수 증가 반영
+        }
+
         return convertToPostDetailResponse(post);
     }
 
@@ -229,6 +242,8 @@ public class PostService {
         response.setAddress(post.getMember().getAddress());
         response.setHeartCount(post.getHearts().size());
         response.setCommentCount(post.getComments().size());
+        response.setViews(post.getViews());
+        response.setTemp(post.getMember().getTemp());
         response.setComments(post.getComments().stream()
                 .map(comment -> new CommentResponse(
                         comment.getId(),
@@ -245,6 +260,30 @@ public class PostService {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new PostException.PostNotFoundException("존재하지 않는 게시글입니다."));
     }
+
+    // 인기 게시글 판단 : 좋아요 5개 이상, 조회수 10 이상
+    private boolean isPopularPost(Post post) {
+        int likes = post.getHearts().size();
+        return likes >= 5 && post.getViews() >= 100;
+    }
+
+    // 조회수 증가
+    private void increaseAndSetViews(Post post) {
+        String viewsKey = "post:" + post.getId() + ":views";
+        Long views = (Long) redisTemplate.opsForValue().get(viewsKey);
+
+        // Redis에 데이터가 없을 경우 DB에서 조회수 가져오기
+        if (views == null) {
+            views = post.getViews();
+        }
+
+        // 조회수 증가
+        views++;
+        redisTemplate.opsForValue().set(viewsKey, views);
+
+        post.setViews(views);
+    }
+
 
 
 }

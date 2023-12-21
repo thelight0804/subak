@@ -22,9 +22,11 @@ public class PostDetailResponse {
     private String address; // 게시글 위치
     private int heartCount; // 좋아요 개수
     private int commentCount; // 댓글 개수
+    private Long views; // 조회수
 
     private String memberName; // 작성자 이름
     private String profileImage; // 작성자 프로필 이미지
+    private Float temp; // 작성자 매너온도
 
     private List<CommentResponse> comments; // 댓글
 
