@@ -73,21 +73,34 @@ const PostDetail = ({navigation, route}) => {
   
   return (
     <View style={shared.container}>
-    <View style={styles.header}>
-      <TouchableOpacity
-        style={shared.iconButton}
-        onPress={() => navigation.goBack()}>
-        <Icon name="chevron-back" size={30} color="#FFFFFF" />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={shared.iconButton}
-        onPress={() => navigation.navigate('PostsList')}>
-        <Icon name="home-outline" size={30} color="#FFFFFF" />
-      </TouchableOpacity>
-    </View>
-    <ScrollView style={styles.content}>
-      {post ? <RenderContent post={post} tempColor={tempColor} tempEmoji={tempEmoji}/> : <Loading />}
-    </ScrollView>
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={shared.iconButton}
+          onPress={() => navigation.goBack()}>
+          <Icon name="chevron-back" size={30} color="#FFFFFF" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={shared.iconButton}
+          onPress={() => navigation.navigate('PostsList')}>
+          <Icon name="home-outline" size={30} color="#FFFFFF" />
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView style={styles.content}>
+        {post ? <RenderContent post={post} tempColor={tempColor} tempEmoji={tempEmoji}/> : <Loading />}
+      </ScrollView>
+
+      <View style={styles.footer}>
+        <View style={styles.heartContainer}>
+          <TouchableOpacity style={styles.heart}>
+            <Icon name="heart-outline" color="#868b94" size={25}/>
+          </TouchableOpacity>
+          <Text style={styles.price}>{`${post.price}원`}</Text>
+        </View>
+        <TouchableOpacity style={shared.button}>
+          <Text style={[styles.buttonText, shared.redButton]}>구매하기</Text>
+        </TouchableOpacity>
+      </View>
   </View>
   );
 };
@@ -98,6 +111,7 @@ const RenderContent = ({post, tempColor, tempEmoji}) => {
       <View style={styles.imageContainer}>
         <Image style={styles.mainImage} source={{uri: post.postImages[0]}} />
       </View>
+
       <View style={styles.titleContainer}>
         <View style={styles.profileContainer}>
           <Image style={styles.profileImage} source={{uri: post.profileImage}} />
@@ -129,7 +143,8 @@ const RenderContent = ({post, tempColor, tempEmoji}) => {
           <Text style={styles.tempText}>매너온도</Text>
         </View>
       </View>
-      <View>
+
+      <View style={styles.postContent}>
         <Text style={[styles.text, styles.postTitle]}>{post.postTitle}</Text>
         <Text style={[styles.textGray, styles.postDateTime]}>{post.postDateTime}</Text>
         <Text style={[styles.text, styles.content]}>{post.content}</Text>

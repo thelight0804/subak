@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     paddingBottom: 15,
 
-    borderBottomWidth: 1,
+    borderBottomWidth: 1.5,
     borderBottomColor: '#2b2b2d',
   },
   profileContainer: { // 프로필 사진, 작성자 컨테이너
@@ -99,6 +99,37 @@ const styles = StyleSheet.create({
   postDateTime: {
     paddingBottom: 5,
     fontSize: 12,
+  },
+
+  // footer
+  footer: { // footer 컨테이너
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    
+    borderTopWidth: 1.5,
+    borderTopColor: "#2b2b2d",
+  },
+  heartContainer: { // 좋아요, 가격 컨테이너
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  heart: { // 좋아요
+    paddingRight: 10,
+    borderRightWidth: 1.5,
+    borderRightColor: "#2b2b2d",
+  },
+  price: { // 가격
+    color: colorPalette.white,
+    fontSize: 16,
+    fontWeight: "bold",
+
+    paddingLeft: 10,
+  },
+  buttonText: { // 구매하기 버튼
+    color: colorPalette.white,
+    fontSize: 14,
+    fontWeight: "bold",
   }
 })
 
