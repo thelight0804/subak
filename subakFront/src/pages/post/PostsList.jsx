@@ -9,6 +9,7 @@ import { shared } from '../../styles/shared';
 import styles from '../../styles/post/postsList';
 import Alert from '../components/Alert';
 import Loading from '../components/Loading';
+import CommaPrice from '../components/CommaPrice';
 
 const PostsList = ({navigation}) => {
   const userData = useSelector((state) => state.userData); // 유저 데이터
@@ -115,7 +116,7 @@ const RenderPosts = ({posts, navigation}) => {
           <View style={styles.postContentContainer}>
             <Text style={styles.title}>{item.postTitle}</Text>
             <Text style={[styles.grayText, styles.address]}>{`${item.address}ㆍ${item.postDateTime}`}</Text>
-            <Text style={styles.price}>{`${item.price}원`}</Text>
+            <Text style={styles.price}>{`${CommaPrice(item.price)}원`}</Text>
             <View style={styles.heartCountContainer}>
               <Text style={[styles.grayText, styles.heartCount]}>{item.heartCount}</Text>
               <Icon name="heart-outline" size={18} color="#868b94"></Icon>

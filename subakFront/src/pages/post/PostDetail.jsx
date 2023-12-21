@@ -8,6 +8,7 @@ import { shared } from '../../styles/shared';
 import styles from '../../styles/post/postDetail';
 
 import Loading from '../components/Loading';
+import CommaPrice from '../components/CommaPrice'
 
 const PostDetail = ({navigation, route}) => {
   const [post, setPost] = useState(null); // 게시물 상세 데이터
@@ -91,15 +92,7 @@ const PostDetail = ({navigation, route}) => {
       </ScrollView>
 
       <View style={styles.footer}>
-        <View style={styles.heartContainer}>
-          <TouchableOpacity style={styles.heart}>
-            <Icon name="heart-outline" color="#868b94" size={25}/>
-          </TouchableOpacity>
-          <Text style={styles.price}>{`${post.price}원`}</Text>
-        </View>
-        <TouchableOpacity style={shared.button}>
-          <Text style={[styles.buttonText, shared.redButton]}>구매하기</Text>
-        </TouchableOpacity>
+        {post && <RenderFooter price={post.price}/>}
       </View>
   </View>
   );
@@ -152,5 +145,21 @@ const RenderContent = ({post, tempColor, tempEmoji}) => {
     </>
   );
 }
+
+const RenderFooter = ({price}) => {
+  return(
+    <>
+    <View style={styles.heartContainer}>
+      <TouchableOpacity style={styles.heart}>
+        <Icon name="heart-outline" color="#868b94" size={25}/>
+      </TouchableOpacity>
+      <Text style={styles.price}>{`${CommaPrice(price)}원`}</Text>
+    </View>
+    <TouchableOpacity style={shared.button}>
+      <Text style={[styles.buttonText, shared.redButton]}>구매하기</Text>
+    </TouchableOpacity>
+  </>
+  );
+};
 
 export default PostDetail;
