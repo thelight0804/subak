@@ -8,6 +8,7 @@ import Config from 'react-native-config';
 import { shared } from '../../styles/shared';
 import styles from '../../styles/post/postsList';
 import Alert from '../components/Alert';
+import Loading from '../components/Loading';
 
 const PostsList = ({navigation}) => {
   const userData = useSelector((state) => state.userData); // 유저 데이터
@@ -15,157 +16,38 @@ const PostsList = ({navigation}) => {
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
 
-  const [posts, setPosts] = useState([
-    {
-      "id": 5004,
-      "memberName": "IamYourFather",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg",
-      "postTitle": "\"titleddd\"",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702468776/ab63209a-9fdf-44d0-bafa-ccecd61c1f9f.png.jpg",
-      "price": 1,
-      "postDateTime": "3일 전",
-      "address": "00",
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 7001,
-      "memberName": "zzzz",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "\"titleddd\"",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 1,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 7001,
-      "memberName": "zzzz",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "\"titleddd\"",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 1,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 7001,
-      "memberName": "zzzz",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "\"titleddd\"",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 1,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 7001,
-      "memberName": "zzzz",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "\"titleddd\"",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 1,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 7001,
-      "memberName": "zzzz",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "\"titleddd\"",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 1,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 7001,
-      "memberName": "zzzz",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "\"titleddd\"",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 1,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 7001,
-      "memberName": "zzzz",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "\"titleddd\"",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 1,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 7001,
-      "memberName": "zzzz",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "\"titleddd\"",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 1,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 7001,
-      "memberName": "zzzz",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "\"titleddd\"",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 1,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 7001,
-      "memberName": "zzzz",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "\"titleddd\"",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 1,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 7001,
-      "memberName": "zzzz",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "\"titleddd\"",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 1,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-  ]);
-  // const [posts, setPosts] = useState([]); // 포스트 목록
+  // const [posts, setPosts] = useState([
+  //   {
+  //     "id": 5004,
+  //     "memberName": "IamYourFather",
+  //     "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg",
+  //     "postTitle": "\"titleddd\"",
+  //     "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702468776/ab63209a-9fdf-44d0-bafa-ccecd61c1f9f.png.jpg",
+  //     "price": 1,
+  //     "postDateTime": "3일 전",
+  //     "address": "00",
+  //     "heartCount": 0,
+  //     "commentCount": 0
+  //   },
+  //   {
+  //     "id": 7001,
+  //     "memberName": "zzzz",
+  //     "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
+  //     "postTitle": "\"titleddd\"",
+  //     "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
+  //     "price": 1,
+  //     "postDateTime": "3일 전",
+  //     "address": null,
+  //     "heartCount": 0,
+  //     "commentCount": 0
+  //   },
+  // ]);
+  const [posts, setPosts] = useState(null); // 포스트 목록
 
   useEffect(() => {
     axios.get(`http://${Config.DB_IP}/posts`, {timeout: 2000})
       .then(response => {
+        console.log(response.data);
         if (response.status === 200) {
           setPosts(response.data);
         }
@@ -207,7 +89,7 @@ const PostsList = ({navigation}) => {
           </View>
         </View>
         <ScrollView style={styles.content}>
-          <RenderPosts posts={posts} navigation={navigation}/>
+          {posts ? <RenderPosts posts={posts} navigation={navigation}/> : <Loading />}
         </ScrollView>
       </View>
     </>
@@ -215,7 +97,6 @@ const PostsList = ({navigation}) => {
 };
 
 const RenderPosts = ({posts, navigation}) => {
-  console.log(posts[0]);
   return (
     <>
       {posts.map((item, i) => (
