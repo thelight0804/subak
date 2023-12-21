@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
@@ -206,9 +206,9 @@ const PostsList = ({navigation}) => {
             </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.content}>
+        <ScrollView style={styles.content}>
           <RenderPosts posts={posts} navigation={navigation}/>
-        </View>
+        </ScrollView>
       </View>
     </>
   )
@@ -219,16 +219,17 @@ const RenderPosts = ({posts, navigation}) => {
   return (
     <>
       {posts.map((item, i) => (
-        <TouchableOpacity 
+        <TouchableOpacity
           key={i}
           style={styles.postBox}
-          onPress={() => navigation.navigate('PostDetail', {postId: item.id})}
-        >
+          onPress={() =>
+            navigation.navigate('PostStack', {
+              screen: 'PostDetail',
+              params: {postId: item.id},
+            })
+          }>
           <View style={styles.imageBox}>
-            <Image
-              style={styles.image}
-              source={{uri: item.firstImage}}
-            />
+            <Image style={styles.image} source={{uri: item.firstImage}} />
           </View>
           <View style={styles.postContentBox}>
             <Text style={styles.title}>{item.postTitle}</Text>
