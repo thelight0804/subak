@@ -130,9 +130,9 @@ const RenderContent = ({post, tempColor, tempEmoji}) => {
         </View>
       </View>
       <View>
-        <Text style={styles.postTitle}>{post.postTitle}</Text>
-        <Text style={styles.postDate}>{post.postDateTime}</Text>
-        <Text style={styles.postContent}>{post.content}</Text>
+        <Text style={[styles.text, styles.postTitle]}>{post.postTitle}</Text>
+        <Text style={[styles.textGray, styles.postDateTime]}>{post.postDateTime}</Text>
+        <Text style={[styles.text, styles.content]}>{post.content}</Text>
       </View>
     </>
   );

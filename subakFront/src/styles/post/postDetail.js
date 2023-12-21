@@ -17,6 +17,8 @@ const styles = StyleSheet.create({
     color: colorPalette.white,
     fontSize: 14,
   },
+
+  // 메인 이미지
   imageContainer: {
     width: width,
     height: height * 0.4, // 화면의 40%만 차지
@@ -26,6 +28,8 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'cover',
   },
+
+  // 프로필 정보
   titleContainer: { // 작성자, 메너온도 컨테이너
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -83,6 +87,18 @@ const styles = StyleSheet.create({
     color: colorPalette.gray,
     textAlign: 'right',
     textDecorationLine: 'underline', // 밑줄
+  },
+
+  // 게시글 내용
+  postTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    paddingTop: 15,
+    paddingBottom: 5,
+  },
+  postDateTime: {
+    paddingBottom: 5,
+    fontSize: 12,
   }
 })
 
