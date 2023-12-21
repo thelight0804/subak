@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     borderTopColor: '#868b94',
     backgroundColor: colorPalette.background,
   },
-  menuBox: {
+  menuContainer: {
     alignItems: 'center',
   }
 })

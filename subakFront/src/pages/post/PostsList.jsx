@@ -102,21 +102,21 @@ const RenderPosts = ({posts, navigation}) => {
       {posts.map((item, i) => (
         <TouchableOpacity
           key={i}
-          style={styles.postBox}
+          style={styles.postContainer}
           onPress={() =>
             navigation.navigate('PostStack', {
               screen: 'PostDetail',
               params: {postId: item.id},
             })
           }>
-          <View style={styles.imageBox}>
+          <View style={styles.imageContainer}>
             <Image style={styles.image} source={{uri: item.firstImage}} />
           </View>
-          <View style={styles.postContentBox}>
+          <View style={styles.postContentContainer}>
             <Text style={styles.title}>{item.postTitle}</Text>
             <Text style={[styles.grayText, styles.address]}>{`${item.address}ㆍ${item.postDateTime}`}</Text>
             <Text style={styles.price}>{`${item.price}원`}</Text>
-            <View style={styles.heartCountBox}>
+            <View style={styles.heartCountContainer}>
               <Text style={[styles.grayText, styles.heartCount]}>{item.heartCount}</Text>
               <Icon name="heart-outline" size={18} color="#868b94"></Icon>
             </View>

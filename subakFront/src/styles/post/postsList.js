@@ -1,5 +1,5 @@
-import {StyleSheet} from "react-native";
-import { colorPalette } from "../shared";
+import {StyleSheet} from 'react-native';
+import { colorPalette } from '../shared';
 
 const styles = StyleSheet.create({
   footer: {
@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   // 게시글 리스트
-  postBox: {
+  postContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 0.7,
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     marginRight: 15,
     marginBottom: 15,
   },
-  postContentBox: {
+  postContentContainer: {
     flex: 1, // 너비 채우기
   },
   title: {
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     paddingBottom: 3,
   },
   // 좋아요
-  heartCountBox: {
+  heartCountContainer: {
     flexDirection: 'row-reverse',
     alignItems: 'center',
   },
