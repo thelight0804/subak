@@ -86,7 +86,7 @@ const FindEmail = ({ navigation }) => {
                 setTimeout(() => {
                   setShowAlert(false);
                 }, 6000);
-                console.log('Login error.response', error.response);
+                console.log('FindEmail error.response', error.response);
               } else if (error.request) {
                 // timeout으로 요청 실패
                 setAlertMessage(
@@ -103,7 +103,7 @@ const FindEmail = ({ navigation }) => {
                 setTimeout(() => {
                   setShowAlert(false);
                 }, 6000);
-                console.log('Login Unexpected error', error.message);
+                console.log('FindEmail Unexpected error', error.message);
               }
             }
           )

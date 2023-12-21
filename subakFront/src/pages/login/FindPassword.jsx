@@ -137,7 +137,7 @@ const SignUp = ({ navigation }) => {
                           setTimeout(() => {
                             setShowAlert(false);
                           }, 6000);
-                          console.log('SignUp error.response', error.response);
+                          console.log('FindPassword error.response', error.response);
                         } else if (error.request) {
                           // timeout으로 요청 실패
                           setNewPassword('');
@@ -155,7 +155,7 @@ const SignUp = ({ navigation }) => {
                           setTimeout(() => {
                             setShowAlert(false);
                           }, 6000);
-                          console.log('SignUp Unexpected error', error.message);
+                          console.log('FindPassword Unexpected error', error.message);
                         }
                       });
                   }}

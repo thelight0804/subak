@@ -80,7 +80,7 @@ const LocationSearch = ({ navigation }) => {
                           setTimeout(() => {
                             setShowAlert(false);
                           }, 6000);
-                          console.log('Login error.response', error.response);
+                          console.log('Address error.response', error.response);
                         } else if (error.request) { // timeout으로 요청 실패
                           setAlertMessage('서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
                           setShowAlert(true);

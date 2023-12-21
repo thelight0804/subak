@@ -116,7 +116,7 @@ const PostsList = ({navigation}) => {
                     setTimeout(() => {
                       setShowAlert(false);
                     }, 6000);
-                    console.log('error.response', error.response.data);
+                    console.log('EditProfile error.response', error.response.data);
                   } else if (error.request) { // timeout으로 요청 실패
                     setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.'); // 오류 메시지
                     setShowAlert(true); // 오류 알림창
@@ -129,7 +129,7 @@ const PostsList = ({navigation}) => {
                     setTimeout(() => {
                       setShowAlert(false);
                     }, 6000);
-                    console.log('Unexpected error', error.message);
+                    console.log('EditProfile Unexpected error', error.message);
                   }
                }
                
