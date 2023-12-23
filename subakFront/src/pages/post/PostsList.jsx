@@ -90,9 +90,19 @@ const PostsList = ({navigation}) => {
             </TouchableOpacity>
           </View>
         </View>
+
         <ScrollView style={styles.content}>
           {posts ? <RenderPosts posts={posts} navigation={navigation}/> : <Loading />}
         </ScrollView>
+
+        <View style={styles.newPost}>
+          <TouchableOpacity
+            style={styles.newPostButton}
+            onPress={() => console.log("newPostButton 클릭!")}>
+            <Icon name="add" size={30} color="#FFFFFF" />
+            <Text style={styles.title}>글쓰기</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </>
   )

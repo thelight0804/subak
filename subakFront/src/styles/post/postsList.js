@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
+
   // 게시글 리스트
   postContainer: {
     flexDirection: 'row',
@@ -49,6 +50,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row-reverse',
     alignItems: 'center',
   },
+
+  // 글쓰기 버튼
+  newPostButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    backgroundColor: colorPalette.main,
+    width: 100,
+    padding: 10,
+    borderRadius: 50,
+    alignSelf: 'flex-end',
+  }
 })
 
 export default styles;
