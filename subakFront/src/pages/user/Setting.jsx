@@ -29,7 +29,7 @@ const Setting = ({navigation}) => {
           <TouchableOpacity style={[shared.inlineContainer, styles.listButton]} onPress={() => console.log("공지사항")}>
             <Text style={[shared.text, styles.text]}>공지사항</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[shared.inlineContainer, styles.listButton, styles.languageBox]} onPress={() => console.log("언어 설정")}>
+          <TouchableOpacity style={[shared.inlineContainer, styles.listButton, styles.languageContainer]} onPress={() => console.log("언어 설정")}>
             <Text style={[shared.text, styles.text]}>언어 설정</Text>
             <Text style={[shared.text, styles.text, styles.languageText]}>{language}</Text>
           </TouchableOpacity>
