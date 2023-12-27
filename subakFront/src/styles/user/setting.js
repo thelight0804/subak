@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     paddingBottom: 12,
   },
-  languageBox: {
+  languageContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

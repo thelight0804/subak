@@ -1,9 +1,9 @@
-import { View, TouchableOpacity, Text } from "react-native";
+import { View, TouchableOpacity, Text } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import { shared } from "../../styles/shared";
-import styles from "../../styles/login/findedEmail";
+import { shared } from '../../styles/shared';
+import styles from '../../styles/login/findedEmail';
 
 const FindedEmail = ({ navigation, route }) => {
   return (

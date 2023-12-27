@@ -11,6 +11,7 @@ import LoginStack from './LoginStack';
 import UserStack from './UserStack';
 import FooterTabs from './FooterTabs';
 import logoutUser from '../data/store/logoutUser';
+import PostStack from './PostStack';
 
 const DrawerNavigator = () => {
   const Stack = createNativeStackNavigator(); //React navigation stack
@@ -44,6 +45,7 @@ const DrawerNavigator = () => {
       <Stack.Screen name="LoginStack" component={LoginStack}/>
       <Stack.Screen name="UserStack" component={UserStack}/>
       <Stack.Screen name="FooterTabs" component={FooterTabs}/>
+      <Stack.Screen name="PostStack" component={PostStack}/>
     </Stack.Navigator>
   );
 }
