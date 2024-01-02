@@ -122,4 +122,16 @@ public class PostController {
         Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
         return ResponseEntity.ok(postService.getLikedPosts(offset, limit, loginMember.getId()));
     }
+
+    @ApiOperation(value = "판매 완료된 상품 조회")
+    @GetMapping("/posts/completed")
+    public ResponseEntity<List<PostResponse>> getCompletePosts(
+            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            HttpServletRequest httpServletRequest) {
+        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
+        return ResponseEntity.ok(postService.getCompletePosts(offset, limit, loginMember.getId()));
+    }
+
+
 }

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -74,6 +75,13 @@ public class PostService {
     /**
      * '판매 완료' 게시글 조회
      */
+    public List<PostResponse> getCompletePosts(int offset, int limit, Long memberId) {
+        Pageable pageable = PageRequest.of(offset / limit, limit, Sort.by(Sort.Direction.DESC, "postDateTime"));
+        Page<Post> posts = postRepository.findCompletePosts(memberId, pageable);
+        return posts.stream()
+                .map(this::convertToPostResponse)
+                .collect(Collectors.toList());
+    }
 
 
 
