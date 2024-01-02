@@ -3,19 +3,16 @@ package subak.backend.controller;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import subak.backend.domain.Member;
-import subak.backend.domain.Post;
 import subak.backend.dto.request.post.CreatePostRequest;
 import subak.backend.dto.request.post.PostStatusUpdateRequest;
 import subak.backend.dto.request.post.ProductStatusUpdateRequest;
 import subak.backend.dto.request.post.UpdatePostRequest;
-import subak.backend.dto.response.post.MainResponse;
+import subak.backend.dto.response.post.PostResponse;
 import subak.backend.dto.response.post.PostDetailResponse;
 import subak.backend.service.AuthService;
 import subak.backend.service.CommentService;
@@ -102,7 +99,7 @@ public class PostController {
 
     @ApiOperation(value = "메인페이지 게시글 목록 출력")
     @GetMapping("/posts")
-    public ResponseEntity<List<MainResponse>> getMainPosts(
+    public ResponseEntity<List<PostResponse>> getMainPosts(
             @RequestParam(value = "offset", defaultValue = "0") int offset,
             @RequestParam(value = "limit", defaultValue = "10") int limit) {
         return ResponseEntity.ok(postService.getMainPosts(offset, limit));
@@ -110,7 +107,19 @@ public class PostController {
 
     @ApiOperation(value = "게시글 상세페이지 출력")
     @GetMapping("/posts/{postId}")
-    public ResponseEntity<PostDetailResponse> getPostDetail(@PathVariable("postId") Long id) {
-        return ResponseEntity.ok(postService.getPostDetail(id));
+    public ResponseEntity<PostDetailResponse> getPostDetail(@PathVariable("postId") Long id,
+                                                            HttpServletRequest httpServletRequest) {
+        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
+        return ResponseEntity.ok(postService.getPostDetail(id, loginMember));
+    }
+
+    @ApiOperation(value = "관심 상품 조회")
+    @GetMapping("/posts/likedBy")
+    public ResponseEntity<List<PostResponse>> getLikedPosts(
+            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            HttpServletRequest httpServletRequest) {
+        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
+        return ResponseEntity.ok(postService.getLikedPosts(offset, limit, loginMember.getId()));
     }
 }

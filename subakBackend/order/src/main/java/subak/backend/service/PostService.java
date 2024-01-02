@@ -18,16 +18,13 @@ import subak.backend.domain.enumType.ProductStatus;
 import subak.backend.dto.request.post.CreatePostRequest;
 import subak.backend.dto.request.post.UpdatePostRequest;
 import subak.backend.dto.response.comment.CommentResponse;
-import subak.backend.dto.response.post.MainResponse;
+import subak.backend.dto.response.post.PostResponse;
 import subak.backend.dto.response.post.PostDetailResponse;
 import subak.backend.exception.PostException;
 import subak.backend.repository.HeartRepository;
 import subak.backend.repository.PostRepository;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,18 +45,18 @@ public class PostService {
     /**
      * 메인페이지 글 보기
      */
-    public List<MainResponse> getMainPosts(int offset, int limit) {
+    public List<PostResponse> getMainPosts(int offset, int limit) {
         Pageable pageable = PageRequest.of(offset / limit, limit, Sort.by(Sort.Direction.DESC, "postDateTime"));
         Page<Post> posts = postRepository.findAll(pageable);
         return posts.stream()
-                .map(this::convertToMainResponse)
+                .map(this::convertToPostResponse)
                 .collect(Collectors.toList());
     }
 
     /**
      * 글 상세보기
      */
-    public PostDetailResponse getPostDetail(Long postId) {
+    public PostDetailResponse getPostDetail(Long postId, Member authenticatedMember) {
         Post post = getPostById(postId);
 
         // 인기 게시글일 경우에만 Redis에서 조회수를 증가시키고 가져오기
@@ -71,7 +68,24 @@ public class PostService {
             postRepository.save(post); // DB에 조회수 증가 반영
         }
 
-        return convertToPostDetailResponse(post);
+        return convertToPostDetailResponse(post, authenticatedMember);
+    }
+
+    /**
+     * '판매 완료' 게시글 조회
+     */
+
+
+
+    /**
+     * '즐겨찾기' (좋아요 누른) 게시글 조회
+     */
+    public List<PostResponse> getLikedPosts(int offset, int limit, Long memberId) {
+        Pageable pageable = PageRequest.of(offset / limit, limit, Sort.by(Sort.Direction.DESC, "postDateTime"));
+        Page<Post> posts = postRepository.findLikedPosts(memberId, pageable);
+        return posts.stream()
+                .map(this::convertToPostResponse)
+                .collect(Collectors.toList());
     }
 
 
@@ -211,8 +225,8 @@ public class PostService {
     }
 
     // 메인페이지
-    private MainResponse convertToMainResponse(Post post){
-        MainResponse response = new MainResponse();
+    private PostResponse convertToPostResponse(Post post){
+        PostResponse response = new PostResponse();
 
         response.setId(post.getId());
         response.setMemberName(post.getMember().getName());
@@ -229,7 +243,7 @@ public class PostService {
 
 
     // 상세페이지
-    private PostDetailResponse convertToPostDetailResponse(Post post) {
+    private PostDetailResponse convertToPostDetailResponse(Post post, Member member) {
         PostDetailResponse response = new PostDetailResponse();
         response.setId(post.getId());
         response.setPostTitle(post.getPostTitle());
@@ -252,7 +266,20 @@ public class PostService {
                         comment.getCmDateTime(),
                         comment.getMember().getProfileImage()))
                 .collect(Collectors.toList()));
+
+        response.setLiked(isPostLikedByMember(post, member));
+
         return response;
+    }
+
+    // 좋아요 검사 로직
+    private boolean isPostLikedByMember(Post post, Member member) {
+        for (Heart heart : post.getHearts()) {
+            if (heart.getMember().equals(member)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // 게시물이 존재하지 않는 경우 예외처리

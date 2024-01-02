@@ -23,6 +23,7 @@ public class PostDetailResponse {
     private int heartCount; // 좋아요 개수
     private int commentCount; // 댓글 개수
     private Long views; // 조회수
+    private boolean isLiked; // 좋아요 여부
 
     private String memberName; // 작성자 이름
     private String profileImage; // 작성자 프로필 이미지
