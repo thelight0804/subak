@@ -25,6 +25,7 @@ const NewPost = ({navigation}) => {
   const categories = ['디지털/가전', '가구/인테리어', '의류', '도서/티켓/음반/게임', '뷰티/미용', '기타'];
   const [selectedCategory, setSelectedCategory] = useState(null); // 카테고리
 
+  // 카테고리 렌더링
   const renderCategory = (start, end) => {
     return (
       <View style={styles.toggleContainer}>
@@ -47,16 +48,16 @@ const NewPost = ({navigation}) => {
 
   return (
     <>
+      <View style={styles.inlineContainer}>
+        <TouchableOpacity
+          style={shared.iconButton}
+          onPress={() => navigation.goBack()}>
+          <Icon name="close" size={30} color="#FFFFFF" />
+        </TouchableOpacity>
+        <Text style={[shared.text, styles.mainText]}>내 물건 팔기</Text>
+      </View>
+      
       <ScrollView style={[shared.container, styles.container]}>
-        <View style={styles.inlineContainer}>
-          <TouchableOpacity
-            style={shared.iconButton}
-            onPress={() => navigation.goBack()}>
-            <Icon name="chevron-back" size={30} color="#FFFFFF" />
-          </TouchableOpacity>
-          <Text style={[shared.text, styles.mainText]}>내 물건 팔기</Text>
-        </View>
-        
         <View style={styles.content}>
           <TouchableOpacity style={styles.imageContainer}>
             <Icon style={styles.grayText} name="camera" size={25} color="#868b94" />

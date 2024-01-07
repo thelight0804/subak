@@ -9,11 +9,13 @@ const styles = StyleSheet.create({
 
   inlineContainer: {
     // 상단에 고정
-    position: 'absolute',
+    // position: 'absolute',
     top: 0,
     width: '100%',
     backgroundColor: colorPalette.background,
-    zIndex: 1,
+    paddingTop: 10,
+    paddingLeft: 10,
+    paddingRight: 30,
 
     flexDirection: 'row',
     justifyContent: 'flex-start',
@@ -29,7 +31,7 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    marginTop: 50,
+    // marginTop: 50,
   },
   imageContainer: {
     width: 65,
@@ -89,7 +91,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     flex: 1,
     backgroundColor: colorPalette.background,
-    // zIndex: 1,
     width: '100%',
     bottom: 0,
   },

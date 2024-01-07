@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  // 글쓰기 버튼
+  // 작성 완료 버튼
   newPostButton: {
     flexDirection: 'row',
     justifyContent: 'center',
