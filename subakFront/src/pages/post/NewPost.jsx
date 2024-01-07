@@ -6,6 +6,7 @@ import Config from 'react-native-config';
 
 import { shared } from '../../styles/shared';
 import styles from '../../styles/post/newPost';
+import Alert from '../components/Alert';
 
 const NewPost = ({navigation}) => {
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
@@ -19,6 +20,7 @@ const NewPost = ({navigation}) => {
 
   const [noTitle, setNoTitle] = useState(false); // 제목 없음
   const [noContent, setNoContent] = useState(false); // 내용 없음
+  const [noCategory, setNoCategory] = useState(false); // 카테고리 없음
 
   const categories = ['디지털/가전', '가구/인테리어', '의류', '도서/티켓/음반/게임', '뷰티/미용', '기타'];
   const [selectedCategory, setSelectedCategory] = useState(null); // 카테고리
@@ -30,7 +32,10 @@ const NewPost = ({navigation}) => {
           <TouchableOpacity 
           key={index}
           style={[styles.toggle, selectedCategory === index + start && styles.selectedToggle]}
-          onPress={() => {setSelectedCategory(index + start)}}
+          onPress={() => {
+            setSelectedCategory(index + start) // 선택한 카테고리
+            setNoCategory(false); // 카테고리가 있다면 경고문구 삭제
+          }}
         >
           <Text style={[styles.toggleText, selectedCategory === index + start && styles.selectedToggleText]}>{category}</Text>
         </TouchableOpacity>
@@ -42,7 +47,7 @@ const NewPost = ({navigation}) => {
 
   return (
     <>
-      <ScrollView style={shared.container}>
+      <ScrollView style={[shared.container, styles.container]}>
         <View style={styles.inlineContainer}>
           <TouchableOpacity
             style={shared.iconButton}
@@ -81,6 +86,12 @@ const NewPost = ({navigation}) => {
           <Text style={styles.inputTag}>카테고리</Text>
           <View>{renderCategory(0, 3)}</View>
           <View>{renderCategory(3, 6)}</View>
+          {noCategory && (
+            <View style={shared.inlineContainer}>
+              <Icon name="alert-circle" size={15} color="#dc645b" />
+              <Text style={styles.alertText}> 카테고리를 지정해 주세요.</Text>
+            </View>
+          )}
 
           <Text style={styles.inputTag}>거래 방식</Text>
           <View style={styles.toggleContainer}>
@@ -144,45 +155,47 @@ const NewPost = ({navigation}) => {
               !titleCheck(title) && setNoTitle(true);
               // 내용이 없다면
               !contentCheck(content) && setNoContent(true);
+              // 카테고리가 없다면
+              !selectedCategory && setNoCategory(true);
+
               // 제목과 내용이 있다면
-              if (titleCheck(title) && contentCheck(content)) { 
-                
-            axios.post(`http://${Config.DB_IP}/post`, {
-              // category: category,
-              // postImage: postImage,
-              postTitle: title,
-              price: price,
-            }, {
-              timeout: 2000,
-            }
-            ).then(response => { // 성공 했을 때
-              navigation.navigate('FooterTabs');
-            })
-            .catch(error => { 
-                if (error.response) { // 요청은 성공했으나 응답은 실패
-                  setAlertMessage(`${error.response.data}`);
-                  setShowAlert(true);
-                  setTimeout(() => {
-                    setShowAlert(false);
-                  }, 6000);
-                  console.error('Login error.response', error.response.data);
-                } else if (error.request) { // timeout으로 요청 실패
-                  setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.'); // 오류 메시지
-                  setShowAlert(true); // 오류 알림창
-                  setTimeout(() => {
-                    setShowAlert(false);
-                  }, 6000); // 6초 후 알림창 사라짐
-                } else { // 기타 오류 발생
-                  setAlertMessage(`오류가 발생했습니다. \n[${error.message}]`);
-                  setShowAlert(true);
-                  setTimeout(() => {
-                    setShowAlert(false);
-                  }, 6000);
-                  console.error('NewPost Unexpected error', error.message);
+              if (titleCheck(title) && contentCheck(content) && selectedCategory) {
+                !price && setPrice(0); // 가격이 없다면 0으로 초기화
+                axios.post(`http://${Config.DB_IP}/post`, {
+                  category: categories[selectedCategory],
+                  // postImage: postImage,
+                  postTitle: title,
+                  price: price ? price : 0,
+                }, {
+                  timeout: 2000,
                 }
-             }
-          )
-              }
+                ).then(response => { // 성공 했을 때
+                  navigation.navigate('FooterTabs');
+                })
+                .catch(error => { 
+                    if (error.response) { // 요청은 성공했으나 응답은 실패
+                      setAlertMessage(`${error.response.data}`);
+                      setShowAlert(true);
+                      setTimeout(() => {
+                        setShowAlert(false);
+                      }, 6000);
+                      console.error('Login error.response', error.response.data);
+                    } else if (error.request) { // timeout으로 요청 실패
+                      setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.'); // 오류 메시지
+                      setShowAlert(true); // 오류 알림창
+                      setTimeout(() => {
+                        setShowAlert(false);
+                      }, 6000); // 6초 후 알림창 사라짐
+                    } else { // 기타 오류 발생
+                      setAlertMessage(`오류가 발생했습니다. \n[${error.message}]`);
+                      setShowAlert(true);
+                      setTimeout(() => {
+                        setShowAlert(false);
+                      }, 6000);
+                      console.error('NewPost Unexpected error', error.message);
+                    }
+                }
+              )}
             }}>
             <Text style={styles.buttonText}>작성 완료</Text>
           </TouchableOpacity>

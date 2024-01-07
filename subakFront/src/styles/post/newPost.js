@@ -2,6 +2,11 @@ import {StyleSheet} from 'react-native';
 import { colorPalette } from '../shared';
 
 const styles = StyleSheet.create({
+  container: {
+    // backgroundColor: '#c4c4c4',
+    marginBottom: 61,
+  },
+
   inlineContainer: {
     // 상단에 고정
     position: 'absolute',
