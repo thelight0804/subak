@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   toggle: { // 선택되지 않은 토글
-    width: 80,
+    // width: 80,
     padding: 10,
     marginRight: 10,
 

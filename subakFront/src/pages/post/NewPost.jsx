@@ -20,6 +20,25 @@ const NewPost = ({navigation}) => {
   const [noTitle, setNoTitle] = useState(false); // 제목 없음
   const [noContent, setNoContent] = useState(false); // 내용 없음
 
+  const categories = ['디지털/가전', '가구/인테리어', '의류', '도서/티켓/음반/게임', '뷰티/미용', '기타'];
+  const [selectedCategory, setSelectedCategory] = useState(null); // 카테고리
+
+  const renderCategory = (start, end) => {
+    return (
+      <View style={styles.toggleContainer}>
+        {categories.slice(start, end).map((category, index) => (
+          <TouchableOpacity 
+          key={index}
+          style={[styles.toggle, selectedCategory === index + start && styles.selectedToggle]}
+          onPress={() => {setSelectedCategory(index + start)}}
+        >
+          <Text style={[styles.toggleText, selectedCategory === index + start && styles.selectedToggleText]}>{category}</Text>
+        </TouchableOpacity>
+        ))}
+      </View>
+    );
+  };
+
 
   return (
     <>
@@ -58,6 +77,10 @@ const NewPost = ({navigation}) => {
               <Text style={styles.alertText}> 제목을 적어주세요.</Text>
             </View>
           )}
+
+          <Text style={styles.inputTag}>카테고리</Text>
+          <View>{renderCategory(0, 3)}</View>
+          <View>{renderCategory(3, 6)}</View>
 
           <Text style={styles.inputTag}>거래 방식</Text>
           <View style={styles.toggleContainer}>
