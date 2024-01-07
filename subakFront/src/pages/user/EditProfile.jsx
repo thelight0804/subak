@@ -137,7 +137,7 @@ const PostsList = ({navigation}) => {
             }
             }
             disabled={!changeData()}>
-            <Text style={[shared.text, styles.mainText, !changeData() && styles.enabled]}>
+            <Text style={[shared.text, styles.buttonText, !changeData() && styles.enabled]}>
               완료
             </Text>
           </TouchableOpacity>
@@ -162,7 +162,7 @@ const PostsList = ({navigation}) => {
           <Text style={[shared.text, {textAlign: 'left'}]}>닉네임</Text>
           <View style={{marginTop: 10}}>
             <TextInput
-              style={styles.textInput}
+              style={shared.blankTextInput}
               onChangeText={text => setNewName(text)}
               value={newName}
               inputMode="text"

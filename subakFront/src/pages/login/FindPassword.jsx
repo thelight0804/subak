@@ -37,7 +37,7 @@ const SignUp = ({ navigation }) => {
         <View style={{marginTop: 10}}>
           <TextInput
             style={[
-              styles.textInput,
+              shared.blankTextInput,
               !nameCheck(name) && name.length > 0 && {borderColor: '#dc645b', borderWidth: 1},
             ]}
             onChangeText={text => setName(text)}
@@ -48,7 +48,7 @@ const SignUp = ({ navigation }) => {
           />
           <TextInput
             style={[
-              styles.textInput,
+              shared.blankTextInput,
               !phoneCheck(phone) &&  phone.length > 0 && {borderColor: '#dc645b', borderWidth: 1},
             ]}
             onChangeText={text => setPhone(text)}
@@ -59,7 +59,7 @@ const SignUp = ({ navigation }) => {
           />
           <TextInput
             style={[
-              styles.textInput,
+              shared.blankTextInput,
               !emailCheck(email) && email.length > 0 && {borderColor: '#dc645b', borderWidth: 1},
             ]}
             onChangeText={text => setEmail(text)}
@@ -76,7 +76,7 @@ const SignUp = ({ navigation }) => {
               <>
                 <TextInput
                   style={[
-                    styles.textInput,
+                    shared.blankTextInput,
                     !passwordCheck(newPassword) && 
                     newPassword.length > 0 && 
                     {

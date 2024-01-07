@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 50,
     alignSelf: 'flex-end',
-  }
+  },
 })
 
 export default styles;

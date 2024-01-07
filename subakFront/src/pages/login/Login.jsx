@@ -38,7 +38,7 @@ const Login = ({ navigation }) => {
         </Text>
         <View style={{marginTop: 10}}>
           <TextInput
-            style={styles.textInput}
+            style={shared.blankTextInput}
             onChangeText={text => setEmail(text)}
             value={email}
             inputMode="email"
@@ -47,7 +47,7 @@ const Login = ({ navigation }) => {
             placeholderTextColor="#676c74"
           />
           <TextInput
-            style={styles.textInput}
+            style={shared.blankTextInput}
             onChangeText={text => setPassword(text)}
             value={password}
             inputMode="text"

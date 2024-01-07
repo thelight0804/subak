@@ -98,12 +98,13 @@ const PostsList = ({navigation}) => {
         <View style={styles.newPost}>
           <TouchableOpacity
             style={styles.newPostButton}
-            onPress={() => console.log("newPostButton 클릭!")}>
+            onPress={() => navigation.navigate('PostStack', {screen: 'NewPost'})}>
             <Icon name="add" size={30} color="#FFFFFF" />
             <Text style={styles.title}>글쓰기</Text>
           </TouchableOpacity>
         </View>
       </View>
+      {showAlert && <Alert message={alertMessage} />}
     </>
   )
 };

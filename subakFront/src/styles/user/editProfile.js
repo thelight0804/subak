@@ -12,7 +12,10 @@ const styles = StyleSheet.create({
   },
   mainText: {
     fontSize: 16,
-    paddingBottom: 8,
+    paddingBottom: 15,
+  },
+  buttonText: {
+    fontSize: 16,
   },
   enabled: {
     color: colorPalette.gray,
@@ -37,16 +40,6 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 20, // 원형
-  },
-  textInput: { // 입력칸
-    width: '100%',
-    borderWidth: 1,
-    borderColor: '#868b94',
-    borderRadius: 8,
-    paddingTop: 10,
-    paddingLeft: 10,
-    marginBottom: 10,
-    color: colorPalette.white,
   },
 })
 
