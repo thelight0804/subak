@@ -109,7 +109,7 @@ const PostDetail = ({navigation, route}) => {
       </ScrollView>
 
       <View style={styles.footer}>
-        {post && <RenderFooter price={post.price} liked={liked} setLiked={setLiked}/>}
+        {post && <RenderFooter price={post.price} liked={liked} setLiked={setLiked} postId={post.id}/>}
       </View>
   </View>
   );
@@ -163,14 +163,55 @@ const RenderContent = ({post, tempColor, tempEmoji}) => {
   );
 }
 
-const RenderFooter = ({price, liked, setLiked}) => {
+const RenderFooter = ({price, liked, setLiked, postId}) => {
   return(
     <>
       <View style={styles.heartContainer}>
         <TouchableOpacity style={styles.heart}
           onPress={() => {
-            liked ? setLiked(false) : setLiked(true);
-            //TODO: 좋아요 기능 구현
+            // 좋아요 API 호출
+            axios.post(`http://${Config.DB_IP}/post/${postId}/hearts`)
+              .then(response => {
+                if (response.status === 200) {
+                  setLiked(true);
+                }
+              })
+              .catch(error => {
+                if (error.response) {
+                  // 요청은 성공했으나 응답은 실패
+                  setLiked(false);
+
+                  setAlertMessage(`${error.response.data}`);
+                  setShowAlert(true);
+                  setTimeout(() => {
+                    setShowAlert(false);
+                  }, 6000);
+                  console.error('PostDetail error.response', error.response.data);
+                } else if (error.request) {
+                  // timeout으로 요청 실패
+                  setLiked(false);
+
+                  setAlertMessage(
+                    '서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.',
+                  ); // 오류 메시지
+                  setShowAlert(true); // 오류 알림창
+                  setTimeout(() => {
+                    setShowAlert(false);
+                  }, 6000); // 6초 후 알림창 사라짐
+                } else {
+                  // 기타 오류 발생
+                  setLiked(false);
+
+                  setAlertMessage(
+                    `오류가 발생했습니다. \n[${error.message}]`,
+                  );
+                  setShowAlert(true);
+                  setTimeout(() => {
+                    setShowAlert(false);
+                  }, 6000);
+                  console.error('PostDetail Unexpected error', error.message);
+                }
+              });
           }}
         >
           { liked ? 
