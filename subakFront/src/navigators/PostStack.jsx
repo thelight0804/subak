@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import PostDetail from '../pages/post/PostDetail';
 import NewPost from '../pages/post/NewPost';
+import PostEdit from '../pages/post/PostEdit';
 
 const PostStack = () => {
   const Stack = createNativeStackNavigator(); //React navigation stack
@@ -10,6 +11,7 @@ const PostStack = () => {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="PostDetail" component={PostDetail}/>
       <Stack.Screen name="NewPost" component={NewPost}/>
+      <Stack.Screen name="PostEdit" component={PostEdit}/>
     </Stack.Navigator>
   )
 }

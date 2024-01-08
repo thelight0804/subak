@@ -9,9 +9,11 @@ const styles = StyleSheet.create({
   header: {
     position: "absolute",
     flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
     padding: 10,
     zIndex: 1,
+    width: '110%', // 부모 너비를 기준으로
   },
   text: {
     color: colorPalette.white,

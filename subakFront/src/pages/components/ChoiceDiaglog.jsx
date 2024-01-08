@@ -1,6 +1,6 @@
 import { View, Modal, TouchableWithoutFeedback, Text, TouchableOpacity } from 'react-native';
 
-import styles from '../../styles/components/choiceModal'
+import styles from '../../styles/components/ChoiceDiaglog'
 import { shared } from '../../styles/shared';
 
 const ChoiceDiaglog = props => {

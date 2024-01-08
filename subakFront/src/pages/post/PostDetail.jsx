@@ -9,11 +9,15 @@ import styles from '../../styles/post/postDetail';
 
 import Loading from '../components/Loading';
 import CommaPrice from '../components/CommaPrice'
+import ChoiceDiaglog from '../components/ChoiceDiaglog';
 
 const PostDetail = ({navigation, route}) => {
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
   const [liked, setLiked] = useState(false); // 좋아요 여부
+
+  const [openModal, setOpenModal] = useState(false); // 모달 창
+  const [modalIndex, setModalIndex] = useState(-1); // 모달 선택 인덱스
 
   const [post, setPost] = useState({
     "id": 5004,
@@ -87,20 +91,47 @@ const PostDetail = ({navigation, route}) => {
         setTempEmoji('😆');
       }
     }
-  }, [post])
+  }, [post]);
+
+  // 모달 선택 버튼에 따라 실행
+  useEffect(() => {
+    if (modalIndex === 0) { // 게시글 수정
+      navigation.navigate('PostStack', {screen: 'PostEdit', params: {postId: post.id},})
+    }
+    else if (modalIndex === 1) { // 끌어올리기
+      console.log('끌어올리기')
+    }
+    else if (modalIndex === 2) { // 숨기기
+      console.log('숨기기')
+    }
+    else if (modalIndex === 3) { // 삭제
+      console.log('삭제')
+    }
+    setModalIndex(-1); // 모달 선택 인덱스 초기화
+    setOpenModal(false); // 모달 창 닫기
+  }, [modalIndex]);
   
   return (
     <View style={shared.container}>
       <View style={styles.header}>
+        <View style={{ flexDirection: 'row' }}>
+          <TouchableOpacity
+            style={shared.iconButton}
+            onPress={() => navigation.goBack()}>
+            <Icon name="chevron-back" size={25} color="#FFFFFF" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={shared.iconButton}
+            onPress={() => navigation.navigate('PostsList')}>
+            <Icon name="home-outline" size={25} color="#FFFFFF" />
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity
           style={shared.iconButton}
-          onPress={() => navigation.goBack()}>
-          <Icon name="chevron-back" size={30} color="#FFFFFF" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={shared.iconButton}
-          onPress={() => navigation.navigate('PostsList')}>
-          <Icon name="home-outline" size={30} color="#FFFFFF" />
+          onPress={() => {
+            setOpenModal(true);
+          }}>
+          <Icon name="ellipsis-vertical-sharp" size={25} color="#FFFFFF" />
         </TouchableOpacity>
       </View>
 
@@ -111,6 +142,14 @@ const PostDetail = ({navigation, route}) => {
       <View style={styles.footer}>
         {post && <RenderFooter price={post.price} liked={liked} setLiked={setLiked} postId={post.id}/>}
       </View>
+      {openModal && (
+        <ChoiceDiaglog
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+          setModalIndex={setModalIndex}
+          choices={['게시글 수정', '끌어올리기', '숨기기', '삭제']}
+        />
+      )}
   </View>
   );
 };

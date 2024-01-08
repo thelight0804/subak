@@ -46,7 +46,7 @@ const shared = StyleSheet.create({
   iconButton: {
     display: 'flex',
     paddingBottom: 15,
-    // paddingRight: 15 요소를 중앙으로 정렬하기 위해 삭제
+    paddingRight: 15,
   },
   textInput: {
     width: '100%',
