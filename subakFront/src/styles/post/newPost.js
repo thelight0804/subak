@@ -2,9 +2,8 @@ import {StyleSheet} from 'react-native';
 import { colorPalette } from '../shared';
 
 const styles = StyleSheet.create({
-  container: {
-    // backgroundColor: '#c4c4c4',
-    marginBottom: 61,
+  content: {
+    marginBottom: 80,
   },
 
   inlineContainer: {
@@ -97,9 +96,6 @@ const styles = StyleSheet.create({
   },
   selectedToggleText: { // 선택된 토글 텍스트
     color: 'black',
-  },
-  alertContainer: {
-
   },
   alertText: {
     color: colorPalette.main,

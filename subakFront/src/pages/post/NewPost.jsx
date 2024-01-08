@@ -4,12 +4,15 @@ import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Config from 'react-native-config';
 import { launchImageLibrary } from 'react-native-image-picker';
+import { useSelector } from 'react-redux';
 
 import { shared } from '../../styles/shared';
 import styles from '../../styles/post/newPost';
 import Alert from '../components/Alert';
 
 const NewPost = ({navigation}) => {
+  const userData = useSelector((state) => state.userData); // 유저 데이터
+
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
   const [image, setImage] = useState([]); // 이미지
@@ -280,18 +283,30 @@ const NewPost = ({navigation}) => {
                 selectedCategory
               ) {
                 !price && setPrice(0); // 가격이 없다면 0으로 초기화
-                axios
-                  .post(
-                    `http://${Config.DB_IP}/post`,
-                    {
+                
+                // 사진 formData
+                const formData = new FormData();
+                image.forEach((uri, index) => {
+                  formData.append('image', {
+                    name: `postImage${index}`,
+                    type: 'image/jpeg',
+                    uri: uri,
+                  });
+                });
+
+                axios.post(
+                    `http://${Config.DB_IP}/post`,{
                       category: categories[selectedCategory],
-                      // postImage: postImage,
+                      postImage: formData,
                       postTitle: title,
                       price: price ? price : 0,
                     },
-                    {
-                      timeout: 2000,
-                    },
+                    {headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${userData.token}` // 토큰 값을 추가
+                      },
+                      timeout: 2000 // 타임아웃을 2초로 설정
+                    }
                   )
                   .then(response => {
                     // 성공 했을 때
