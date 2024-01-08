@@ -65,6 +65,14 @@ const NewPost = ({navigation}) => {
             <TouchableOpacity
               style={styles.cameraButton}
               onPress={() => {
+                if (image.length === 10) {
+                  setAlertMessage(`사진은 최대 10장까지 선택할 수 있습니다.`);
+                  setShowAlert(true);
+                  setTimeout(() => {
+                    setShowAlert(false);
+                  }, 6000);
+                }
+                else {
                 // 갤러리 사진 불러오기
                 PermissionsAndroid.request(
                   PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
@@ -103,7 +111,7 @@ const NewPost = ({navigation}) => {
                     }
                   },
                 );
-              }}>
+              }}}>
               <Icon
                 style={styles.grayText}
                 name="camera"
