@@ -30,13 +30,11 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
 
-  content: {
-    // marginTop: 50,
-  },
-  imageContainer: {
+  cameraButton: {
     width: 65,
     padding: 10,
     marginTop: 20,
+    marginRight: 10,
 
     borderWidth: 1,
     borderRadius: 5,
@@ -46,6 +44,28 @@ const styles = StyleSheet.create({
     color: colorPalette.gray,
     textAlign: 'center',
   },
+  redText: {
+    color: colorPalette.main,
+    textAlign: 'center',
+  },
+
+  previewImageContainer: { // 미리보기 이미지 컨테이너
+    position: 'relative',
+    alignSelf: 'center',
+  },
+  closeIcon: { // 삭제 아이콘
+    position: 'absolute', // 자식
+    top: '15%',
+    left: '70%',
+  },
+  previewImage: { // 미리보기 이미지
+    width: 65,
+    height: 65,
+    borderRadius: 5,
+    marginTop: 20,
+    marginRight: 10,
+  },
+
   inputTag: {
     color: colorPalette.white,
     fontWeight: 'bold',
