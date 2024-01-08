@@ -128,9 +128,22 @@
     <tr>
         <td>관심 상품 조회</td>
         <td>GET</td>
-        <td>/posts?likedBy={postId}</td>
+        <td>/posts/likedBy</td>
         <td>게시글</td>
     </tr>
+    <tr>
+        <td>판매완료 상품 조회</td>
+        <td>GET</td>
+        <td>/posts/completed</td>
+        <td>게시글</td>
+    </tr>
+    <tr>
+        <td>숨김 상품 조회</td>
+        <td>GET</td>
+        <td>/posts/hide</td>
+        <td>게시글</td>
+    </tr>
+      
     <tr>
         <td>유저가 받은 후기</td>
         <td>GET</td>
