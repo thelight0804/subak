@@ -83,6 +83,17 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * '숨김' 게시글 조회
+     */
+    public List<PostResponse> getHidePosts(int offset, int limit, Long memberId) {
+        Pageable pageable = PageRequest.of(offset / limit, limit, Sort.by(Sort.Direction.DESC, "postDateTime"));
+        Page<Post> posts = postRepository.findHidePosts(memberId, pageable);
+        return posts.stream()
+                .map(this::convertToPostResponse)
+                .collect(Collectors.toList());
+    }
+
 
 
     /**

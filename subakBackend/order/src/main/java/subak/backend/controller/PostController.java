@@ -133,5 +133,14 @@ public class PostController {
         return ResponseEntity.ok(postService.getCompletePosts(offset, limit, loginMember.getId()));
     }
 
+    @ApiOperation(value = "숨김 게시물 조회")
+    @GetMapping("/posts/hide")
+    public ResponseEntity<List<PostResponse>> getHidePosts(
+            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            HttpServletRequest httpServletRequest) {
+        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
+        return ResponseEntity.ok(postService.getHidePosts(offset, limit, loginMember.getId()));
+    }
 
 }
