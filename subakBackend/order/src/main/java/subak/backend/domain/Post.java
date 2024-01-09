@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
+import subak.backend.domain.enumType.Category;
 import subak.backend.domain.enumType.PostStatus;
 import subak.backend.domain.enumType.ProductStatus;
 
@@ -30,7 +31,8 @@ public class Post {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private Category category; // 상품 카테고리
 
     @Column(name = "post_title")
     private String postTitle; //글 제목
@@ -44,7 +46,7 @@ public class Post {
     @Column(name = "post_date_time")
     private LocalDateTime postDateTime; // 글 게시 시간
 
-    private int views = 0; // 조회수
+    private Long views = 0L; // 조회수
 
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus; // 상품 상태 [SALE, RESERVATION, COMPLETE]
@@ -68,7 +70,7 @@ public class Post {
     private List<Review> reviews = new ArrayList<>();
 
     public static Post createPost(Member member,
-                                  String category,
+                                  Category category,
                                   String postTitle,
                                   String content,
                                   int price,
@@ -98,7 +100,7 @@ public class Post {
 
 
     // 글 수정
-    public void updatePostInfo(String category, String postTitle, String content, int price, List<String> newImagePaths) {
+    public void updatePostInfo(Category category, String postTitle, String content, int price, List<String> newImagePaths) {
         this.category = category;
         this.postTitle = postTitle;
         this.content = content;
@@ -138,5 +140,10 @@ public class Post {
     //끌어올리기
     public void updatePostDateTime() {
         this.postDateTime = LocalDateTime.now();
+    }
+
+    //조회수
+    public void increaseViews() {
+        this.views++;
     }
 }
