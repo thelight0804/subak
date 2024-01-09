@@ -44,11 +44,11 @@ public class PostService {
 
 
     /**
-     * 메인페이지 글 보기
+     * 메인페이지 글 보기 ('숨김' 게시글 제외)
      */
     public List<PostResponse> getMainPosts(int offset, int limit) {
         Pageable pageable = PageRequest.of(offset / limit, limit, Sort.by(Sort.Direction.DESC, "postDateTime"));
-        Page<Post> posts = postRepository.findAll(pageable);
+        Page<Post> posts = postRepository.findMainPosts(pageable);
         return posts.stream()
                 .map(this::convertToPostResponse)
                 .collect(Collectors.toList());
