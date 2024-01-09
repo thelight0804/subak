@@ -34,7 +34,7 @@ public class PostController {
     @ApiOperation(value = "게시글 생성")
     @PostMapping(value = "/post", consumes = {"multipart/form-data"})
     public ResponseEntity<String> createPost(@ModelAttribute @Validated CreatePostRequest createPostRequest,
-                                             @RequestPart("postImage") List<MultipartFile> images,
+                                             @RequestPart(value = "postImage", required = false) List<MultipartFile> images,
                                              HttpServletRequest httpServletRequest) throws IOException {
         Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
 
@@ -46,7 +46,7 @@ public class PostController {
     @PutMapping("/post/{postId}")
     public ResponseEntity<String> updatePost(@PathVariable Long postId,
                                              @ModelAttribute @Validated UpdatePostRequest UpdatePostRequest,
-                                             @RequestPart("postImage") List<MultipartFile> postImages,
+                                             @RequestPart(value = "postImage", required = false) List<MultipartFile> postImages,
                                              HttpServletRequest httpServletRequest) throws IOException {
 
         authService.getAuthenticatedMember(httpServletRequest);
