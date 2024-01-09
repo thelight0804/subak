@@ -34,7 +34,7 @@ public class PostController {
     @ApiOperation(value = "게시글 생성")
     @PostMapping(value = "/post", consumes = {"multipart/form-data"})
     public ResponseEntity<String> createPost(@ModelAttribute @Validated CreatePostRequest createPostRequest,
-                                             @RequestPart("postImage") List<MultipartFile> images,
+                                             @RequestPart(value = "postImage", required = false) List<MultipartFile> images,
                                              HttpServletRequest httpServletRequest) throws IOException {
         Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
 
@@ -46,7 +46,7 @@ public class PostController {
     @PutMapping("/post/{postId}")
     public ResponseEntity<String> updatePost(@PathVariable Long postId,
                                              @ModelAttribute @Validated UpdatePostRequest UpdatePostRequest,
-                                             @RequestPart("postImage") List<MultipartFile> postImages,
+                                             @RequestPart(value = "postImage", required = false) List<MultipartFile> postImages,
                                              HttpServletRequest httpServletRequest) throws IOException {
 
         authService.getAuthenticatedMember(httpServletRequest);
@@ -133,5 +133,14 @@ public class PostController {
         return ResponseEntity.ok(postService.getCompletePosts(offset, limit, loginMember.getId()));
     }
 
+    @ApiOperation(value = "숨김 게시물 조회")
+    @GetMapping("/posts/hide")
+    public ResponseEntity<List<PostResponse>> getHidePosts(
+            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            HttpServletRequest httpServletRequest) {
+        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
+        return ResponseEntity.ok(postService.getHidePosts(offset, limit, loginMember.getId()));
+    }
 
 }

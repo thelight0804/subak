@@ -14,4 +14,10 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
 
     @Query("SELECT p FROM Post p WHERE p.productStatus = 'COMPLETE' and p.member.id = :memberId")
     Page<Post> findCompletePosts(@Param("memberId") Long memberId, Pageable pageable);
+
+    @Query("SELECT p FROM Post p WHERE p.postStatus = 'HIDE' and p.member.id = :memberId")
+    Page<Post> findHidePosts(@Param("memberId") Long memberId, Pageable pageable);
+
+    @Query("SELECT p FROM Post p WHERE p.postStatus != 'HIDE'")
+    Page<Post> findMainPosts(Pageable pageable);
 }
