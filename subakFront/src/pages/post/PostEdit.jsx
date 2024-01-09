@@ -364,6 +364,7 @@ const PostEdit = ({navigation, route}) => {
                       postImage: formData,
                       postTitle: title,
                       price: price ? price : 0,
+                      content: content,
                     },
                     {headers: {
                         'Content-Type': 'multipart/form-data',

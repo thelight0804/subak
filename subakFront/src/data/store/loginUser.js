@@ -6,16 +6,16 @@ import { setName, setId, setPhone, setEmail, setAddress, setLogined, setMannerSc
  * @param {Function} dispatch Redux dispatch 함수
  * @returns {Object} userData
  */
-const loginUser = (userData, dispatch) => {
-  dispatch(setName(userData.name));
-  dispatch(setId(userData.id));
-  dispatch(setPhone(userData.phone));
-  dispatch(setEmail(userData.email));
-  dispatch(setAddress(userData.address));
+const loginUser = (data, dispatch) => {
+  dispatch(setName(data.name));
+  dispatch(setId(data.memberId));
+  dispatch(setPhone(data.phoneNumber));
+  dispatch(setEmail(data.email));
+  dispatch(setAddress(data.address));
   dispatch(setLogined(true));
-  dispatch(setMannerScore(userData.mannerScore));
-  dispatch(setImage(userData.image));
-  dispatch(setToken(userData.token));
+  dispatch(setMannerScore(data.temp));
+  dispatch(setImage(data.profileImage));
+  dispatch(setToken(data.token));
 }
 
 export default loginUser;

@@ -13,15 +13,15 @@ import styles from '../../styles/login/login';
 
 import Alert from '../components/Alert';
 
-import { setName } from '../../data/store/userSlice';
-
-const Login = ({ navigation }) => {
+const PostRecent = ({navigation, route}) => {
   const userData = useSelector((state) => state.userData);
   const dispatch = useDispatch();
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
   const [email, setEmail] = useState(''); //이메일
   const [password, setPassword] = useState(''); //비밀번호
+
+  //params: {postId: post.id, postTitle: post.postTitle, postImage: post.postImages[0], postPrice: post.price}
 
   return (
     <View style={{ flex: 1 }}>
@@ -33,11 +33,8 @@ const Login = ({ navigation }) => {
             <Ionicon name="chevron-back" size={30} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
-        <Text style={styles.headerText}>안녕하세요!</Text>
-        <Text style={styles.headerText}>이메일과 비밀번호로 로그인해주세요.</Text>
-        <Text style={styles.text}>
-          휴대폰 번호는 안전하게 보관되며 이웃들에게 공개되지 않아요.
-        </Text>
+        <Text style={styles.headerText}>지금 가격을 낮추고</Text>
+        <Text style={styles.headerText}>게시글을 끌어올려 보세요</Text>
         <View style={{marginTop: 10}}>
           <TextInput
             style={shared.blankTextInput}
@@ -68,7 +65,7 @@ const Login = ({ navigation }) => {
               timeout: 2000,
             }
             ).then(response => { // 로그인 성공 했을 때
-              loginUser(response.data, dispatch); // Redux에 저장
+              loginUser(userData, dispatch); // Redux에 저장
               setStorageData(userData, 'userData'); // AsyncStorage에 저장
               navigation.navigate('FooterTabs');
             })
@@ -111,6 +108,7 @@ const Login = ({ navigation }) => {
         <Text style={[styles.text, styles.text2]}>
           이메일 또는 비밀번호를 잊으셨나요?
         </Text>
+        {/* <TouchableOpacity onPress={() => console.log('이메일 찾기 버튼 클릭')}> */}
         <TouchableOpacity onPress={() =>  navigation.navigate('FindEmail')}>
           <Text style={styles.hyperText}>이메일 찾기</Text>
         </TouchableOpacity>
@@ -133,4 +131,4 @@ const emailCheck = (emailValue) => {
   return emailRegEx.test(emailValue);
 }
 
-export default Login;
+export default PostRecent;

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { Text, View, TouchableOpacity, ScrollView, Image, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -12,6 +13,8 @@ import CommaPrice from '../components/CommaPrice'
 import ChoiceDiaglog from '../components/ChoiceDiaglog';
 
 const PostDetail = ({navigation, route}) => {
+  const userData = useSelector((state) => state.userData); // 유저 데이터
+
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
   const [liked, setLiked] = useState(false); // 좋아요 여부
@@ -19,26 +22,33 @@ const PostDetail = ({navigation, route}) => {
   const [openModal, setOpenModal] = useState(false); // 모달 창
   const [modalIndex, setModalIndex] = useState(-1); // 모달 선택 인덱스
 
-  const [post, setPost] = useState({
-    "id": 5004,
-    "postImages": ["http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg"],
-    "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg",
-    "memberName": "IamYourFather",
-    "address": "경남 창원시",
-    "temp": 68.7,
-    "price": 65000,
-    "postTitle": "titleddd",
-    "postDateTime": "3일 전",
-    "content": "도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도"
-  })
-  // const [post, setPost] = useState(null); // 게시물 상세 데이터
+  // const [post, setPost] = useState({
+  //   "id": 5004,
+  //   "postImages": ["http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg"],
+  //   "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg",
+  //   "memberName": "IamYourFather",
+  //   "address": "경남 창원시",
+  //   "temp": 68.7,
+  //   "price": 65000,
+  //   "postTitle": "titleddd",
+  //   "postDateTime": "3일 전",
+  //   "content": "도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도"
+  // })
+  const [post, setPost] = useState(null); // 게시물 상세 데이터
 
   const [tempColor, setTempColor] = useState('white'); // 매너 온도 색상
   const [tempEmoji, setTempEmoji] = useState('❔'); // 매너 온도 이모지
 
   // 게시물 상세 데이터 가져오기
   useEffect(() => {
-    axios.get(`http://${Config.DB_IP}/posts/${route.params.postId}`, {timeout: 2000})
+    axios.get(`http://${Config.DB_IP}/posts/${route.params.postId}`,
+      {headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${userData.token}` // 토큰 값을 추가
+      },
+      timeout: 2000 // 타임아웃을 2초로 설정
+      }
+    )
       .then(response => {
         if (response.status === 200) {
           setPost(response.data);
@@ -96,10 +106,10 @@ const PostDetail = ({navigation, route}) => {
   // 모달 선택 버튼에 따라 실행
   useEffect(() => {
     if (modalIndex === 0) { // 게시글 수정
-      navigation.navigate('PostStack', {screen: 'PostEdit', params: {postId: post.id},})
+      navigation.navigate('PostStack', {screen: 'PostEdit', params: {postId: post.id}})
     }
     else if (modalIndex === 1) { // 끌어올리기
-      console.log('끌어올리기')
+      navigation.navigate('PostStack', {screen: 'PostRecent', params: {postId: post.id, postTitle: post.postTitle, postImage: post.postImages[0], postPrice: post.price}})
     }
     else if (modalIndex === 2) { // 숨기기
       console.log('숨기기')
@@ -140,7 +150,18 @@ const PostDetail = ({navigation, route}) => {
       </ScrollView>
 
       <View style={styles.footer}>
-        {post && <RenderFooter price={post.price} liked={liked} setLiked={setLiked} postId={post.id}/>}
+        {post && (
+          <RenderFooter
+            price={post.price}
+            liked={liked}
+            setLiked={setLiked}
+            postId={post.id}
+            userData={userData}
+            setAlertMessage={setAlertMessage}
+            setShowAlert={setShowAlert}
+            />
+          )
+        }
       </View>
       {openModal && (
         <ChoiceDiaglog
@@ -202,14 +223,21 @@ const RenderContent = ({post, tempColor, tempEmoji}) => {
   );
 }
 
-const RenderFooter = ({price, liked, setLiked, postId}) => {
+const RenderFooter = ({price, liked, setLiked, postId, userData, setAlertMessage, setShowAlert}) => {
   return(
     <>
       <View style={styles.heartContainer}>
         <TouchableOpacity style={styles.heart}
           onPress={() => {
             // 좋아요 API 호출
-            axios.post(`http://${Config.DB_IP}/post/${postId}/hearts`)
+            axios.post(`http://${Config.DB_IP}/post/${postId}/hearts`,
+              {
+              headers: {
+                // 'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${userData.token}` // TODO: 토큰 값 추가 오류
+              },
+              timeout: 2000 // 타임아웃을 2초로 설정
+              })
               .then(response => {
                 if (response.status === 200) {
                   setLiked(true);

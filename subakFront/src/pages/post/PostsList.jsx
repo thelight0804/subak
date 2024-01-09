@@ -49,7 +49,6 @@ const PostsList = ({navigation}) => {
   useEffect(() => {
     axios.get(`http://${Config.DB_IP}/posts`, {timeout: 2000})
       .then(response => {
-        console.log(response.data);
         if (response.status === 200) {
           setPosts(response.data);
         }

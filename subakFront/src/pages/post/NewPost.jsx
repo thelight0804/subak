@@ -275,32 +275,37 @@ const NewPost = ({navigation}) => {
               !contentCheck(content) && setNoContent(true);
               // 카테고리가 없다면
               !selectedCategory && setNoCategory(true);
-
+              
               // 제목과 내용이 있다면
-              if (
-                titleCheck(title) &&
-                contentCheck(content) &&
-                selectedCategory
-              ) {
+              if ( titleCheck(title) && contentCheck(content) && selectedCategory ) {
                 !price && setPrice(0); // 가격이 없다면 0으로 초기화
+                // 카테고리 영어 치환
+                let categoryMapping = {
+                  '디지털/가전': 'ELECTRONICS',
+                  '가구/인테리어': 'FURNITURE',
+                  '의류': 'CLOTHING',
+                  '도서/티켓/음반/게임': 'BOOKS_TICKETS_RECORDS_GAMES',
+                  '뷰티/미용': 'BEAUTY',
+                  '기타': 'ETC',
+                };
+                let category = categoryMapping[categories[selectedCategory]];
                 
-                // 사진 formData
+                // formData 형식
                 const formData = new FormData();
                 image.forEach((uri, index) => {
-                  formData.append('image', {
-                    name: `postImage${index}`,
+                  formData.append('postImage', {
+                    name: `postImage${index}.jpg`,
                     type: 'image/jpeg',
                     uri: uri,
                   });
                 });
+                formData.append('postTitle', title);
+                formData.append('price', price ? price : 0);
+                formData.append('content', content);
+                formData.append('category', category);
 
-                axios.post(
-                    `http://${Config.DB_IP}/post`,{
-                      category: categories[selectedCategory],
-                      postImage: formData,
-                      postTitle: title,
-                      price: price ? price : 0,
-                    },
+                axios.post(`http://${Config.DB_IP}/post`,
+                    formData,
                     {headers: {
                         'Content-Type': 'multipart/form-data',
                         'Authorization': `Bearer ${userData.token}` // 토큰 값을 추가
@@ -308,7 +313,7 @@ const NewPost = ({navigation}) => {
                       timeout: 2000 // 타임아웃을 2초로 설정
                     }
                   )
-                  .then(response => {
+                  .then(() => {
                     // 성공 했을 때
                     navigation.navigate('FooterTabs');
                   })
