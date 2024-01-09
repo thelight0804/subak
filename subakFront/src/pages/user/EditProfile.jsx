@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { shared } from '../../styles/shared';
 import styles from '../../styles/user/editProfile';
 import Alert from '../components/Alert';
-import ChoiceModal from '../components/ChoiceModal';
+import ChoiceDiaglog from '../components/ChoiceDiaglog';
 
 
 const PostsList = ({navigation}) => {
@@ -173,7 +173,7 @@ const PostsList = ({navigation}) => {
         </View>
       </View>
       {openModal && (
-        <ChoiceModal
+        <ChoiceDiaglog
           openModal={openModal}
           setOpenModal={setOpenModal}
           setModalIndex={setModalIndex}
