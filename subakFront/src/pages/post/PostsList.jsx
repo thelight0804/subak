@@ -49,7 +49,6 @@ const PostsList = ({navigation}) => {
   // const [posts, setPosts] = useState(null); // 포스트 목록
 
   useEffect(() => {
-    setStorageData(userData, 'userData'); // AsyncStorage에 유저 데이터 저장
     axios.get(`http://${Config.DB_IP}/posts`, {timeout: 2000})
       .then(response => {
         if (response.status === 200) {

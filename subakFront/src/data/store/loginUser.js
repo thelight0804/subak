@@ -1,12 +1,13 @@
+import setStorageData from '../asyncStorage/setStorageData';
 import { login } from './userSlice';
 
 /**
  * 유저 데이터에 로그인 정보를 저장합니다
- * @param {Object} data 유저 데이터
+ * @param {Object} data 백엔드 유저 데이터
  * @param {Function} dispatch Redux dispatch 함수
  * @returns {Object} userData
  */
-const loginUser = (data, dispatch) => {
+const loginUser = async (data, dispatch) => {
   // 초기 상태
   const initialState = {
     name: data.name, // 이름
@@ -21,6 +22,7 @@ const loginUser = (data, dispatch) => {
   };
   // 로그인 정보를 저장
   dispatch(login(initialState));
+  await setStorageData(initialState, 'userData');
 }
 
 export default loginUser;

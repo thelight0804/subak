@@ -66,7 +66,6 @@ const PostRecent = ({navigation, route}) => {
             }
             ).then(response => { // 로그인 성공 했을 때
               loginUser(userData, dispatch); // Redux에 저장
-              setStorageData(userData, 'userData'); // AsyncStorage에 저장
               navigation.navigate('FooterTabs');
             })
             .catch(error => { 

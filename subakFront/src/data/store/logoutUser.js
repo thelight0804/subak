@@ -6,8 +6,8 @@ import { logout } from './userSlice';
  * @param {Function} dispatch Redux dispatch 함수
  */
 const logoutUser = async (dispatch) => {
-  await removeStorageData('userData'); // 로컬에서 유저 데이터 제거
   dispatch(logout()); // Redux store에서 유저 데이터 제거
+  await removeStorageData('userData'); // 로컬에서 유저 데이터 제거
 }
 
 export default logoutUser;

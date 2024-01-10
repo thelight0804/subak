@@ -29,11 +29,11 @@ const userData = createSlice({
   // },
   initialState,
   reducers: {
-    login(state, action) {
-      return action.payload; // 로그인 정보를 저장
+    login(state, action) { // 로그인 정보를 저장
+      return action.payload;
     },
-    logout(state) {
-      return initialState; // 초기 상태로 설정
+    logout(state) { // 초기 상태로 설정
+      return initialState;
     },
   }
 })
