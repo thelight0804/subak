@@ -111,9 +111,9 @@ public class PostService {
     /**
      * 끌어올리기
      */
-    public void recentPost(Long postId){
+    public void recentPost(Long postId, int newPrice){
         Post post = getPostById(postId);
-        post.updatePostDateTime();
+        post.updatePostDateTimeAndPrice(newPrice);
         postRepository.save(post);
     }
 
