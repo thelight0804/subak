@@ -21,6 +21,7 @@ import subak.backend.service.PostService;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -80,11 +81,14 @@ public class PostController {
         return ResponseEntity.ok("Success Delete post");
     }
 
-    @ApiOperation(value = "끌어올리기", notes = "필수값 : 게시글 ID")
+    @ApiOperation(value = "끌어올리기", notes = "필수값 : 게시글 ID, 가격")
     @PutMapping("/post/{postId}/recent")
-    public ResponseEntity<String> recentPost(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
-        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
-        postService.recentPost(postId);
+    public ResponseEntity<String> recentPost(@PathVariable Long postId,
+                                             @RequestBody Map<String, Integer> body,
+                                             HttpServletRequest httpServletRequest) {
+        int price = body.get("price");
+        authService.getAuthenticatedMember(httpServletRequest);
+        postService.recentPost(postId, price);
         return ResponseEntity.ok("Post updated to recent success");
     }
 
