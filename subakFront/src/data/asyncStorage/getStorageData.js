@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const getStorageData = async (key) => {
   try {
     const jsonValue = await AsyncStorage.getItem(key);
-    console.log('getStorageData Success: ', jsonValue); // 테스트용 로그
+    console.log('getStorageData Success:', jsonValue); // 테스트용 로그
     return jsonValue != null ? JSON.parse(jsonValue) : null;
   } catch (e) {
     return console.error('setStorageData Error:', e);

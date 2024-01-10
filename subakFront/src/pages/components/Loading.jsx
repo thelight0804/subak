@@ -1,4 +1,5 @@
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { colorPalette } from '../../styles/shared';
 
 const Loading = () => {
   return (
@@ -12,6 +13,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    backgroundColor: colorPalette.background,
   },
   horizontal: {
     flexDirection: 'row',

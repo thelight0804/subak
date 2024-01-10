@@ -113,10 +113,7 @@ const SignUp = ({ navigation, route }) => {
             .then(response => {
               if (response.status === 200) {
                 // 백엔드로부터 데이터 받기
-                const data = response.data;
-                data.logined = true;
-                loginUser(data, dispatch); // Redux에 저장
-                setStorageData(userData, 'userData'); // AsyncStorage에 저장
+                loginUser(response.data, dispatch); // Redux에 저장
                 navigation.navigate('FooterTabs'); // 메인 화면으로 이동
               }
             })

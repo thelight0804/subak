@@ -1,5 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+// 초기 상태
+const initialState = {
+  name: '', // 이름
+  id: '', // 유저 고유 id
+  phone: '', // 전화번호
+  email: '', // 이메일
+  address: '', // 주소
+  logined: false, // 로그인 여부
+  mannerScore: 0, // 매너 온도
+  image: '', // 프로필 사진
+  token: '', // JWT 토큰
+};
+
 const userData = createSlice({
   name : 'userData',
   // FIX: 테스트 계정으로 초기화
@@ -14,48 +27,17 @@ const userData = createSlice({
   //   image : '../../assets/image/nijika.png', // 프로필 사진
   //   token : 'tokenabc', // JWT 토큰
   // },
-  initialState : {
-    name : '', // 이름
-    id : '', // 유저 고유 id
-    phone : '', // 전화번호
-    email : '', // 이메일
-    address : '', // 주소
-    logined : false, // 로그인 여부
-    mannerScore : 36.5, // 매너 온도
-    image : '', // 프로필 사진
-    token : '', // JWT 토큰
-  },
+  initialState,
   reducers: {
-    setName(state, action){
-      state.name = action.payload
+    login(state, action) {
+      return action.payload; // 로그인 정보를 저장
     },
-    setId(state, action){
-      state.id = action.payload
-    },
-    setPhone(state, action){
-      state.phone = action.payload
-    },
-    setEmail(state, action){
-      state.email = action.payload
-    },
-    setAddress(state, action){
-      state.address = action.payload
-    },
-    setLogined(state, action){
-      state.logined = action.payload
-    },
-    setMannerScore(state, action){
-      state.mannerScore = action.payload
-    },
-    setImage(state, action){
-      state.image = action.payload
-    },
-    setToken(state, action){
-      state.token = action.payload
+    logout(state) {
+      return initialState; // 초기 상태로 설정
     },
   }
 })
 
-export const {setName, setId, setPhone, setEmail, setAddress, setLogined, setMannerScore, setImage, setToken} = userData.actions;
+export const {login, logout} = userData.actions;
 
 export default userData;

@@ -7,6 +7,7 @@ import styles from '../../styles/user/setting';
 import { useSelector, useDispatch } from 'react-redux';
 import { setName, setPhone, setEmail, setAddress, setLogined, setToken } from '../../data/store/userSlice';
 import storeStorageData from '../../data/asyncStorage/setStorageData';
+import logoutUser from '../../data/store/logoutUser';
 
 const Setting = ({navigation}) => {
   const userData = useSelector((state) => state.userData);
@@ -29,19 +30,22 @@ const Setting = ({navigation}) => {
           <TouchableOpacity style={[shared.inlineContainer, styles.listButton]} onPress={() => console.log("공지사항")}>
             <Text style={[shared.text, styles.text]}>공지사항</Text>
           </TouchableOpacity>
+
           <TouchableOpacity style={[shared.inlineContainer, styles.listButton, styles.languageContainer]} onPress={() => console.log("언어 설정")}>
             <Text style={[shared.text, styles.text]}>언어 설정</Text>
             <Text style={[shared.text, styles.text, styles.languageText]}>{language}</Text>
           </TouchableOpacity>
+
           <TouchableOpacity 
             style={[shared.inlineContainer, styles.listButton]} 
             onPress={() => {
-              logOut(userData, dispatch)
               navigation.navigate('LoginStack', {screen: 'Start'});
+              logoutUser(dispatch);
             }}
           >
             <Text style={[shared.text, styles.text]}>로그아웃</Text>
           </TouchableOpacity>
+
           <TouchableOpacity style={[shared.inlineContainer, styles.listButton]} onPress={() => console.log("탈퇴하기")}>
             <Text style={[shared.text, styles.text]}>탈퇴하기</Text>
           </TouchableOpacity>
@@ -50,19 +54,5 @@ const Setting = ({navigation}) => {
     </>
   )
 };
-
-
-const logOut = (userData, dispatch) => {
-  // 로그아웃
-  dispatch(setName(''));
-  dispatch(setPhone(''));
-  dispatch(setEmail(''));
-  dispatch(setAddress(''));
-  dispatch(setLogined(false));
-  dispatch(setToken(''));
-  storeStorageData('userData', userData);
-
-  console.log(userData);
-}
 
 export default Setting;

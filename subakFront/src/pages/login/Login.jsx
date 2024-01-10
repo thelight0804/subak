@@ -78,9 +78,8 @@ const Login = ({ navigation }) => {
                 mannerScore: response.data.temp,
                 image: response.data.profileImage,
                 token: response.data.token,
-              }
+              };
               loginUser(data, dispatch); // Redux에 저장
-              setStorageData(userData, 'userData'); // AsyncStorage에 유저 데이터 저장
               navigation.navigate('FooterTabs');
             })
             .catch(error => { 

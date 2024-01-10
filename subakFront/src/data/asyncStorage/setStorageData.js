@@ -13,7 +13,7 @@ const setStorageData = async (data, key) => {
 
     // 테스트용 로그
     const retrievedData = await AsyncStorage.getItem(key);
-    return console.log('setStorageData Success: ', retrievedData);
+    return console.log('setStorageData Success:', retrievedData);
   } catch (e) {
     return console.error('setStorageData Error:', e);
   }
