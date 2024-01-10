@@ -25,6 +25,7 @@ import subak.backend.exception.PostException;
 import subak.backend.repository.HeartRepository;
 import subak.backend.repository.PostRepository;
 
+import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final FileUploadService fileUploadService;
     private final HeartRepository heartRepository;
+    private final EntityManager entityManager;
     private RedisTemplate<String, Object> redisTemplate;
 
 
@@ -47,12 +49,17 @@ public class PostService {
      * 메인페이지 글 보기 ('숨김' 게시글 제외)
      */
     public List<PostResponse> getMainPosts(int offset, int limit) {
-        Pageable pageable = PageRequest.of(offset, limit, Sort.by(Sort.Direction.DESC, "postDateTime"));
-        Page<Post> posts = postRepository.findMainPosts(pageable);
+        List<Post> posts = entityManager.createQuery(
+                "SELECT p FROM Post p WHERE p.postStatus != 'HIDE' ORDER BY p.postDateTime DESC", Post.class)
+                .setFirstResult(offset) // 시작 지점
+                .setMaxResults(limit) // 최대 개수
+                .getResultList();
         return posts.stream()
                 .map(this::convertToPostResponse)
                 .collect(Collectors.toList());
     }
+
+
 
     /**
      * 글 상세보기
@@ -72,12 +79,17 @@ public class PostService {
         return convertToPostDetailResponse(post, authenticatedMember);
     }
 
+
     /**
      * '판매 완료' 게시글 조회
      */
     public List<PostResponse> getCompletePosts(int offset, int limit, Long memberId) {
-        Pageable pageable = PageRequest.of(offset, limit, Sort.by(Sort.Direction.DESC, "postDateTime"));
-        Page<Post> posts = postRepository.findCompletePosts(memberId, pageable);
+        List<Post> posts = entityManager.createQuery(
+                "SELECT p FROM Post p WHERE p.member.id = :memberId AND p.productStatus = 'COMPLETE' ORDER BY p.postDateTime DESC", Post.class)
+                .setParameter("memberId", memberId)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
         return posts.stream()
                 .map(this::convertToPostResponse)
                 .collect(Collectors.toList());
@@ -87,8 +99,12 @@ public class PostService {
      * '숨김' 게시글 조회
      */
     public List<PostResponse> getHidePosts(int offset, int limit, Long memberId) {
-        Pageable pageable = PageRequest.of(offset, limit, Sort.by(Sort.Direction.DESC, "postDateTime"));
-        Page<Post> posts = postRepository.findHidePosts(memberId, pageable);
+        List<Post> posts = entityManager.createQuery(
+                "SELECT p FROM Post p WHERE p.member.id = :memberId AND p.postStatus = 'HIDE' ORDER BY p.postDateTime DESC", Post.class)
+                .setParameter("memberId", memberId)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
         return posts.stream()
                 .map(this::convertToPostResponse)
                 .collect(Collectors.toList());
@@ -100,8 +116,12 @@ public class PostService {
      * '즐겨찾기' (좋아요 누른) 게시글 조회
      */
     public List<PostResponse> getLikedPosts(int offset, int limit, Long memberId) {
-        Pageable pageable = PageRequest.of(offset, limit, Sort.by(Sort.Direction.DESC, "postDateTime"));
-        Page<Post> posts = postRepository.findLikedPosts(memberId, pageable);
+        List<Post> posts = entityManager.createQuery(
+                "SELECT p FROM Post p JOIN p.hearts h WHERE h.member.id = :memberId ORDER BY p.postDateTime DESC", Post.class)
+                .setParameter("memberId", memberId)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
         return posts.stream()
                 .map(this::convertToPostResponse)
                 .collect(Collectors.toList());
