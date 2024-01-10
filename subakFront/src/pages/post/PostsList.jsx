@@ -10,6 +10,8 @@ import styles from '../../styles/post/postsList';
 import Alert from '../components/Alert';
 import Loading from '../components/Loading';
 import CommaPrice from '../components/CommaPrice';
+import setStorageData from '../../data/asyncStorage/setStorageData';
+import getStorageData from '../../data/asyncStorage/getStorageData';
 
 const PostsList = ({navigation}) => {
   const userData = useSelector((state) => state.userData); // 유저 데이터
@@ -47,6 +49,7 @@ const PostsList = ({navigation}) => {
   // const [posts, setPosts] = useState(null); // 포스트 목록
 
   useEffect(() => {
+    // setStorageData(userData, 'userData'); // AsyncStorage에 유저 데이터 저장
     axios.get(`http://${Config.DB_IP}/posts`, {timeout: 2000})
       .then(response => {
         if (response.status === 200) {

@@ -68,8 +68,19 @@ const Login = ({ navigation }) => {
               timeout: 2000,
             }
             ).then(response => { // 로그인 성공 했을 때
-              loginUser(response.data, dispatch); // Redux에 저장
-              setStorageData(userData, 'userData'); // AsyncStorage에 저장
+              const data = { // 서버 데이터를 유저 데이터 형식으로 변환
+                name: response.data.name,
+                id: response.data.memberId,
+                phone: response.data.phoneNumber,
+                email: response.data.email,
+                address: response.data.address,
+                logined: true,
+                mannerScore: response.data.temp,
+                image: response.data.profileImage,
+                token: response.data.token,
+              }
+              loginUser(data, dispatch); // Redux에 저장
+              setStorageData(userData, 'userData'); // AsyncStorage에 유저 데이터 저장
               navigation.navigate('FooterTabs');
             })
             .catch(error => { 
@@ -101,9 +112,7 @@ const Login = ({ navigation }) => {
           <Text
             style={[
               styles.startText,
-              emailCheck(email) && password
-                ? styles.enabled
-                : styles.disabled,
+              emailCheck(email) && password ? styles.enabled : styles.disabled
             ]}>
             로그인 하기
           </Text>
