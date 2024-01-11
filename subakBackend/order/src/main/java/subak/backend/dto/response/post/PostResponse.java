@@ -1,6 +1,5 @@
 package subak.backend.dto.response.post;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,13 +8,14 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class MainResponse {
+public class PostResponse {
     private Long id; // 게시글 ID
     private String memberName; // 작성자 이름
     private String profileImage; // 작성자 프로필 이미지
     private String postTitle; // 게시글 제목
     private String firstImage; // 첫 번째 이미지
     private int price; // 가격
+    private String content; // 게시글 내용
     private String postDateTime; // 게시글 작성 시간
     private String address; // 위치
     private int heartCount; // 좋아요 개수
