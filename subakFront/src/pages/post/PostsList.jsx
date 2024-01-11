@@ -1,9 +1,10 @@
-import {useState, useEffect, useRef} from 'react';
+import {useState, useEffect, useCallback} from 'react';
 import { View, Text, TouchableOpacity, Image, ScrollView, FlatList } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Config from 'react-native-config';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { shared } from '../../styles/shared';
 import styles from '../../styles/post/postsList';
@@ -150,9 +151,21 @@ const PostsList = ({navigation}) => {
 
   // 초기 데이터 로딩
   useEffect(() => {
-    getLoadPost(0);
+    getPost(0);
   }, []);
 
+  // 포커스를 얻었을 때 데이터 다시 가져오기
+  useFocusEffect(
+    useCallback(() => {
+      getPost(0);
+
+      return () => {
+        setPosts([]);
+        setPage(1);
+        setNoMore(false);
+      };
+    }, [])
+  );
   
   const loadMoreData = () => {
     if (isLoading || noMore) return; // 이미 로딩 중이면 중복 요청 방지
@@ -160,12 +173,12 @@ const PostsList = ({navigation}) => {
 
     setTimeout(() => { // 추가 데이터 로딩
       setPage(page + 1); // 페이지 번호 증가
-      getLoadPost(page); // 추가 데이터 로딩
+      getPost(page); // 추가 데이터 로딩
       setIsLoading(false);
     }, 1000);
   }
 
-  const getLoadPost = (start) => {
+  const getPost = useCallback((start) => {
     axios.get(`http://${Config.DB_IP}/posts?offset=${start*10}&limit=10`, {timeout: 2000})
       .then(response => {
           if (response.status === 200) {
@@ -205,7 +218,7 @@ const PostsList = ({navigation}) => {
           }, 6000);
           console.log('PostsList Unexpected error', error.message);
     }});
-  }
+  });
 
   const RenderPost = ({ item }) => {
     return (

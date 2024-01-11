@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { Text, View, TouchableOpacity, ScrollView, Image, ActivityIndicator } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, Image } from 'react-native';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Config from 'react-native-config';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { shared } from '../../styles/shared';
 import styles from '../../styles/post/postDetail';
@@ -43,42 +44,15 @@ const PostDetail = ({navigation, route}) => {
 
   // 게시물 상세 데이터 가져오기
   useEffect(() => {
-    axios.get(`http://${Config.DB_IP}/posts/${route.params.postId}`,
-      {headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': `Bearer ${userData.token}` // 토큰 값을 추가
-      },
-      timeout: 2000 // 타임아웃을 2초로 설정
-      }
-    )
-      .then(response => {
-        if (response.status === 200) {
-          setPost(response.data);
-        }
-      })
-      .catch(error => { 
-        if (error.response) { // 요청은 성공했으나 응답은 실패
-          setAlertMessage(`데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`);
-          setShowAlert(true);
-          setTimeout(() => {
-            setShowAlert(false);
-          }, 6000);
-          console.log('PostsList error.response', error.response);
-        } else if (error.request) { // timeout으로 요청 실패
-          setAlertMessage('서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
-          setShowAlert(true);
-          setTimeout(() => {
-            setShowAlert(false);
-          }, 6000);
-        } else { // 기타 오류 발생
-          setAlertMessage(`데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`);
-          setShowAlert(true);
-          setTimeout(() => {
-            setShowAlert(false);
-          }, 6000);
-          console.log('PostsList Unexpected error', error.message);
-        }});
+    fetchPost();
   }, []);
+
+  // 포커스를 얻었을 때 데이터 다시 가져오기
+  useFocusEffect(
+    useCallback(() => {
+      fetchPost();
+    }, []),
+  );
 
   // 매너온도에 따른 색상, 이모지 변경
   useEffect(() => {
@@ -122,6 +96,45 @@ const PostDetail = ({navigation, route}) => {
     setModalIndex(-1); // 모달 선택 인덱스 초기화
     setOpenModal(false); // 모달 창 닫기
   }, [modalIndex]);
+
+  // 게시물 상세 데이터 가져오기
+  const fetchPost = useCallback(() => {
+    axios.get(`http://${Config.DB_IP}/posts/${route.params.postId}`,
+      {headers: {
+        'Authorization': `Bearer ${userData.token}` // 토큰 값을 추가
+      },
+      timeout: 2000 // 타임아웃을 2초로 설정
+      }
+    )
+      .then(response => {
+        if (response.status === 200) {
+          setPost(response.data);
+        }
+      })
+      .catch(error => { 
+        if (error.response) { // 요청은 성공했으나 응답은 실패
+          setAlertMessage(`데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`);
+          setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 6000);
+          console.log('PostsList error.response', error.response);
+        } else if (error.request) { // timeout으로 요청 실패
+          setAlertMessage('서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
+          setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 6000);
+        } else { // 기타 오류 발생
+          setAlertMessage(`데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`);
+          setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 6000);
+          console.log('PostsList Unexpected error', error.message);
+        }});
+  
+  })
   
   return (
     <View style={shared.container}>
