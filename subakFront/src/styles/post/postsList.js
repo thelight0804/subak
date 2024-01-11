@@ -2,16 +2,19 @@ import {StyleSheet} from 'react-native';
 import { colorPalette } from '../shared';
 
 const styles = StyleSheet.create({
-  footer: {
-    padding: 0,
+  header: {
+    // backgroundColor: colorPalette.main,
   },
+
   inlineContainer: {
     flexDirection: 'row-reverse',
     alignItems: 'center',
-    marginBottom: 16,
   },
 
   // 게시글 리스트
+  content: {
+    flex: 1,
+  },
   postContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -52,6 +55,12 @@ const styles = StyleSheet.create({
   },
 
   // 작성 완료 버튼
+  newPost: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    margin: 20,
+  },
   newPostButton: {
     flexDirection: 'row',
     justifyContent: 'center',

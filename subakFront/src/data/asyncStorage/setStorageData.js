@@ -11,9 +11,9 @@ const setStorageData = async (data, key) => {
     const jsonValue = JSON.stringify(data);
     await AsyncStorage.setItem(key, jsonValue);
 
-    // 테스트용 로그
+    
     const retrievedData = await AsyncStorage.getItem(key);
-    return console.log('setStorageData Success:', retrievedData);
+    // return console.log('setStorageData Success:', retrievedData); // 테스트용 로그
   } catch (e) {
     return console.error('setStorageData Error:', e);
   }
