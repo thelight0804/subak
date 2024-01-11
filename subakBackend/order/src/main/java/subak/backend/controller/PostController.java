@@ -150,7 +150,7 @@ public class PostController {
         return ResponseEntity.ok(postService.getHidePosts(offset, limit, loginMember.getId()));
     }
 
-    @ApiOperation(value = "검색 기능", notes = "필수값 : 검색 키워드")
+    @ApiOperation(value = "검색 기능", notes = "필수값 : 검색 키워드(제목, 내용 동시 검색)")
     @GetMapping("/posts/search")
     public ResponseEntity<List<PostResponse>> search(
             @RequestParam(required = false) String keyword,
