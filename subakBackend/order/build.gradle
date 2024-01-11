@@ -46,8 +46,6 @@ dependencies {
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.9' // 시간 설정
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis' // redis 설정
 
-	implementation 'org.hibernate:hibernate-search-orm:5.11.7.Final' // full text search
-
 }
 
 tasks.named('test') {

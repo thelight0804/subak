@@ -41,11 +41,9 @@ public class Post {
     private Category category; // 상품 카테고리
 
     @Column(name = "post_title")
-    @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO) // 검색
     private String postTitle; //글 제목
 
     @Column(name = "post_content", columnDefinition = "TEXT")
-    @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO) // 검색
     private String content; // 게시글 내용
 
     private int price;
