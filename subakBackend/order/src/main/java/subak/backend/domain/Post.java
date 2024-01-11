@@ -138,8 +138,9 @@ public class Post {
     }
 
     //끌어올리기
-    public void updatePostDateTime() {
+    public void updatePostDateTimeAndPrice(int newPrice) {
         this.postDateTime = LocalDateTime.now();
+        this.price = newPrice;
     }
 
     //조회수
