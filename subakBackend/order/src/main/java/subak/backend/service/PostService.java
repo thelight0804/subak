@@ -59,6 +59,23 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 게시글 검색
+     */
+    public List<PostResponse> searchPosts(String keyword, int offset, int limit) {
+
+        List<Post> posts = entityManager.createQuery(
+                "SELECT p FROM Post p WHERE (p.postTitle LIKE :keyword OR p.content LIKE :keyword) AND p.postStatus != 'HIDE' ORDER BY p.postDateTime DESC", Post.class)
+                .setParameter("keyword", "%" + keyword + "%")
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+
+        return posts.stream()
+                .map(this::convertToPostResponse)
+                .collect(Collectors.toList());
+    }
+
 
 
     /**
@@ -273,6 +290,7 @@ public class PostService {
         response.setPostTitle(post.getPostTitle());
         response.setFirstImage(post.getPostImages().isEmpty() ? null : post.getPostImages().get(0).getImagePath());
         response.setPrice(post.getPrice());
+        response.setContent(post.getContent());
         response.setPostDateTime(post.getPostDateTime());
         response.setAddress(post.getMember().getAddress());
         response.setHeartCount(post.getHearts().size());

@@ -5,6 +5,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Store;
+import org.springframework.stereotype.Indexed;
 import subak.backend.domain.enumType.Category;
 import subak.backend.domain.enumType.PostStatus;
 import subak.backend.domain.enumType.ProductStatus;
@@ -20,6 +25,7 @@ import static javax.persistence.FetchType.*;
 @Entity
 @Getter
 @Setter
+@Indexed
 public class Post {
 
     @Id @GeneratedValue

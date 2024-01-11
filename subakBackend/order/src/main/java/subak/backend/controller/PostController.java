@@ -1,19 +1,22 @@
 package subak.backend.controller;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import subak.backend.domain.Member;
-import subak.backend.dto.request.post.CreatePostRequest;
-import subak.backend.dto.request.post.PostStatusUpdateRequest;
-import subak.backend.dto.request.post.ProductStatusUpdateRequest;
-import subak.backend.dto.request.post.UpdatePostRequest;
+import subak.backend.domain.Post;
+import subak.backend.dto.request.post.*;
 import subak.backend.dto.response.post.PostResponse;
 import subak.backend.dto.response.post.PostDetailResponse;
+import subak.backend.repository.PostRepository;
 import subak.backend.service.AuthService;
 import subak.backend.service.CommentService;
 import subak.backend.service.PostService;
@@ -30,6 +33,7 @@ public class PostController {
 
     private final PostService postService;
     private final AuthService authService;
+    private final PostRepository postRepository;
     private final CommentService commentService;
 
     @ApiOperation(value = "게시글 생성")
@@ -84,11 +88,10 @@ public class PostController {
     @ApiOperation(value = "끌어올리기", notes = "필수값 : 게시글 ID, 가격")
     @PutMapping("/post/{postId}/recent")
     public ResponseEntity<String> recentPost(@PathVariable Long postId,
-                                             @RequestBody Map<String, Integer> body,
+                                             @RequestBody RecentRequest recentRequest,
                                              HttpServletRequest httpServletRequest) {
-        int price = body.get("price");
         authService.getAuthenticatedMember(httpServletRequest);
-        postService.recentPost(postId, price);
+        postService.recentPost(postId, recentRequest.getPrice());
         return ResponseEntity.ok("Post updated to recent success");
     }
 
@@ -145,6 +148,16 @@ public class PostController {
             HttpServletRequest httpServletRequest) {
         Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
         return ResponseEntity.ok(postService.getHidePosts(offset, limit, loginMember.getId()));
+    }
+
+    @ApiOperation(value = "검색 기능", notes = "필수값 : 검색 키워드(제목, 내용 동시 검색)")
+    @GetMapping("/posts/search")
+    public ResponseEntity<List<PostResponse>> search(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @RequestParam(value = "limit", defaultValue = "10") int limit) {
+        List<PostResponse> posts = postService.searchPosts(keyword, offset, limit);
+        return ResponseEntity.ok(posts);
     }
 
 }
