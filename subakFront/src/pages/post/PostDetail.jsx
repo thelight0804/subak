@@ -22,6 +22,7 @@ const PostDetail = ({navigation, route}) => {
   const [openModal, setOpenModal] = useState(false); // 모달 창
   const [modalIndex, setModalIndex] = useState(-1); // 모달 선택 인덱스
 
+  // FIX: 테스트용 코드
   // const [post, setPost] = useState({
   //   "id": 5004,
   //   "postImages": ["http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg"],
@@ -34,6 +35,7 @@ const PostDetail = ({navigation, route}) => {
   //   "postDateTime": "3일 전",
   //   "content": "도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도"
   // })
+
   const [post, setPost] = useState(null); // 게시물 상세 데이터
 
   const [tempColor, setTempColor] = useState('white'); // 매너 온도 색상
