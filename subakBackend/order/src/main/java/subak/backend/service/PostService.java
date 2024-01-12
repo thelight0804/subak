@@ -312,6 +312,8 @@ public class PostService {
         response.setPostDateTime(post.getPostDateTime());
         response.setAddress(post.getMember().getAddress());
         response.setHeartCount(post.getHearts().size());
+        response.setCategory(post.getCategory());
+        response.setProductStatus(post.getProductStatus());
         response.setCommentCount(post.getComments().size());
         response.setViews(post.getViews());
         response.setTemp(post.getMember().getTemp());
