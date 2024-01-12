@@ -28,12 +28,28 @@ const PostsList = ({navigation}) => {
   const [openModal, setOpenModal] = useState(false); // 모달 창
   const [modalIndex, setModalIndex] = useState(-1); // 모달 선택 인덱스
 
-  // 내용이 변경 되었는지 확인
+  // 모달 선택 버튼에 따라 실행
+  useEffect(() => {
+    if (modalIndex === 0) { // 프로필 사진 선택
+      getPhoto();
+    }
+    else if (modalIndex === 1) { // 프로필 사진 삭제
+      setProfileImg(null);
+    }
+    setModalIndex(-1); // 모달 선택 인덱스 초기화
+    setOpenModal(false); // 모달 창 닫기
+  }, [modalIndex]);
+
+  /**
+   * 내용이 변경 되었는지 확인하는 함수
+   */
   const changeData = () => {
     return (newName !== prevName && newName.length !== 0) || profileImg;
   }
 
-  // 사진 불러오기
+  /**
+   * 사진 선택 함수
+   */
   const getPhoto = () => {
     launchImageLibrary({
       mediaType: 'photo',
@@ -63,17 +79,56 @@ const PostsList = ({navigation}) => {
     });
   }
 
-  // 모달 선택 버튼에 따라 실행
-  useEffect(() => {
-    if (modalIndex === 0) { // 프로필 사진 선택
-      getPhoto();
-    }
-    else if (modalIndex === 1) { // 프로필 사진 삭제
-      setProfileImg(null);
-    }
-    setModalIndex(-1); // 모달 선택 인덱스 초기화
-    setOpenModal(false); // 모달 창 닫기
-  }, [modalIndex]);
+  /**
+   * 프로필 수정 함수
+   */
+  const handleEditProfile = () => {
+    let formData = new FormData(); // 사진은 formData를 사용한다
+    formData.append('name', newName);
+    formData.append('profileImage', {
+      uri: profileImg,
+      type: 'image/jpg',
+      name: 'profileImg.jpg'
+    });
+    axios.put(`http://${Config.DB_IP}/user/${userData.id}/profile`,
+    //TODO: 유저 id, 이미지 들고 오기
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${userData.token}` // 토큰 값을 추가
+          },
+          timeout: 2000 // 타임아웃을 2초로 설정
+        }
+      )
+      .then(response => {
+        navigation.goBack();
+      })
+      .catch(error => { 
+        if (error.response) { // 요청은 성공했으나 응답은 실패
+          setAlertMessage(`${error.response.data}`);
+          setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 6000);
+          console.log('EditProfile error.response', error.response.data);
+        } else if (error.request) { // timeout으로 요청 실패
+          setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.'); // 오류 메시지
+          setShowAlert(true); // 오류 알림창
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 6000); // 6초 후 알림창 사라짐
+        } else { // 기타 오류 발생
+          setAlertMessage(`오류가 발생했습니다. \n[${error.message}]`);
+          setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 6000);
+          console.log('EditProfile Unexpected error', error.message);
+        }
+     }
+    )
+  }
 
   return (
     <>
@@ -87,61 +142,14 @@ const PostsList = ({navigation}) => {
           <Text style={[shared.text, styles.mainText]}>프로필 수정</Text>
           <TouchableOpacity
             style={shared.iconButton}
-            onPress={() =>{
-              let formData = new FormData(); // 사진은 formData를 사용한다
-              formData.append('name', newName);
-              formData.append('profileImage', {
-                uri: profileImg,
-                type: 'image/jpg',
-                name: 'profileImg.jpg'
-              });
-              axios.put(`http://${Config.DB_IP}/user/${userData.id}/profile`,
-              //TODO: 유저 id, 이미지 들고 오기
-                  formData,
-                  {
-                    headers: {
-                      'Content-Type': 'multipart/form-data',
-                      'Authorization': `Bearer ${userData.token}` // 토큰 값을 추가
-                    },
-                    timeout: 2000 // 타임아웃을 2초로 설정
-                  }
-                )
-                .then(response => {
-                  navigation.goBack();
-                })
-                .catch(error => { 
-                  if (error.response) { // 요청은 성공했으나 응답은 실패
-                    setAlertMessage(`${error.response.data}`);
-                    setShowAlert(true);
-                    setTimeout(() => {
-                      setShowAlert(false);
-                    }, 6000);
-                    console.log('EditProfile error.response', error.response.data);
-                  } else if (error.request) { // timeout으로 요청 실패
-                    setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.'); // 오류 메시지
-                    setShowAlert(true); // 오류 알림창
-                    setTimeout(() => {
-                      setShowAlert(false);
-                    }, 6000); // 6초 후 알림창 사라짐
-                  } else { // 기타 오류 발생
-                    setAlertMessage(`오류가 발생했습니다. \n[${error.message}]`);
-                    setShowAlert(true);
-                    setTimeout(() => {
-                      setShowAlert(false);
-                    }, 6000);
-                    console.log('EditProfile Unexpected error', error.message);
-                  }
-               }
-               
-              )
-            }
-            }
+            onPress={handleEditProfile}
             disabled={!changeData()}>
             <Text style={[shared.text, styles.buttonText, !changeData() && styles.enabled]}>
               완료
             </Text>
           </TouchableOpacity>
         </View>
+
         <View style={styles.content}>
           <TouchableOpacity
             style={styles.profile}
@@ -159,6 +167,7 @@ const PostsList = ({navigation}) => {
               source={require('../../assets/image/circle-camera.jpg')}
             />
           </TouchableOpacity>
+
           <Text style={[shared.text, {textAlign: 'left'}]}>닉네임</Text>
           <View style={{marginTop: 10}}>
             <TextInput
@@ -172,6 +181,7 @@ const PostsList = ({navigation}) => {
           </View>
         </View>
       </View>
+      
       {openModal && (
         <ChoiceDiaglog
           openModal={openModal}

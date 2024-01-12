@@ -167,6 +167,10 @@ const PostsList = ({navigation}) => {
     }, [])
   );
   
+  /**
+   * 추가 데이터 로딩 함수
+   * @returns 추가 데이터
+   */
   const loadMoreData = () => {
     if (isLoading || noMore) return; // 이미 로딩 중이면 중복 요청 방지
     setIsLoading(true);
@@ -178,6 +182,9 @@ const PostsList = ({navigation}) => {
     }, 1000);
   }
 
+  /**
+   * 포스트 목록 가져오는 함수
+   */
   const getPost = useCallback((start) => {
     axios.get(`http://${Config.DB_IP}/posts?offset=${start*10}&limit=10`, {timeout: 2000})
       .then(response => {
@@ -220,6 +227,11 @@ const PostsList = ({navigation}) => {
     }});
   });
 
+  /**
+   * 포스트 컴포넌트 렌더링 함수
+   * @param {item} item 게시글
+   * @returns 포스트 컴포넌트
+   */
   const RenderPost = ({ item }) => {
     return (
       <TouchableOpacity

@@ -30,6 +30,53 @@ const SignUp = ({ navigation, route }) => {
   const userData = useSelector((state) => state.userData); // 로그인 여부
   const dispatch = useDispatch();
 
+  /**
+   * 회원가입 함수
+   */
+  const handleSignUp = () => {
+    axios.post(`http://${Config.DB_IP}/user`,{
+      email: email,
+      password: password,
+      name: name,
+      phone: phone,
+      address: address,
+    },
+    {timeout: 2000})
+    .then(response => {
+      if (response.status === 200) {
+        // 백엔드로부터 데이터 받기
+        loginUser(response.data, dispatch); // Redux에 저장
+        navigation.navigate('FooterTabs'); // 메인 화면으로 이동
+      }
+    })
+    .catch(error => { 
+      if (error.response) { // 요청은 성공했으나 응답은 실패
+        if (error.response.data === '')
+        setAlertMessage(`${error.response.data}`);
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        console.error('SignUp error.response : ', error.response.data);
+      } else if (error.request) { // timeout으로 요청 실패
+        // 오류 Toast
+        setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.');
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+      } else { // 기타 오류 발생
+        setAlertMessage(`오류가 발생했습니다. \n[${error.message}]`);
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        console.error('SignUp Unexpected error', error.message);
+        }
+    }
+  )
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <KeyboardAwareScrollView style={shared.container}>
@@ -40,11 +87,14 @@ const SignUp = ({ navigation, route }) => {
             <Ionicon name="chevron-back" size={30} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
+        
         <Text style={styles.headerText}>안녕하세요!</Text>
         <Text style={styles.headerText}>이메일과 비밀번호로 가입해주세요.</Text>
+
         <Text style={styles.text}>
           휴대폰 번호는 안전하게 보관되며 이웃들에게 공개되지 않아요.
         </Text>
+
         <View style={{marginTop: 10}}>
           <TextInput
             style={[
@@ -99,58 +149,15 @@ const SignUp = ({ navigation, route }) => {
             </Text>
           )}
         </View>
+
         <TouchableOpacity
           style={styles.button}
-          onPress={() => {
-            axios.post(`http://${Config.DB_IP}/user`,{
-              email: email,
-              password: password,
-              name: name,
-              phone: phone,
-              address: address,
-            },
-            {timeout: 2000})
-            .then(response => {
-              if (response.status === 200) {
-                // 백엔드로부터 데이터 받기
-                loginUser(response.data, dispatch); // Redux에 저장
-                navigation.navigate('FooterTabs'); // 메인 화면으로 이동
-              }
-            })
-            .catch(error => { 
-              if (error.response) { // 요청은 성공했으나 응답은 실패
-                if (error.response.data === '')
-                setAlertMessage(`${error.response.data}`);
-                setShowAlert(true);
-                setTimeout(() => {
-                  setShowAlert(false);
-                }, 6000);
-                console.error('SignUp error.response : ', error.response.data);
-              } else if (error.request) { // timeout으로 요청 실패
-                // 오류 Toast
-                setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.');
-                setShowAlert(true);
-                setTimeout(() => {
-                  setShowAlert(false);
-                }, 6000);
-              } else { // 기타 오류 발생
-                setAlertMessage(`오류가 발생했습니다. \n[${error.message}]`);
-                setShowAlert(true);
-                setTimeout(() => {
-                  setShowAlert(false);
-                }, 6000);
-                console.error('SignUp Unexpected error', error.message);
-                }
-            }
-          )
-          }}
+          onPress={handleSignUp}
           disabled={!(emailCheck(email) && passwordCheck(password) && nameCheck(name) && phoneCheck(phone))}>
           <Text
             style={[
               styles.startText,
-              emailCheck(email) && passwordCheck(password) && nameCheck(name) && phoneCheck(phone)
-                ? styles.enabled
-                : styles.disabled,
+              emailCheck(email) && passwordCheck(password) && nameCheck(name) && phoneCheck(phone) ? styles.enabled : styles.disabled,
             ]}>
             가입 하기
           </Text>

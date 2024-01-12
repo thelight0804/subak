@@ -24,6 +24,7 @@ const Start = ({navigation}) => {
           setOpenModal={setOpenModal}
         />
       )}
+      
       <View style={styles.content}>
         <Image
           style={styles.image}

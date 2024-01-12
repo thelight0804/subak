@@ -97,7 +97,7 @@ const PostDetail = ({navigation, route}) => {
     setOpenModal(false); // 모달 창 닫기
   }, [modalIndex]);
 
-  // 게시물 상세 데이터 가져오기
+  // 게시물 상세 데이터 가져오기 함수
   const fetchPost = useCallback(() => {
     axios.get(`http://${Config.DB_IP}/posts/${route.params.postId}`,
       {headers: {

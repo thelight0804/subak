@@ -20,6 +20,7 @@ const MyPage = ({navigation}) => {
               <Icon name="settings-outline" size={25} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
+
           <TouchableOpacity 
             style={styles.profile} 
             onPress={() => navigation.navigate('UserStack', {screen: 'Profile'})}
@@ -35,18 +36,30 @@ const MyPage = ({navigation}) => {
               <Text style={[shared.text, {fontSize: 12}]}>프로필 보기</Text>
             </View>
           </TouchableOpacity>
+
         </View>
         <View style={styles.content}>
           <Text style={[shared.text, styles.text]}>나의 거래</Text>
-          <TouchableOpacity style={[shared.inlineContainer, styles.listButton]} onPress={() => console.log("관심목록")}>
+
+          <TouchableOpacity 
+            style={[shared.inlineContainer, styles.listButton]} 
+            onPress={() => console.log("관심목록")}
+          >
             <Icon name="heart-outline" size={25} color="#ffffff" style={styles.icon}/>
             <Text style={[shared.text, styles.text]}>관심목록</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[shared.inlineContainer, styles.listButton]} onPress={() => console.log("판매내역")}>
+
+          <TouchableOpacity 
+            style={[shared.inlineContainer, styles.listButton]} onPress={() => console.log("판매내역")}
+          >
             <Icon name="receipt-outline" size={25} color="#ffffff" style={styles.icon}/>
             <Text style={[shared.text, styles.text]}>판매내역</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[shared.inlineContainer, styles.listButton]} onPress={() => console.log("구매내역")}>
+
+          <TouchableOpacity 
+            style={[shared.inlineContainer, styles.listButton]} 
+            onPress={() => console.log("구매내역")}
+          >
             <Icon name="bag-outline" size={25} color="#ffffff" style={styles.icon}/>
             <Text style={[shared.text, styles.text]}>구매내역</Text>
           </TouchableOpacity>

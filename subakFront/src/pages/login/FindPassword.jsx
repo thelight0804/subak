@@ -19,6 +19,70 @@ const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState(''); // 이메일
   const [newPassword, setNewPassword] = useState(''); // 비밀번호
 
+  /**
+   * 비밀번호를 변경하는 함수
+   */
+  const handleChangePassword = () => {
+    axios.post(`http://${Config.DB_IP}/user/password`,
+      {
+        email: email,
+        newPassword: newPassword,
+        name: name,
+        phone: phone,
+      },
+      {timeout: 2000},
+    )
+    .then(response => {
+      if (response.status === 200) {
+        if (response.data) {
+          // TODO: 비밀번호 변경 백엔드 테스트
+          //입력값 초기화
+          setName('');
+          setPhone('');
+          setEmail('');
+          setNewPassword('');
+
+          // Toast 알림
+          setAlertMessage('비밀번호 변경이 완료되었습니다.\n다시 로그인 해주세요.');
+          setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 6000);
+        }
+      }
+    })
+    .catch(error => {
+      if (error.response) {
+        // 요청은 성공했으나 응답은 실패
+        setNewPassword('');
+        setAlertMessage(`${error.response.data}`);
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        console.log('FindPassword error.response', error.response);
+      } else if (error.request) {
+        // timeout으로 요청 실패
+        setNewPassword('');
+        // 오류 Toast
+        setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.');
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+      } else {
+        // 기타 오류 발생
+        setNewPassword('');
+        setAlertMessage(`오류가 발생했습니다. \n[${error.message}]`);
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        console.log('FindPassword Unexpected error', error.message);
+      }
+    });
+  }
+
   return (
     <View style={{flex: 1}}>
       <KeyboardAwareScrollView style={shared.container}>
@@ -77,8 +141,7 @@ const SignUp = ({ navigation }) => {
                 <TextInput
                   style={[
                     shared.blankTextInput,
-                    !passwordCheck(newPassword) && 
-                    newPassword.length > 0 && 
+                    !passwordCheck(newPassword) && newPassword.length > 0 && 
                     {
                       borderColor: '#dc645b',
                       borderWidth: 1,
@@ -98,74 +161,12 @@ const SignUp = ({ navigation }) => {
                 )}
                 <TouchableOpacity
                   style={styles.button}
-                  onPress={() => {
-                    axios
-                      .post(`http://${Config.DB_IP}/user/password`,
-                        {
-                          email: email,
-                          newPassword: newPassword,
-                          name: name,
-                          phone: phone,
-                        },
-                        {timeout: 2000},
-                      )
-                      .then(response => {
-                        if (response.status === 200) {
-                          if (response.data) {
-                            // TODO: 비밀번호 변경 백엔드 테스트
-                            //입력값 초기화
-                            setName('');
-                            setPhone('');
-                            setEmail('');
-                            setNewPassword('');
-
-                            // Toast 알림
-                            setAlertMessage('비밀번호 변경이 완료되었습니다.\n다시 로그인 해주세요.');
-                            setShowAlert(true);
-                            setTimeout(() => {
-                              setShowAlert(false);
-                            }, 6000);
-                          }
-                        }
-                      })
-                      .catch(error => {
-                        if (error.response) {
-                          // 요청은 성공했으나 응답은 실패
-                          setNewPassword('');
-                          setAlertMessage(`${error.response.data}`);
-                          setShowAlert(true);
-                          setTimeout(() => {
-                            setShowAlert(false);
-                          }, 6000);
-                          console.log('FindPassword error.response', error.response);
-                        } else if (error.request) {
-                          // timeout으로 요청 실패
-                          setNewPassword('');
-                          // 오류 Toast
-                          setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.');
-                          setShowAlert(true);
-                          setTimeout(() => {
-                            setShowAlert(false);
-                          }, 6000);
-                        } else {
-                          // 기타 오류 발생
-                          setNewPassword('');
-                          setAlertMessage(`오류가 발생했습니다. \n[${error.message}]`);
-                          setShowAlert(true);
-                          setTimeout(() => {
-                            setShowAlert(false);
-                          }, 6000);
-                          console.log('FindPassword Unexpected error', error.message);
-                        }
-                      });
-                  }}
+                  onPress={() => {handleChangePassword}}
                   disabled={!(emailCheck(email) && passwordCheck(newPassword) && nameCheck(name) && phoneCheck(phone))}>
                   <Text
                     style={[
                       styles.startText,
-                      emailCheck(email) && passwordCheck(newPassword) && nameCheck(name) && phoneCheck(phone)
-                        ? styles.enabled
-                        : styles.disabled,
+                      emailCheck(email) && passwordCheck(newPassword) && nameCheck(name) && phoneCheck(phone) ? styles.enabled : styles.disabled,
                     ]}>
                     비밀번호 변경하기
                   </Text>

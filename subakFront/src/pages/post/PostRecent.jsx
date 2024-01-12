@@ -30,6 +30,7 @@ const PostRecent = ({navigation, route}) => {
     }
   }
 
+  // 게시글 끌어올리기 함수
   const handleRecentRequest = () => {
     axios.put(`http://${Config.DB_IP}/post/${route.params.postId}/recent`,
       {
@@ -65,7 +66,7 @@ const PostRecent = ({navigation, route}) => {
           }, 6000);
           console.log('PostRecent Unexpected error', error.message);
       }})
-    }
+  }
 
   return (
     <View style={{ flex: 1 }}>

@@ -16,10 +16,12 @@ const FindedEmail = ({ navigation, route }) => {
             <Icon name="chevron-back" size={30} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
+
         <Text style={styles.headerText}>{route.params.name}님의 이메일은</Text>
         <Text style={[styles.headerText, styles.email]}>{route.params.email}
           <Text style={styles.headerText}>입니다.</Text>
         </Text>
+        
       <TouchableOpacity
         style={shared.redButton}
         onPress={() => navigation.navigate('Login')}>
