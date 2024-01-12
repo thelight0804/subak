@@ -14,6 +14,7 @@ import subak.backend.domain.Heart;
 import subak.backend.domain.Member;
 import subak.backend.domain.Post;
 import subak.backend.domain.PostImage;
+import subak.backend.domain.enumType.Category;
 import subak.backend.domain.enumType.PostStatus;
 import subak.backend.domain.enumType.ProductStatus;
 import subak.backend.dto.request.post.CreatePostRequest;
@@ -60,7 +61,7 @@ public class PostService {
     }
 
     /**
-     * 게시글 검색
+     * 게시글 키워드 검색
      */
     public List<PostResponse> searchPosts(String keyword, int offset, int limit) {
 
@@ -76,6 +77,22 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
+
+    /**
+     * 게시글 카테고리별 검색
+     */
+    public List<PostResponse> searchPostsByCategory(Category category, int offset, int limit) {
+        List<Post> posts = entityManager.createQuery(
+                        "SELECT p FROM Post p WHERE p.category = :category AND p.postStatus != 'HIDE' ORDER BY p.postDateTime DESC", Post.class)
+                .setParameter("category", category)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+
+        return posts.stream()
+                .map(this::convertToPostResponse)
+                .collect(Collectors.toList());
+    }
 
 
     /**

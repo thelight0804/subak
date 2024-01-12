@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import subak.backend.domain.Member;
 import subak.backend.domain.Post;
+import subak.backend.domain.enumType.Category;
 import subak.backend.dto.request.post.*;
 import subak.backend.dto.response.post.PostResponse;
 import subak.backend.dto.response.post.PostDetailResponse;
@@ -33,8 +34,6 @@ public class PostController {
 
     private final PostService postService;
     private final AuthService authService;
-    private final PostRepository postRepository;
-    private final CommentService commentService;
 
     @ApiOperation(value = "게시글 생성")
     @PostMapping(value = "/post", consumes = {"multipart/form-data"})
@@ -157,6 +156,16 @@ public class PostController {
             @RequestParam(value = "offset", defaultValue = "0") int offset,
             @RequestParam(value = "limit", defaultValue = "10") int limit) {
         List<PostResponse> posts = postService.searchPosts(keyword, offset, limit);
+        return ResponseEntity.ok(posts);
+    }
+
+    @ApiOperation(value = "카테고리별 게시글 검색", notes = "필수값 : 카테고리")
+    @GetMapping("/posts/category/{category}")
+    public ResponseEntity<List<PostResponse>> searchByCategory(
+            @PathVariable Category category,
+            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @RequestParam(value = "limit", defaultValue = "10") int limit) {
+        List<PostResponse> posts = postService.searchPostsByCategory(category, offset, limit);
         return ResponseEntity.ok(posts);
     }
 
