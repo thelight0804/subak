@@ -43,14 +43,15 @@ const MyPage = ({navigation}) => {
 
           <TouchableOpacity 
             style={[shared.inlineContainer, styles.listButton]} 
-            onPress={() => console.log("관심목록")}
+            onPress={() => navigation.navigate('LikesList', { screen: 'LikesList' })}
           >
             <Icon name="heart-outline" size={25} color="#ffffff" style={styles.icon}/>
             <Text style={[shared.text, styles.text]}>관심목록</Text>
           </TouchableOpacity>
 
           <TouchableOpacity 
-            style={[shared.inlineContainer, styles.listButton]} onPress={() => console.log("판매내역")}
+            style={[shared.inlineContainer, styles.listButton]}
+            onPress={() => navigation.navigate('ItemHistoryList', { screen: 'ItemHistoryList' })}
           >
             <Icon name="receipt-outline" size={25} color="#ffffff" style={styles.icon}/>
             <Text style={[shared.text, styles.text]}>판매내역</Text>
