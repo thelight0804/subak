@@ -25,20 +25,20 @@ const PostDetail = ({navigation, route}) => {
   const [modalIndex, setModalIndex] = useState(-1); // 모달 선택 인덱스
 
   // FIX: 테스트용 코드
-  const [post, setPost] = useState({
-    "id": 5004,
-    "postImages": ["http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg"],
-    "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg",
-    "memberName": "IamYourFather",
-    "address": "경남 창원시",
-    "temp": 68.7,
-    "price": 65000,
-    "postTitle": "titleddd",
-    "postDateTime": "3일 전",
-    "content": "도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도"
-  })
+  // const [post, setPost] = useState({
+  //   "id": 5004,
+  //   "postImages": ["http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg"],
+  //   "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg",
+  //   "memberName": "IamYourFather",
+  //   "address": "경남 창원시",
+  //   "temp": 68.7,
+  //   "price": 65000,
+  //   "postTitle": "titleddd",
+  //   "postDateTime": "3일 전",
+  //   "content": "도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도"
+  // })
 
-  // const [post, setPost] = useState(null); // 게시물 상세 데이터
+  const [post, setPost] = useState(null); // 게시물 상세 데이터
 
   const [tempColor, setTempColor] = useState('white'); // 매너 온도 색상
   const [tempEmoji, setTempEmoji] = useState('❔'); // 매너 온도 이모지
@@ -92,7 +92,8 @@ const PostDetail = ({navigation, route}) => {
       console.log('숨기기')
     }
     else if (modalIndex === 3) { // 삭제
-      console.log('삭제')
+      deletePost();
+      navigation.navigate('PostsList', {params: {deleteAlert: true}}); // 게시글 목록으로 이동
     }
     setModalIndex(-1); // 모달 선택 인덱스 초기화
     setOpenModal(false); // 모달 창 닫기
@@ -102,7 +103,7 @@ const PostDetail = ({navigation, route}) => {
    * 게시물 상세 데이터 가져오기 함수
    */
   const fetchPost = useCallback(() => {
-    axios.get(`http://${Config.DB_IP}/posts/${post.id}`,
+    axios.get(`http://${Config.DB_IP}/posts/${route.params.postId}`,
       {headers: {
         'Authorization': `Bearer ${userData.token}` // 토큰 값을 추가
       },
@@ -142,7 +143,7 @@ const PostDetail = ({navigation, route}) => {
    * 게시물 삭제 함수
    */
   const deletePost = () => {
-    axios.delete(`http://${Config.DB_IP}/post/${route.params.postId}`,
+    axios.delete(`http://${Config.DB_IP}/post/${post.id}`,
     {headers: {
       'Authorization': `Bearer ${userData.token}` // 토큰 값을 추가
     },

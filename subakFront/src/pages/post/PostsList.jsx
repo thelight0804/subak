@@ -15,141 +15,143 @@ import setStorageData from '../../data/asyncStorage/setStorageData';
 import getStorageData from '../../data/asyncStorage/getStorageData';
 import { set } from 'react-native-reanimated';
 
-const PostsList = ({navigation}) => {
+const PostsList = ({navigation, route}) => {
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1); // 페이지 번호
   const [noMore, setNoMore] = useState(false); // 더 이상 데이터가 없는지 확인
-
   const noPostImage = '../../assets/image/noPostImage.png';
 
-  const [posts, setPosts] = useState([
-    {
-      "id": 0,
-      "memberName": "0",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg",
-      "postTitle": "0",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702468776/ab63209a-9fdf-44d0-bafa-ccecd61c1f9f.png.jpg",
-      "price": 0,
-      "postDateTime": "3일 전",
-      "address": "00",
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 1,
-      "memberName": "1",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "1",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 1,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 2,
-      "memberName": "2",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "2",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 2,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 3,
-      "memberName": "3",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "3",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 3,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 4,
-      "memberName": "4",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "4",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 4,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 5,
-      "memberName": "5",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "5",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 5,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 6,
-      "memberName": "6",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "6",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 6,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 7,
-      "memberName": "7",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "7",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 7,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 8,
-      "memberName": "8",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "8",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 8,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 9,
-      "memberName": "9",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "9",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 9,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-  ]);
+  // const [posts, setPosts] = useState([
+  //   {
+  //     "id": 0,
+  //     "memberName": "0",
+  //     "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg",
+  //     "postTitle": "0",
+  //     "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702468776/ab63209a-9fdf-44d0-bafa-ccecd61c1f9f.png.jpg",
+  //     "price": 0,
+  //     "postDateTime": "3일 전",
+  //     "address": "00",
+  //     "heartCount": 0,
+  //     "commentCount": 0
+  //   },
+  //   {
+  //     "id": 1,
+  //     "memberName": "1",
+  //     "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
+  //     "postTitle": "1",
+  //     "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
+  //     "price": 1,
+  //     "postDateTime": "3일 전",
+  //     "address": null,
+  //     "heartCount": 0,
+  //     "commentCount": 0
+  //   },
+  //   {
+  //     "id": 2,
+  //     "memberName": "2",
+  //     "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
+  //     "postTitle": "2",
+  //     "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
+  //     "price": 2,
+  //     "postDateTime": "3일 전",
+  //     "address": null,
+  //     "heartCount": 0,
+  //     "commentCount": 0
+  //   },
+  //   {
+  //     "id": 3,
+  //     "memberName": "3",
+  //     "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
+  //     "postTitle": "3",
+  //     "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
+  //     "price": 3,
+  //     "postDateTime": "3일 전",
+  //     "address": null,
+  //     "heartCount": 0,
+  //     "commentCount": 0
+  //   },
+  //   {
+  //     "id": 4,
+  //     "memberName": "4",
+  //     "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
+  //     "postTitle": "4",
+  //     "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
+  //     "price": 4,
+  //     "postDateTime": "3일 전",
+  //     "address": null,
+  //     "heartCount": 0,
+  //     "commentCount": 0
+  //   },
+  //   {
+  //     "id": 5,
+  //     "memberName": "5",
+  //     "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
+  //     "postTitle": "5",
+  //     "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
+  //     "price": 5,
+  //     "postDateTime": "3일 전",
+  //     "address": null,
+  //     "heartCount": 0,
+  //     "commentCount": 0
+  //   },
+  //   {
+  //     "id": 6,
+  //     "memberName": "6",
+  //     "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
+  //     "postTitle": "6",
+  //     "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
+  //     "price": 6,
+  //     "postDateTime": "3일 전",
+  //     "address": null,
+  //     "heartCount": 0,
+  //     "commentCount": 0
+  //   },
+  //   {
+  //     "id": 7,
+  //     "memberName": "7",
+  //     "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
+  //     "postTitle": "7",
+  //     "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
+  //     "price": 7,
+  //     "postDateTime": "3일 전",
+  //     "address": null,
+  //     "heartCount": 0,
+  //     "commentCount": 0
+  //   },
+  //   {
+  //     "id": 8,
+  //     "memberName": "8",
+  //     "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
+  //     "postTitle": "8",
+  //     "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
+  //     "price": 8,
+  //     "postDateTime": "3일 전",
+  //     "address": null,
+  //     "heartCount": 0,
+  //     "commentCount": 0
+  //   },
+  //   {
+  //     "id": 9,
+  //     "memberName": "9",
+  //     "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
+  //     "postTitle": "9",
+  //     "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
+  //     "price": 9,
+  //     "postDateTime": "3일 전",
+  //     "address": null,
+  //     "heartCount": 0,
+  //     "commentCount": 0
+  //   },
+  // ]);
 
   // const [posts, setPosts] = useState([]); // 포스트 목록
 
   // 초기 데이터 로딩
+  
+  const [posts, setPosts] = useState([]); // 포스트 목록
+  
   useEffect(() => {
     getPost(0);
   }, []);
