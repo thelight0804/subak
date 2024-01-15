@@ -30,6 +30,11 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'cover',
   },
+  notImageContainger: { // 이미지가 없을 때
+    height: 50,
+    borderBottomWidth: 2,
+    borderBottomColor: '#2b2b2d',
+  },
 
   // 프로필 정보
   titleContainer: { // 작성자, 메너온도 컨테이너
@@ -89,6 +94,20 @@ const styles = StyleSheet.create({
     color: colorPalette.gray,
     textAlign: 'right',
     textDecorationLine: 'underline', // 밑줄
+  },
+
+  // 게시글 상태
+  statusContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    marginTop: 20,
+
+    width: 100,
+    borderWidth: 1.5,
+    borderColor: '#2b2b2d',
+    borderRadius: 5,
   },
 
   // 게시글 내용

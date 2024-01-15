@@ -13,7 +13,6 @@ import Loading from '../components/Loading';
 import CommaPrice from '../components/CommaPrice';
 import setStorageData from '../../data/asyncStorage/setStorageData';
 import getStorageData from '../../data/asyncStorage/getStorageData';
-import { set } from 'react-native-reanimated';
 
 const PostsList = ({navigation, route}) => {
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
@@ -146,10 +145,6 @@ const PostsList = ({navigation, route}) => {
   //   },
   // ]);
 
-  // const [posts, setPosts] = useState([]); // 포스트 목록
-
-  // 초기 데이터 로딩
-  
   const [posts, setPosts] = useState([]); // 포스트 목록
   
   useEffect(() => {

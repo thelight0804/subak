@@ -9,32 +9,35 @@ import { useSelector } from 'react-redux';
 import { shared } from '../../styles/shared';
 import styles from '../../styles/post/newPost';
 import Alert from '../components/Alert';
+import Loading from '../components/Loading';
 
 const PostEdit = ({navigation, route}) => {
   const userData = useSelector((state) => state.userData); // 유저 데이터
+  const [post, setPost] = useState(null); // 게시물 상세 데이터
 
   //FIX: 테스트용 코드
-  const [post, setPost] = useState({
-    "id": 5004,
-    "postImages": ["http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg"],
-    "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg",
-    "memberName": "IamYourFather",
-    "address": "경남 창원시",
-    "temp": 68.7,
-    "price": 65000,
-    "postTitle": "titleddd",
-    "postDateTime": "3일 전",
-    "content": "도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도"
-  })
+  // const [post, setPost] = useState({
+  //   "id": 5004,
+  //   "postImages": ["http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg"],
+  //   "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg",
+  //   "memberName": "IamYourFather",
+  //   "address": "경남 창원시",
+  //   "temp": 68.7,
+  //   "price": 65000,
+  //   "postTitle": "titleddd",
+  //   "postDateTime": "3일 전",
+  //   "content": "도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도"
+  // })
 
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
-  const [image, setImage] = useState([]); // 이미지
-
+  const [isLoading, setIsLoading] = useState(true); // 로딩
+  
   const [title, setTitle] = useState(''); // 제목
   const [price, setPrice] = useState(0); // 가격
   const [deal, setDeal] = useState('판매하기'); // 거래 방식
   const [content, setContent] = useState(''); // 자세한 설명
+  const [image, setImage] = useState([]); // 이미지
 
   const [noTitle, setNoTitle] = useState(false); // 제목 없음
   const [noContent, setNoContent] = useState(false); // 내용 없음
@@ -46,55 +49,61 @@ const PostEdit = ({navigation, route}) => {
   // 게시물 상세 데이터 가져오기
   useEffect(() => {
     getPostDetail();
-  }, []);
-
-  //FIX: 테스트용 코드
-  useEffect(() => {
-    setTitle(post.postTitle);
-    setPrice(post.price);
-    setDeal(post.price > 0 ? '판매하기' : '나눔하기');
-    setContent(post.content);
-    setImage(post.postImages);
-    setSelectedCategory(2);
+    setIsLoading(false);
   }, []);
 
   /**
    * 게시물 상세 데이터 가져오는 함수
    */
   const getPostDetail = () => {
-    axios.get(`http://${Config.DB_IP}/posts/${route.params.postId}`, {timeout: 2000})
+    axios.get(`http://${Config.DB_IP}/posts/${route.params.postId}`, {
+        headers: {
+          Authorization: `Bearer ${userData.token}`,
+        },
+        timeout: 2000, // 타임아웃을 2초로 설정
+      })
       .then(response => {
         if (response.status === 200) {
-          // setPost(response.data);
-          setTitle(post.postTitle);
-          setPrice(post.price);
-          setDeal(post.price > 0 ? '판매하기' : '나눔하기');
-          setContent(post.content);
-          setImage(post.postImages);
+          setPost(response.data);
+          setImage(response.data.postImages);
+          setTitle(response.data.postTitle);
+          setPrice(response.data.price);
+          setDeal(response.data.price > 0 ? '판매하기' : '나눔하기');
+          setContent(response.data.content);
         }
       })
-      .catch(error => { 
-        if (error.response) { // 요청은 성공했으나 응답은 실패
-          setAlertMessage(`데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`);
+      .catch(error => {
+        if (error.response) {
+          // 요청은 성공했으나 응답은 실패
+          setAlertMessage(
+            `데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`,
+          );
           setShowAlert(true);
           setTimeout(() => {
             setShowAlert(false);
           }, 6000);
           console.log('PostsList error.response', error.response);
-        } else if (error.request) { // timeout으로 요청 실패
-          setAlertMessage('서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
+        } else if (error.request) {
+          // timeout으로 요청 실패
+          setAlertMessage(
+            '서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.',
+          );
           setShowAlert(true);
           setTimeout(() => {
             setShowAlert(false);
           }, 6000);
-        } else { // 기타 오류 발생
-          setAlertMessage(`데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`);
+        } else {
+          // 기타 오류 발생
+          setAlertMessage(
+            `데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`,
+          );
           setShowAlert(true);
           setTimeout(() => {
             setShowAlert(false);
           }, 6000);
           console.log('PostsList Unexpected error', error.message);
-        }});
+        }
+      });
   }
 
   /**
@@ -251,6 +260,14 @@ const PostEdit = ({navigation, route}) => {
     }
   }
 
+  if (isLoading) {
+    return (
+      <>
+        <Loading />
+      </>
+    );
+  }
+
   return (
     <>
       <View style={styles.inlineContainer}>
@@ -292,7 +309,7 @@ const PostEdit = ({navigation, route}) => {
               {image.length !== 0 && (
                 <View style={shared.inlineContainer}>
                   {image.map((uri, index) => (
-                    <View style={styles.previewImageContainer}>
+                    <View style={styles.previewImageContainer} key={uri}>
                       <Image style={styles.previewImage} source={{uri}} />
                       <TouchableOpacity
                         key={index}
