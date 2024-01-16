@@ -23,6 +23,7 @@ const PostDetail = ({navigation, route}) => {
 
   const [postStatus, setPostStatus] = useState(''); // 게시물 상태
   const [liked, setLiked] = useState(false); // 좋아요 여부
+  const [category, setCategory] = useState(''); // 게시물 카테고리
 
   const [openOptionModal, setOpenOptionModal] = useState(false); // 옵션 모달 창
   const [modalIndex, setModalIndex] = useState(-1); // 옵션 모달 선택 인덱스
@@ -86,7 +87,7 @@ const PostDetail = ({navigation, route}) => {
   }, [post]);
 
   /**
-   * 게시물 상태 업데이트
+   * 게시물 상태 한글로 업데이트
    */
   useEffect(() => {
     if (post) {
@@ -99,6 +100,65 @@ const PostDetail = ({navigation, route}) => {
       }
     }
   }, [post]);
+
+  /**
+   * 게시물 카테고리 한글로 업데이트
+   */
+  useEffect(() => {
+    if (post) {
+      if (post.category === 'ELECTRONICS') {
+        setCategory('디지털/가전');
+      } else if (post.category === 'FURNITURE') {
+        setCategory('가구/인테리어');
+      } else if (post.category === 'CLOTHING') {
+        setCategory('의류');
+      } else if (post.category === 'BOOKS_TICKETS_RECORDS_GAMES') {
+        setCategory('도서/티켓/음반/게임');
+      } else if (post.category === 'BEAUTY') {
+        setCategory('뷰티/미용');
+      } else if (post.category === 'ETC') {
+        setCategory('기타');
+      }
+    }
+  }, [post])
+
+  /**
+   * 옵션 모달 선택 버튼에 따라 실행
+   */ 
+  useEffect(() => {
+    if (modalIndex === 0) { // 게시글 수정
+      navigation.navigate('PostStack', {screen: 'PostEdit', params: {postId: post.id}})
+    }
+    else if (modalIndex === 1) { // 끌어올리기
+      navigation.navigate('PostStack', {screen: 'PostRecent', params: {postId: post.id, postTitle: post.postTitle, postImage: post.postImages[0], postPrice: post.price}})
+    }
+    else if (modalIndex === 2) { // 숨기기
+      hidePost();
+    }
+    else if (modalIndex === 3) { // 삭제
+      deletePost();
+      navigation.navigate('PostsList', {params: {deleteAlert: true}}); // 게시글 목록으로 이동
+    }
+    setModalIndex(-1); // 모달 선택 인덱스 초기화
+    setOpenOptionModal(false); // 모달 창 닫기
+  }, [modalIndex]);
+
+  /**
+   * 게시물 상태 모달 선택 버튼에 따라 실행
+   */
+  useEffect(() => {
+    if (modalStateIndex === 0) {
+      patchStatus("판매중");
+    }
+    else if (modalStateIndex === 1) {
+      patchStatus("예약중");
+    }
+    else if (modalStateIndex === 2) {
+      patchStatus("거래완료");
+    }
+    setModalStateIndex(-1); // 모달 선택 인덱스 초기화
+    setOpenStateModal(false); // 모달 창 닫기
+  }, [modalStateIndex]);
 
   /**
    * 게시물 상세 데이터 가져오기 함수
@@ -352,43 +412,8 @@ const PostDetail = ({navigation, route}) => {
   }
 
   /**
-   * 옵션 모달 선택 버튼에 따라 실행
-   */ 
-  useEffect(() => {
-    if (modalIndex === 0) { // 게시글 수정
-      navigation.navigate('PostStack', {screen: 'PostEdit', params: {postId: post.id}})
-    }
-    else if (modalIndex === 1) { // 끌어올리기
-      navigation.navigate('PostStack', {screen: 'PostRecent', params: {postId: post.id, postTitle: post.postTitle, postImage: post.postImages[0], postPrice: post.price}})
-    }
-    else if (modalIndex === 2) { // 숨기기
-      hidePost();
-    }
-    else if (modalIndex === 3) { // 삭제
-      deletePost();
-      navigation.navigate('PostsList', {params: {deleteAlert: true}}); // 게시글 목록으로 이동
-    }
-    setModalIndex(-1); // 모달 선택 인덱스 초기화
-    setOpenOptionModal(false); // 모달 창 닫기
-  }, [modalIndex]);
-
-  /**
-   * 게시물 상태 모달 선택 버튼에 따라 실행
+   * 게시물 상세 데이터 렌더링 함수
    */
-  useEffect(() => {
-    if (modalStateIndex === 0) {
-      patchStatus("판매중");
-    }
-    else if (modalStateIndex === 1) {
-      patchStatus("예약중");
-    }
-    else if (modalStateIndex === 2) {
-      patchStatus("거래완료");
-    }
-    setModalStateIndex(-1); // 모달 선택 인덱스 초기화
-    setOpenStateModal(false); // 모달 창 닫기
-  }, [modalStateIndex]);
-
   const RenderContent = () => {
     return (
       <>
@@ -436,19 +461,13 @@ const PostDetail = ({navigation, route}) => {
             <Text style={styles.tempText}>매너온도</Text>
           </View>
         </View>
-  
-        <TouchableOpacity 
-          style={styles.statusContainer}
-          onPress={() => setOpenStateModal(true)}
-        >
-          <Text style={shared.text}>{postStatus}</Text>
-          <Icon name="chevron-down-sharp" size={15} color="#868b94" />
-        </TouchableOpacity>
+
+        {userData.id === post.memberId && <RenderPostState />}
   
         <View style={styles.postContent}>
           <Text style={[styles.text, styles.postTitle]}>{post.postTitle}</Text>
           <Text style={[styles.textGray, styles.postDateTime]}>
-            {post.postDateTime}
+            {`${category} ㆍ ${post.postDateTime}`}
           </Text>
           <Text style={[styles.text, styles.content]}>{post.content}</Text>
         </View>
@@ -456,6 +475,24 @@ const PostDetail = ({navigation, route}) => {
     );
   }
 
+  /**
+   * 게시물 상태 dropdown 렌더링 함수
+   */
+  const RenderPostState = () => {
+    return (
+      <TouchableOpacity 
+        style={styles.statusContainer}
+        onPress={() => setOpenStateModal(true)}
+      >
+      <Text style={shared.text}>{postStatus}</Text>
+      <Icon name="chevron-down-sharp" size={15} color="#868b94" />
+    </TouchableOpacity>
+    )
+  }
+
+  /**
+   * 게시물 하단 렌더링 함수
+   */
   const RenderFooter = () => {
     return(
       <>
@@ -478,6 +515,9 @@ const PostDetail = ({navigation, route}) => {
     </>
     );
   };
+
+
+
   
   return (
     <View style={shared.container}>
