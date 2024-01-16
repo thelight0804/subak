@@ -91,7 +91,6 @@ const PostsList = ({navigation}) => {
       name: 'profileImg.jpg'
     });
     axios.put(`http://${Config.DB_IP}/user/${userData.id}/profile`,
-    //TODO: 유저 id, 이미지 들고 오기
         formData,
         {
           headers: {

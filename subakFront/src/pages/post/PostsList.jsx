@@ -13,15 +13,13 @@ import Loading from '../components/Loading';
 import CommaPrice from '../components/CommaPrice';
 import setStorageData from '../../data/asyncStorage/setStorageData';
 import getStorageData from '../../data/asyncStorage/getStorageData';
-import { set } from 'react-native-reanimated';
 
-const PostsList = ({navigation}) => {
+const PostsList = ({navigation, route}) => {
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1); // 페이지 번호
   const [noMore, setNoMore] = useState(false); // 더 이상 데이터가 없는지 확인
-
   const noPostImage = '../../assets/image/noPostImage.png';
 
   // const [posts, setPosts] = useState([
@@ -148,8 +146,7 @@ const PostsList = ({navigation}) => {
   // ]);
 
   const [posts, setPosts] = useState([]); // 포스트 목록
-
-  // 초기 데이터 로딩
+  
   useEffect(() => {
     getPost(0);
   }, []);

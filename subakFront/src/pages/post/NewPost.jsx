@@ -38,10 +38,10 @@ const NewPost = ({navigation}) => {
     // 내용이 없다면
     !contentCheck(content) && setNoContent(true);
     // 카테고리가 없다면
-    !selectedCategory && setNoCategory(true);
+    (selectedCategory === null) && setNoCategory(true);
     
     // 제목과 내용이 있다면
-    if ( titleCheck(title) && contentCheck(content) && selectedCategory ) {
+    if ( titleCheck(title) && contentCheck(content) && selectedCategory !== null ) {
       !price && setPrice(0); // 가격이 없다면 0으로 초기화
       // 카테고리 영어 치환
       let categoryMapping = {
