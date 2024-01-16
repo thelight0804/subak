@@ -320,6 +320,7 @@ public class PostService {
     private PostDetailResponse convertToPostDetailResponse(Post post, Member member) {
         PostDetailResponse response = new PostDetailResponse();
         response.setId(post.getId());
+        response.setMemberId(post.getMember().getId());
         response.setPostTitle(post.getPostTitle());
         response.setContent(post.getContent());
         response.setMemberName(post.getMember().getName());
