@@ -21,11 +21,13 @@ const PostDetail = ({navigation, route}) => {
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
 
-  const [postStatus, setPostStatus] = useState('판매중'); // 게시물 상태
+  const [postStatus, setPostStatus] = useState(''); // 게시물 상태
   const [liked, setLiked] = useState(false); // 좋아요 여부
 
-  const [openOptionModal, setOpenOptionModal] = useState(false); // 모달 창
-  const [modalIndex, setModalIndex] = useState(-1); // 모달 선택 인덱스
+  const [openOptionModal, setOpenOptionModal] = useState(false); // 옵션 모달 창
+  const [modalIndex, setModalIndex] = useState(-1); // 옵션 모달 선택 인덱스
+  const [openStateModal, setOpenStateModal] = useState(false); // 옵션 모달 창
+  const [modalStateIndex, setModalStateIndex] = useState(-1); // 옵션 모달 선택 인덱스
 
   // FIX: 테스트용 코드
   // const [post, setPost] = useState({
@@ -56,7 +58,9 @@ const PostDetail = ({navigation, route}) => {
     }, []),
   );
 
-  // 매너온도에 따른 색상, 이모지 변경
+  /**
+   * 매너온도에 따른 색상, 이모지 변경
+   */
   useEffect(() => {
     if (post) {
       if (post.temp <= 12.5) {
@@ -77,6 +81,21 @@ const PostDetail = ({navigation, route}) => {
       } else { // 최고 온도
         setTempColor('#ff6e1d');
         setTempEmoji('😆');
+      }
+    }
+  }, [post]);
+
+  /**
+   * 게시물 상태 업데이트
+   */
+  useEffect(() => {
+    if (post) {
+      if (post.productStatus === 'SALE') {
+        setPostStatus('판매중');
+      } else if (post.productStatus === 'RESERVATION') {
+        setPostStatus('예약중');
+      } else if (post.productStatus === 'COMPLETE') {
+        setPostStatus('거래완료');
       }
     }
   }, [post]);
@@ -274,7 +293,66 @@ const PostDetail = ({navigation, route}) => {
   }
 
   /**
-   * 모달 선택 버튼에 따라 실행
+   * 게시물 상태 변경 함수
+   */
+  const patchStatus = (status) => {
+    var updateStatus = status; // 백엔드용 영어값 변수
+
+    switch(status) { // 한글값을 영어값으로 변경
+      case '판매중':
+        updateStatus = 'SALE';
+        break;
+      case '예약중':
+        updateStatus = 'RESERVATION';
+        break;
+      case '거래완료':
+        updateStatus = 'COMPLETE';
+        break;
+    }
+
+    axios.patch(`http://${Config.DB_IP}/post/${post.id}/product-status`,
+      {
+          productStatus: updateStatus,
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${userData.token}` // 토큰 값을 추가
+        },
+        timeout: 2000 // 타임아웃을 2초로 설정
+      }
+    )
+    .then(response => {
+      if (response.status === 200) {
+        setPostStatus(status); // 게시물 상태 state 변경
+      }
+    })
+    .catch(error => { 
+      if (error.response) { // 요청은 성공했으나 응답은 실패
+        setAlertMessage(`데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`);
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        console.log('patchStatus error.response', error.response);
+      } else if (error.request) { // timeout으로 요청 실패
+        setAlertMessage('서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+      } else { // 기타 오류 발생
+        setAlertMessage(`데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`);
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        console.log('patchStatus Unexpected error', error.message);
+      }}
+    )
+  }
+
+  /**
+   * 옵션 모달 선택 버튼에 따라 실행
    */ 
   useEffect(() => {
     if (modalIndex === 0) { // 게시글 수정
@@ -294,6 +372,23 @@ const PostDetail = ({navigation, route}) => {
     setOpenOptionModal(false); // 모달 창 닫기
   }, [modalIndex]);
 
+  /**
+   * 게시물 상태 모달 선택 버튼에 따라 실행
+   */
+  useEffect(() => {
+    if (modalStateIndex === 0) {
+      patchStatus("판매중");
+    }
+    else if (modalStateIndex === 1) {
+      patchStatus("예약중");
+    }
+    else if (modalStateIndex === 2) {
+      patchStatus("거래완료");
+    }
+    setModalStateIndex(-1); // 모달 선택 인덱스 초기화
+    setOpenStateModal(false); // 모달 창 닫기
+  }, [modalStateIndex]);
+
   const RenderContent = () => {
     return (
       <>
@@ -302,7 +397,7 @@ const PostDetail = ({navigation, route}) => {
               <Image style={styles.mainImage} source={{uri: post.postImages[0]}} />
             </View>
           ) : (
-            <View style={styles.notImageContainger}  key={"postImage"}/>
+            <View style={styles.notImageContainger} key={"postImage"} />
           ),
         ]}
   
@@ -344,7 +439,7 @@ const PostDetail = ({navigation, route}) => {
   
         <TouchableOpacity 
           style={styles.statusContainer}
-          onPress={() => {}}
+          onPress={() => setOpenStateModal(true)}
         >
           <Text style={shared.text}>{postStatus}</Text>
           <Icon name="chevron-down-sharp" size={15} color="#868b94" />
@@ -401,9 +496,7 @@ const PostDetail = ({navigation, route}) => {
         </View>
         <TouchableOpacity
           style={shared.iconButton}
-          onPress={() => {
-            setOpenOptionModal(true);
-          }}>
+          onPress={() => setOpenOptionModal(true)}>
           <Icon name="ellipsis-vertical-sharp" size={25} color="#FFFFFF" />
         </TouchableOpacity>
       </View>
@@ -421,6 +514,14 @@ const PostDetail = ({navigation, route}) => {
           setOpenModal={setOpenOptionModal}
           setModalIndex={setModalIndex}
           choices={['게시글 수정', '끌어올리기', '숨기기', '삭제']}
+        />
+      )}
+      {openStateModal && (
+        <ChoiceDiaglog
+          openModal={openStateModal}
+          setOpenModal={setOpenStateModal}
+          setModalIndex={setModalStateIndex}
+          choices={['판매중', '예약중', '거래완료']}
         />
       )}
     {showAlert && <Alert message={alertMessage} />}
