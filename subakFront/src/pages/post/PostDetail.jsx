@@ -16,10 +16,12 @@ import ChoiceDiaglog from '../components/ChoiceDiaglog';
 
 const PostDetail = ({navigation, route}) => {
   const userData = useSelector((state) => state.userData); // 유저 데이터
+  const prevProfileImg = '../../assets/image/user-profile.png'; // 기존 프로필 이미지
   const [post, setPost] = useState(null); // 게시물 상세 데이터
 
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태
 
   const [postStatus, setPostStatus] = useState(''); // 게시물 상태
   const [liked, setLiked] = useState(false); // 좋아요 여부
@@ -50,12 +52,16 @@ const PostDetail = ({navigation, route}) => {
   // 게시물 상세 데이터 가져오기
   useEffect(() => {
     fetchPost();
+    setIsLoading(false);
+    console.log(post);
   }, []);
 
   // 포커스를 얻었을 때 데이터 다시 가져오기
   useFocusEffect(
     useCallback(() => {
       fetchPost();
+      setIsLoading(false);
+      console.log(post);
     }, []),
   );
 
@@ -86,41 +92,12 @@ const PostDetail = ({navigation, route}) => {
     }
   }, [post]);
 
-  /**
-   * 게시물 상태 한글로 업데이트
-   */
   useEffect(() => {
     if (post) {
-      if (post.productStatus === 'SALE') {
-        setPostStatus('판매중');
-      } else if (post.productStatus === 'RESERVATION') {
-        setPostStatus('예약중');
-      } else if (post.productStatus === 'COMPLETE') {
-        setPostStatus('거래완료');
-      }
+      updatePostStatusKorean(post.productStatus)
+      updateCategoryKorean(post.category)
     }
   }, [post]);
-
-  /**
-   * 게시물 카테고리 한글로 업데이트
-   */
-  useEffect(() => {
-    if (post) {
-      if (post.category === 'ELECTRONICS') {
-        setCategory('디지털/가전');
-      } else if (post.category === 'FURNITURE') {
-        setCategory('가구/인테리어');
-      } else if (post.category === 'CLOTHING') {
-        setCategory('의류');
-      } else if (post.category === 'BOOKS_TICKETS_RECORDS_GAMES') {
-        setCategory('도서/티켓/음반/게임');
-      } else if (post.category === 'BEAUTY') {
-        setCategory('뷰티/미용');
-      } else if (post.category === 'ETC') {
-        setCategory('기타');
-      }
-    }
-  }, [post])
 
   /**
    * 옵션 모달 선택 버튼에 따라 실행
@@ -200,6 +177,38 @@ const PostDetail = ({navigation, route}) => {
           console.log('PostDetail Unexpected error', error.message);
         }});
   })
+
+  /**
+   * 게시물 상태 한글로 업데이트
+   */
+  const updatePostStatusKorean = (productStatus) => {
+    if (productStatus === 'SALE') {
+      setPostStatus('판매중');
+    } else if (productStatus === 'RESERVATION') {
+      setPostStatus('예약중');
+    } else if (productStatus === 'COMPLETE') {
+      setPostStatus('거래완료');
+    }
+  };
+
+  /**
+   * 게시물 카테고리 한글로 업데이트
+   */
+  const updateCategoryKorean = (category) => {
+    if (post.category === 'ELECTRONICS') {
+      setCategory('디지털/가전');
+    } else if (post.category === 'FURNITURE') {
+      setCategory('가구/인테리어');
+    } else if (post.category === 'CLOTHING') {
+      setCategory('의류');
+    } else if (post.category === 'BOOKS_TICKETS_RECORDS_GAMES') {
+      setCategory('도서/티켓/음반/게임');
+    } else if (post.category === 'BEAUTY') {
+      setCategory('뷰티/미용');
+    } else if (post.category === 'ETC') {
+      setCategory('기타');
+    }
+  };
 
   /**
    * 게시물 삭제 함수
@@ -412,6 +421,19 @@ const PostDetail = ({navigation, route}) => {
   }
 
   /**
+   * 
+   */
+  const RenderOption = () => {
+    return (
+      <TouchableOpacity
+        style={shared.iconButton}
+        onPress={() => setOpenOptionModal(true)}>
+        <Icon name="ellipsis-vertical-sharp" size={25} color="#FFFFFF" />
+      </TouchableOpacity>
+    );
+  }
+
+  /**
    * 게시물 상세 데이터 렌더링 함수
    */
   const RenderContent = () => {
@@ -430,7 +452,7 @@ const PostDetail = ({navigation, route}) => {
           <View style={styles.profileContainer}>
             <Image
               style={styles.profileImage}
-              source={{uri: post.profileImage}}
+              source={post.profileImage ? {uri: post.profileImage} : require(prevProfileImg)}
             />
             <View style={styles.profileNameContainer}>
               <Text style={styles.text}>{post.memberName}</Text>
@@ -463,7 +485,7 @@ const PostDetail = ({navigation, route}) => {
         </View>
 
         {userData.id === post.memberId && <RenderPostState />}
-  
+
         <View style={styles.postContent}>
           <Text style={[styles.text, styles.postTitle]}>{post.postTitle}</Text>
           <Text style={[styles.textGray, styles.postDateTime]}>
@@ -516,8 +538,9 @@ const PostDetail = ({navigation, route}) => {
     );
   };
 
-
-
+  if (isLoading) {
+    return <Loading />
+  }
   
   return (
     <View style={shared.container}>
@@ -534,11 +557,7 @@ const PostDetail = ({navigation, route}) => {
             <Icon name="home-outline" size={25} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={shared.iconButton}
-          onPress={() => setOpenOptionModal(true)}>
-          <Icon name="ellipsis-vertical-sharp" size={25} color="#FFFFFF" />
-        </TouchableOpacity>
+        {post && userData.id === post.memberId && <RenderOption />}
       </View>
 
       <ScrollView style={styles.content}>
