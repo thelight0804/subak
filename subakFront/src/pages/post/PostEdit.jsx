@@ -52,6 +52,12 @@ const PostEdit = ({navigation, route}) => {
     setIsLoading(false);
   }, []);
 
+  useEffect(() => {
+    if (post){
+      updateCategoryIndex(post.category);
+    }
+  }, [post])
+
   /**
    * 게시물 상세 데이터 가져오는 함수
    */
@@ -107,6 +113,42 @@ const PostEdit = ({navigation, route}) => {
   }
 
   /**
+   * 카테고리 인덱스 업데이트 함수
+   */
+  const updateCategoryIndex = (category) => {
+    if (category === 'ELECTRONICS') {
+      setSelectedCategory(0);
+    } else if (category === 'FURNITURE') {
+      setSelectedCategory(1);
+    } else if (category === 'CLOTHING') {
+      setSelectedCategory(2);
+    } else if (category === 'BOOKS_TICKETS_RECORDS_GAMES') {
+      setSelectedCategory(3);
+    } else if (category === 'BEAUTY') {
+      setSelectedCategory(4);
+    } else if (category === 'ETC') {
+      setSelectedCategory(5);
+    }
+  };
+
+  const convertCategoryMapping = (index) => {
+    switch (index) {
+      case 0:
+        return 'ELECTRONICS';
+      case 1:
+        return 'FURNITURE';
+      case 2:
+        return 'CLOTHING';
+      case 3:
+        return 'BOOKS_TICKETS_RECORDS_GAMES';
+      case 4:
+        return 'BEAUTY';
+      case 5:
+        return 'ETC';
+    }
+  }
+
+  /**
    * 갤러리에서 사진 가져오는 함수
    */
   const handleImageLibrary = () => {
@@ -159,7 +201,9 @@ const PostEdit = ({navigation, route}) => {
   }
   }
 
-  // 카테고리 렌더링
+  /**
+   * 카테고리 렌더링 함수
+   */
   const renderCategory = (start, end) => {
     return (
       <View style={styles.toggleContainer}>
@@ -179,50 +223,51 @@ const PostEdit = ({navigation, route}) => {
     );
   };
 
+  /**
+   * 게시물 수정 함수
+   */
   const handleEditPost = () => {
     // 제목이 없다면
     !titleCheck(title) && setNoTitle(true);
     // 내용이 없다면
     !contentCheck(content) && setNoContent(true);
     // 카테고리가 없다면
-    !selectedCategory && setNoCategory(true);
+    (selectedCategory === null) && setNoCategory(true);
 
     // 제목과 내용이 있다면
-    if (
-      titleCheck(title) &&
-      contentCheck(content) &&
-      selectedCategory
-    ) {
+    if ( titleCheck(title) && contentCheck(content) && selectedCategory !== null ) {
       !price && setPrice(0); // 가격이 없다면 0으로 초기화
       
-      // 사진 formData
+      // formData 형식
       const formData = new FormData();
       image.forEach((uri, index) => {
-        formData.append('image', {
-          name: `postImage${index}`,
+        formData.append('postImage', {
+          name: `postImage${index}.jpg`,
           type: 'image/jpeg',
           uri: uri,
         });
       });
+      formData.append('category', convertCategoryMapping(selectedCategory));
+      formData.append('content', content);
+      formData.append('postTitle', title);
+      formData.append('price', price);
 
-      axios.post(
-          `http://${Config.DB_IP}/post`,{
-            category: categories[selectedCategory],
-            postImage: formData,
-            postTitle: title,
-            price: price ? price : 0,
-            content: content,
-          },
+      axios.put(
+          `http://${Config.DB_IP}/post/${post.id}`,
+          formData,
           {headers: {
-              'Content-Type': 'multipart/form-data',
-              'Authorization': `Bearer ${userData.token}` // 토큰 값을 추가
+              'Content-Type': 'multipart/form-data', // 파일 형식
+              'Authorization': `Bearer ${userData.token}` // 로그인 토큰
             },
-            timeout: 2000 // 타임아웃을 2초로 설정
+            timeout: 2000, // 2초 타임아웃
           }
         )
-        .then(response => {
-          // 성공 했을 때
-          navigation.navigate('FooterTabs');
+        .then(() => {
+          // 게시물 상세 페이지로 이동
+          navigation.navigate('PostStack', {
+            screen: 'PostDetail',
+            params: {postId: post.id},
+          })
         })
         .catch(error => {
           if (error.response) {
@@ -233,7 +278,7 @@ const PostEdit = ({navigation, route}) => {
               setShowAlert(false);
             }, 6000);
             console.error(
-              'Login error.response',
+              'postEdit error.response',
               error.response.data,
             );
           } else if (error.request) {
@@ -254,18 +299,14 @@ const PostEdit = ({navigation, route}) => {
             setTimeout(() => {
               setShowAlert(false);
             }, 6000);
-            console.error('NewPost Unexpected error', error.message);
+            console.error('postEdit Unexpected error', error.message);
           }
         });
     }
   }
 
   if (isLoading) {
-    return (
-      <>
-        <Loading />
-      </>
-    );
+    return <Loading />;
   }
 
   return (

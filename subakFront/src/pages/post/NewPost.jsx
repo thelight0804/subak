@@ -15,12 +15,12 @@ const NewPost = ({navigation}) => {
 
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
-  const [image, setImage] = useState([]); // 이미지
 
   const [title, setTitle] = useState(''); // 제목
   const [price, setPrice] = useState(0); // 가격
   const [deal, setDeal] = useState('판매하기'); // 거래 방식
   const [content, setContent] = useState(''); // 자세한 설명
+  const [image, setImage] = useState([]); // 이미지
 
   const [noTitle, setNoTitle] = useState(false); // 제목 없음
   const [noContent, setNoContent] = useState(false); // 내용 없음
@@ -43,6 +43,7 @@ const NewPost = ({navigation}) => {
     // 제목과 내용이 있다면
     if ( titleCheck(title) && contentCheck(content) && selectedCategory !== null ) {
       !price && setPrice(0); // 가격이 없다면 0으로 초기화
+      
       // 카테고리 영어 치환
       let categoryMapping = {
         '디지털/가전': 'ELECTRONICS',

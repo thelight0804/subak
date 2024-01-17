@@ -53,7 +53,6 @@ const PostDetail = ({navigation, route}) => {
   useEffect(() => {
     fetchPost();
     setIsLoading(false);
-    console.log(post);
   }, []);
 
   // 포커스를 얻었을 때 데이터 다시 가져오기
@@ -61,7 +60,6 @@ const PostDetail = ({navigation, route}) => {
     useCallback(() => {
       fetchPost();
       setIsLoading(false);
-      console.log(post);
     }, []),
   );
 
@@ -94,8 +92,8 @@ const PostDetail = ({navigation, route}) => {
 
   useEffect(() => {
     if (post) {
-      updatePostStatusKorean(post.productStatus)
-      updateCategoryKorean(post.category)
+      convertPostStatusKorean(post.productStatus)
+      convertCategoryKorean(post.category)
     }
   }, [post]);
 
@@ -114,7 +112,6 @@ const PostDetail = ({navigation, route}) => {
     }
     else if (modalIndex === 3) { // 삭제
       deletePost();
-      navigation.navigate('PostsList', {params: {deleteAlert: true}}); // 게시글 목록으로 이동
     }
     setModalIndex(-1); // 모달 선택 인덱스 초기화
     setOpenOptionModal(false); // 모달 창 닫기
@@ -179,9 +176,9 @@ const PostDetail = ({navigation, route}) => {
   })
 
   /**
-   * 게시물 상태 한글로 업데이트
+   * 게시물 상태 한글로 변환
    */
-  const updatePostStatusKorean = (productStatus) => {
+  const convertPostStatusKorean = (productStatus) => {
     if (productStatus === 'SALE') {
       setPostStatus('판매중');
     } else if (productStatus === 'RESERVATION') {
@@ -192,20 +189,20 @@ const PostDetail = ({navigation, route}) => {
   };
 
   /**
-   * 게시물 카테고리 한글로 업데이트
+   * 게시물 카테고리 한글로 변환
    */
-  const updateCategoryKorean = (category) => {
-    if (post.category === 'ELECTRONICS') {
+  const convertCategoryKorean = (category) => {
+    if (category === 'ELECTRONICS') {
       setCategory('디지털/가전');
-    } else if (post.category === 'FURNITURE') {
+    } else if (category === 'FURNITURE') {
       setCategory('가구/인테리어');
-    } else if (post.category === 'CLOTHING') {
+    } else if (category === 'CLOTHING') {
       setCategory('의류');
-    } else if (post.category === 'BOOKS_TICKETS_RECORDS_GAMES') {
+    } else if (category === 'BOOKS_TICKETS_RECORDS_GAMES') {
       setCategory('도서/티켓/음반/게임');
-    } else if (post.category === 'BEAUTY') {
+    } else if (category === 'BEAUTY') {
       setCategory('뷰티/미용');
-    } else if (post.category === 'ETC') {
+    } else if (category === 'ETC') {
       setCategory('기타');
     }
   };
@@ -214,45 +211,56 @@ const PostDetail = ({navigation, route}) => {
    * 게시물 삭제 함수
    */
   const deletePost = () => {
+    console.log(post.id);
+    console.log(userData.token);
     axios.delete(`http://${Config.DB_IP}/post/${post.id}`,
-      {headers: {
-        'Authorization': `Bearer ${userData.token}` // 토큰 값을 추가
-      },
-      timeout: 2000 // 타임아웃을 2초로 설정
-      }
-    )
-    .then(response => {
-      if (response.status === 200) {
-        setAlertMessage(`게시글이 삭제되었습니다.`);
-        setShowAlert(true);
-        setTimeout(() => {
-          setShowAlert(false);
-        }, 6000);
-      }
-      navigation.navigate('PostsList'); // 게시글 목록으로 이동
-    })
-    .catch(error => { 
-      if (error.response) { // 요청은 성공했으나 응답은 실패
-        setAlertMessage(`데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`);
-        setShowAlert(true);
-        setTimeout(() => {
-          setShowAlert(false);
-        }, 6000);
-        console.log('PostsDetail error.response', error.response);
-      } else if (error.request) { // timeout으로 요청 실패
-        setAlertMessage('서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
-        setShowAlert(true);
-        setTimeout(() => {
-          setShowAlert(false);
-        }, 6000);
-      } else { // 기타 오류 발생
-        setAlertMessage(`데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`);
-        setShowAlert(true);
-        setTimeout(() => {
-          setShowAlert(false);
-        }, 6000);
-        console.log('PostDetail Unexpected error', error.message);
-      }});
+        {
+          headers: { 'Authorization': `Bearer ${userData.token}`}, // 로그인 토큰
+          timeout: 2000, // 2초 타임아웃
+        },
+      )
+      .then(response => {
+        if (response.status === 200) {
+          setAlertMessage(`게시글이 삭제되었습니다.`);
+          setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 6000);
+          navigation.navigate('PostsList', {params: {deleteAlert: true}}); // 게시글 목록으로 이동
+        }
+      })
+      .catch(error => {
+        if (error.response) {
+          // 요청은 성공했으나 응답은 실패
+          setAlertMessage(
+            `데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`,
+          );
+          setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 6000);
+          console.log('PostsDetail error.response', error.response.data);
+        } else if (error.request) {
+          // timeout으로 요청 실패
+          setAlertMessage(
+            '서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.',
+          );
+          setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 6000);
+        } else {
+          // 기타 오류 발생
+          setAlertMessage(
+            `데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`,
+          );
+          setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 6000);
+          console.log('PostDetail Unexpected error', error.message);
+        }
+      });
   }
 
   /**

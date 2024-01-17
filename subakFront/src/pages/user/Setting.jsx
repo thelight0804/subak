@@ -47,6 +47,7 @@ const Setting = ({navigation}) => {
           </TouchableOpacity>
 
           <TouchableOpacity style={[shared.inlineContainer, styles.listButton]} onPress={() => console.log("탈퇴하기")}>
+            {/* 회원 탈퇴는 PATCH /user/{email}로 해야 합니다 */}
             <Text style={[shared.text, styles.text]}>탈퇴하기</Text>
           </TouchableOpacity>
         </View>
