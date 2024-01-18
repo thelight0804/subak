@@ -45,7 +45,19 @@ const SignUp = ({ navigation, route }) => {
     .then(response => {
       if (response.status === 200) {
         // 백엔드로부터 데이터 받기
-        loginUser(response.data, dispatch); // Redux에 저장
+        const data = response.data;
+        data.id = data.memberId;
+        data.phone = data.phoneNumber;
+        data.logined = true;
+        data.mannerScore = data.temp;
+        data.image = data.profileImage;
+
+        delete data.memberId;
+        delete data.phoneNumber;
+        delete data.temp;
+        delete data.profileImage;
+
+        loginUser(data, dispatch); // Redux에 저장
         navigation.navigate('FooterTabs'); // 메인 화면으로 이동
       }
     })
