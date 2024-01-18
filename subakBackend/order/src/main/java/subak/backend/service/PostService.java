@@ -63,10 +63,15 @@ public class PostService {
     /**
      * 게시글 키워드 검색
      */
-    public List<PostResponse> searchPosts(String keyword, int offset, int limit) {
+    public List<PostResponse> searchPosts(String keyword, boolean showHide, int offset, int limit) {
 
-        List<Post> posts = entityManager.createQuery(
-                "SELECT p FROM Post p WHERE (p.postTitle LIKE :keyword OR p.content LIKE :keyword) AND p.postStatus != 'HIDE' ORDER BY p.postDateTime DESC", Post.class)
+        String query = "SELECT p FROM Post p WHERE (p.postTitle LIKE :keyword OR p.content LIKE :keyword)";
+        if (!showHide) {
+            query += " AND p.postStatus != 'HIDE'";
+        }
+        query += " ORDER BY p.postDateTime DESC";
+
+        List<Post> posts = entityManager.createQuery(query, Post.class)
                 .setParameter("keyword", "%" + keyword + "%")
                 .setFirstResult(offset)
                 .setMaxResults(limit)

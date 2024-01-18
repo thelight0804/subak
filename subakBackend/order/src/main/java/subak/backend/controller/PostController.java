@@ -47,7 +47,7 @@ public class PostController {
     }
 
     @ApiOperation(value = "게시글 수정")
-    @PutMapping("/post/{postId}")
+    @PutMapping(value = "/post/{postId}", consumes = {"multipart/form-data"})
     public ResponseEntity<String> updatePost(@PathVariable Long postId,
                                              @ModelAttribute @Validated UpdatePostRequest UpdatePostRequest,
                                              @RequestPart(value = "postImage", required = false) List<MultipartFile> postImages,
@@ -96,10 +96,10 @@ public class PostController {
 
     @ApiOperation(value = "좋아요 추가 또는 취소", notes = "필수값 : 게시글 ID")
     @PostMapping("/post/{postId}/hearts")
-    public ResponseEntity<Void> addOrRemoveHeart(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<String> addOrRemoveHeart(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
         Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
         postService.addOrRemoveHeart(postId, loginMember);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("heart success");
     }
 
 
@@ -153,9 +153,10 @@ public class PostController {
     @GetMapping("/posts/search")
     public ResponseEntity<List<PostResponse>> search(
             @RequestParam(required = false) String keyword,
+            @RequestParam(value = "showHide", defaultValue = "false") boolean showHide,
             @RequestParam(value = "offset", defaultValue = "0") int offset,
             @RequestParam(value = "limit", defaultValue = "10") int limit) {
-        List<PostResponse> posts = postService.searchPosts(keyword, offset, limit);
+        List<PostResponse> posts = postService.searchPosts(keyword, showHide, offset, limit);
         return ResponseEntity.ok(posts);
     }
 
