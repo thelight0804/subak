@@ -1,6 +1,5 @@
 import {useState, useEffect, useCallback} from 'react';
-import { View, Text, TouchableOpacity, Image, ScrollView, FlatList } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { View, Text, TouchableOpacity, Image, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Config from 'react-native-config';
@@ -11,8 +10,7 @@ import styles from '../../styles/post/postsList';
 import Alert from '../components/Alert';
 import Loading from '../components/Loading';
 import CommaPrice from '../components/CommaPrice';
-import setStorageData from '../../data/asyncStorage/setStorageData';
-import getStorageData from '../../data/asyncStorage/getStorageData';
+import RenderPosts from '../components/RenderPosts';
 
 const PostsList = ({navigation, route}) => {
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
@@ -20,7 +18,6 @@ const PostsList = ({navigation, route}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1); // 페이지 번호
   const [noMore, setNoMore] = useState(false); // 더 이상 데이터가 없는지 확인
-  const noPostImage = '../../assets/image/noPostImage.png';
 
   // const [posts, setPosts] = useState([
   //   {
@@ -121,7 +118,7 @@ const PostsList = ({navigation, route}) => {
    * @returns 추가 데이터
    */
   const loadMoreData = () => {
-    if (isLoading || noMore) return; // 이미 로딩 중이면 중복 요청 방지
+    if (isLoading || noMore || posts.length < 10) return; // 이미 로딩 중이면 중복 요청 방지
     setIsLoading(true);
 
     setTimeout(() => { // 추가 데이터 로딩
@@ -176,48 +173,6 @@ const PostsList = ({navigation, route}) => {
     }});
   });
 
-  /**
-   * 포스트 컴포넌트 렌더링 함수
-   * @param {item} item 게시글
-   * @returns 포스트 컴포넌트
-   */
-  const RenderPost = ({ item }) => {
-    return (
-      <TouchableOpacity
-        style={styles.postContainer}
-        onPress={() =>
-          navigation.navigate('PostStack', {
-            screen: 'PostDetail',
-            params: {postId: item.id},
-          })
-        }>
-        <View style={styles.imageContainer}>
-          <Image 
-            style={styles.image} 
-            source={item.firstImage ? {uri: item.firstImage} : require(noPostImage)}
-          />
-        </View>
-        <View style={styles.postContentContainer}>
-          <Text style={styles.title}>{item.postTitle}</Text>
-          <Text style={[styles.grayText, styles.address]}>{`${item.address}ㆍ${item.postDateTime}`}</Text>
-          <Text style={styles.price}>
-            {item.price === 0 ? (
-                <Text>
-                  나눔 <Icon name="heart" size={15} color="#dc645b" />
-                </Text>
-              ) : (
-                `${CommaPrice(item.price)}원`
-              )}
-          </Text>
-          <View style={styles.heartCountContainer}>
-            <Text style={[styles.grayText, styles.heartCount]}>{item.heartCount}</Text>
-            <Icon name="heart-outline" size={18} color="#868b94"></Icon>
-          </View>
-        </View>
-      </TouchableOpacity>
-    )
-  };
-
   return (
     <>
       <View style={shared.container}>
@@ -233,7 +188,7 @@ const PostsList = ({navigation, route}) => {
 
         <FlatList
           data={posts}
-          renderItem={RenderPost}
+          renderItem={({item, index}) => <RenderPosts item={item} index={index} navigation={navigation} />}
           keyExtractor={item => item.id}
           onEndReached={loadMoreData}
           onEndReachedThreshold={0.3}
