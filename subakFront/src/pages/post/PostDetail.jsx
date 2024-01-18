@@ -429,7 +429,7 @@ const PostDetail = ({navigation, route}) => {
   }
 
   /**
-   * 
+   * 옵션 버튼 렌더링 함수
    */
   const RenderOption = () => {
     return (
@@ -524,25 +524,33 @@ const PostDetail = ({navigation, route}) => {
    * 게시물 하단 렌더링 함수
    */
   const RenderFooter = () => {
-    return(
+    return (
       <>
         <View style={styles.heartContainer}>
-          <TouchableOpacity style={styles.heart}
-            onPress={handleLike}
-          >
-            { liked ? 
-              <Icon name="heart-sharp" color="#dc645b" size={25}/> :
-              <Icon name="heart-outline" color="#868b94" size={25}/>
-            }
+          <TouchableOpacity style={styles.heart} onPress={handleLike}>
+            {liked ? (
+              <Icon name="heart-sharp" color="#dc645b" size={25} />
+            ) : (
+              <Icon name="heart-outline" color="#868b94" size={25} />
+            )}
           </TouchableOpacity>
-          <Text style={styles.price}>{`${CommaPrice(post.price)}원`}</Text>
+          <Text style={styles.price}>
+            {post.price === 0 ? (
+              <Text>
+                나눔 <Icon name="heart" size={15} color="#dc645b" />
+              </Text>
+            ) : (
+              `${CommaPrice(post.price)}원`
+            )}
+          </Text>
         </View>
-        <TouchableOpacity 
-          style={shared.button}
-        >
-          <Text style={[styles.buttonText, shared.redButton]}>구매하기</Text>
-        </TouchableOpacity>
-    </>
+
+        {post && userData.id !== post.memberId && (
+          <TouchableOpacity style={shared.button}>
+            <Text style={[styles.buttonText, shared.redButton]}>구매하기</Text>
+          </TouchableOpacity>
+        )}
+      </>
     );
   };
 

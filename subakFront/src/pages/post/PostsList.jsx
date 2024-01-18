@@ -94,55 +94,7 @@ const PostsList = ({navigation, route}) => {
   //     "address": null,
   //     "heartCount": 0,
   //     "commentCount": 0
-  //   },
-  //   {
-  //     "id": 6,
-  //     "memberName": "6",
-  //     "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-  //     "postTitle": "6",
-  //     "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-  //     "price": 6,
-  //     "postDateTime": "3일 전",
-  //     "address": null,
-  //     "heartCount": 0,
-  //     "commentCount": 0
-  //   },
-  //   {
-  //     "id": 7,
-  //     "memberName": "7",
-  //     "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-  //     "postTitle": "7",
-  //     "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-  //     "price": 7,
-  //     "postDateTime": "3일 전",
-  //     "address": null,
-  //     "heartCount": 0,
-  //     "commentCount": 0
-  //   },
-  //   {
-  //     "id": 8,
-  //     "memberName": "8",
-  //     "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-  //     "postTitle": "8",
-  //     "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-  //     "price": 8,
-  //     "postDateTime": "3일 전",
-  //     "address": null,
-  //     "heartCount": 0,
-  //     "commentCount": 0
-  //   },
-  //   {
-  //     "id": 9,
-  //     "memberName": "9",
-  //     "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-  //     "postTitle": "9",
-  //     "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-  //     "price": 9,
-  //     "postDateTime": "3일 전",
-  //     "address": null,
-  //     "heartCount": 0,
-  //     "commentCount": 0
-  //   },
+  //   }
   // ]);
 
   const [posts, setPosts] = useState([]); // 포스트 목록
@@ -248,7 +200,15 @@ const PostsList = ({navigation, route}) => {
         <View style={styles.postContentContainer}>
           <Text style={styles.title}>{item.postTitle}</Text>
           <Text style={[styles.grayText, styles.address]}>{`${item.address}ㆍ${item.postDateTime}`}</Text>
-          <Text style={styles.price}>{`${CommaPrice(item.price)}원`}</Text>
+          <Text style={styles.price}>
+            {item.price === 0 ? (
+                <Text>
+                  나눔 <Icon name="heart" size={15} color="#dc645b" />
+                </Text>
+              ) : (
+                `${CommaPrice(item.price)}원`
+              )}
+          </Text>
           <View style={styles.heartCountContainer}>
             <Text style={[styles.grayText, styles.heartCount]}>{item.heartCount}</Text>
             <Icon name="heart-outline" size={18} color="#868b94"></Icon>
