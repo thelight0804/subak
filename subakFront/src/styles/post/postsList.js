@@ -2,13 +2,20 @@ import {StyleSheet} from 'react-native';
 import { colorPalette } from '../shared';
 
 const styles = StyleSheet.create({
-  header: {
-    // backgroundColor: colorPalette.main,
-  },
-
   inlineContainer: {
     flexDirection: 'row-reverse',
     alignItems: 'center',
+  },
+
+  // 메뉴 버튼
+  menuButtonContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    width: 40,
+    height: 40,
+    backgroundColor: '#171719',
+    borderRadius: 8,
   },
 
   // 게시글 리스트

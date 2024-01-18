@@ -184,6 +184,11 @@ const PostsList = ({navigation, route}) => {
               <Icon name="search" size={30} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
+          <TouchableOpacity
+            style={styles.menuButtonContainer}
+            onPress={() => navigation.navigate('PostStack', {screen: 'CategorySelection'})}>
+              <Icon name="menu" size={20} color="#FFFFFF"/>
+          </TouchableOpacity>
         </View>
 
         <FlatList

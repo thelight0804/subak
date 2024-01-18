@@ -88,20 +88,20 @@ const LikesList = ({navigation}) => {
     setPosts([]);
   })
 
-    /**
+  /**
    * 추가 데이터 로딩 함수
    * @returns 추가 데이터
    */
-    const loadMoreData = () => {
-      if (isLoading || noMore || posts.length < 10) return; // 이미 로딩 중이면 중복 요청 방지
-      setIsLoading(true);
-  
-      setTimeout(() => { // 추가 데이터 로딩
-        setPage(page + 1); // 페이지 번호 증가
-        fetchpost(page); // 추가 데이터 로딩
-        setIsLoading(false);
-      }, 1000);
-    }
+  const loadMoreData = () => {
+    if (isLoading || noMore || posts.length < 10) return; // 이미 로딩 중이면 중복 요청 방지
+    setIsLoading(true);
+
+    setTimeout(() => { // 추가 데이터 로딩
+      setPage(page + 1); // 페이지 번호 증가
+      fetchpost(page); // 추가 데이터 로딩
+      setIsLoading(false);
+    }, 1000);
+  }
 
 
   if (isLoading) {
