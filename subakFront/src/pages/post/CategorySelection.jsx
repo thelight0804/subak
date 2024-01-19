@@ -7,12 +7,14 @@ import categoriesImages from "../../assets/image/categories/categoriesIndex";
 
 const CategorySelection = ({navigation}) => {
   const categories = ['디지털/가전', '가구/인테리어', '의류', '도서/티켓\n음반/게임', '뷰티/미용', '기타'];
+  const categoriesEng = ['ELECTRONICS', 'FURNITURE', 'CLOTHING', 'BOOKS_TICKETS_RECORDS_GAMES', 'BEAUTY', 'ETC']
 
   return (
     <View style={shared.container}>
       <View style={styles.inlineContainer}>
         <TouchableOpacity
           style={shared.iconButton}
+          // onPress={() => navigation.navigate('PostsList', {params: {category: 'all'}})}>
           onPress={() => navigation.goBack()}>
           <Icon name="chevron-back" size={30} color="#FFFFFF" />
         </TouchableOpacity>
@@ -24,8 +26,8 @@ const CategorySelection = ({navigation}) => {
         {categories.map((category, index) => (
           <TouchableOpacity
             key={index} 
-            style={styles.button} 
-            onPress={() => console.log(`${category} 버튼이 눌렸습니다.`)}
+            style={styles.button}
+            onPress={() => navigation.navigate('CategoryPosts', {params: {category: categoriesEng[index]}})}
           >
             <View style={styles.imageContainer}>
               <Image

@@ -9,7 +9,6 @@ import { shared } from '../../styles/shared';
 import styles from '../../styles/post/postsList';
 import Alert from '../components/Alert';
 import Loading from '../components/Loading';
-import CommaPrice from '../components/CommaPrice';
 import RenderPosts from '../components/RenderPosts';
 
 const PostsList = ({navigation, route}) => {
@@ -95,15 +94,15 @@ const PostsList = ({navigation, route}) => {
   // ]);
 
   const [posts, setPosts] = useState([]); // 포스트 목록
-  
+
   useEffect(() => {
-    getPost(0);
+    getAllPost(0);
   }, []);
 
   // 포커스를 얻었을 때 데이터 다시 가져오기
   useFocusEffect(
     useCallback(() => {
-      getPost(0);
+      getAllPost(0);
 
       return () => {
         setPosts([]);
@@ -123,15 +122,15 @@ const PostsList = ({navigation, route}) => {
 
     setTimeout(() => { // 추가 데이터 로딩
       setPage(page + 1); // 페이지 번호 증가
-      getPost(page); // 추가 데이터 로딩
+       getAllPost(page);  // 추가 데이터 로딩
       setIsLoading(false);
     }, 1000);
   }
 
   /**
-   * 포스트 목록 가져오는 함수
+   * 전체 게시물 목록 가져오는 함수
    */
-  const getPost = useCallback((start) => {
+  const getAllPost = useCallback((start) => {
     axios.get(`http://${Config.DB_IP}/posts?offset=${start*10}&limit=10`, {timeout: 2000})
       .then(response => {
           if (response.status === 200) {
