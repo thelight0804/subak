@@ -1,5 +1,5 @@
 import {useState, useEffect, useCallback} from 'react';
-import { View, Text, TouchableOpacity, Image, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Config from 'react-native-config';
@@ -162,8 +162,8 @@ const CategoryPosts = ({navigation, route}) => {
         </View>
       
         <View style={styles.noPostsContainer}>
-          <Text style={styles.noPostsText}>관심 표시한 글이 없어요.</Text>
-          <Text style={styles.noPostsText}>우리 동네에 올라온 글을 탐색하고 관심 표시 해보세요!</Text>
+          <Text style={shared.text}>{`앗! ${convertCategoryKorean(category)}에 맞는 결과가 없어요.`}</Text>
+          <Text style={styles.noPostsText}>다른 카테고리에서 찾아보세요.</Text>
         </View>
       </View>
       </>

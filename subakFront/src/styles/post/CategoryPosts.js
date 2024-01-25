@@ -26,6 +26,8 @@ const styles = StyleSheet.create({
     color: colorPalette.gray,
     textAlign: 'center',
     fontWeight: 'bold',
+
+    marginTop: 10,
   },
 })
 
