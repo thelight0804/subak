@@ -9,14 +9,15 @@ import styles from '../../styles/search/search';
 import Alert from '../components/Alert';
 import Loading from '../components/Loading';
 import RenderPosts from '../components/RenderPosts';
+import PriceInput from './PriceInput';
 
 const Search = ({navigation}) => {
   const [searchQuery, setSearchQuery] = useState(''); // 검색어
   const [posts, setPosts] = useState([]); // 포스트 목록
 
   const [isPrice, setIsPrice] = useState(false); // 가격 필터링
-  const [minPrice, setminPrice] = useState(0); // 최소 금액
-  const [maxPrice, setMaxPrice] = useState(0); // 최대 금액
+  const [minPrice, setminPrice] = useState(1000); // 최소 금액
+  const [maxPrice, setMaxPrice] = useState(50000); // 최대 금액
   const [isNewest, setIsNewest] = useState(false); // 최신순 정렬
   const [isLiked, setIsLiked] = useState(false); // 좋아요 정렬
   const [isOnSale, setIsOnSale] = useState(false); // 판매중인 상품만 보기
@@ -148,6 +149,7 @@ const Search = ({navigation}) => {
   return (
     <>
       <View style={shared.container}>
+        {isPrice && <PriceInput maxPrice={maxPrice} minPrice={minPrice} setMaxPrice={setMaxPrice} setminPrice={setminPrice}/>}
         <View style={[shared.inlineContainer, styles.header]}>
           <TouchableOpacity
             style={styles.iconButton}
@@ -230,7 +232,6 @@ const Search = ({navigation}) => {
             style={styles.content}
           />
         </View>
-
       </View>
       {showAlert && <Alert message={alertMessage} />}
     </>
