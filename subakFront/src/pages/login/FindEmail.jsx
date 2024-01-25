@@ -30,7 +30,6 @@ const FindEmail = ({ navigation }) => {
     ).then(response => {
       if (response.status === 200) {
         if (response.data) {
-          // TODO: 이메일 백엔드 테스트
           setFindEmail(response.data); // 찾은 이메일 저장
           navigation.navigate('FindedEmail', {name: name, email: findEmail}); // 페이지 이동
         }

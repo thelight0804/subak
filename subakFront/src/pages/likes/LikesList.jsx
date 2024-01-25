@@ -122,15 +122,15 @@ const LikesList = ({navigation}) => {
           </View>
 
           <View style={styles.content}>
-          <FlatList
-            data={posts}
-            renderItem={({item, index}) => <RenderPosts item={item} index={index} navigation={navigation} />}
-            keyExtractor={item => item.id}
-            onEndReached={loadMoreData}
-            onEndReachedThreshold={0.3}
-            ListFooterComponent={isLoading && <Loading />}
-            style={styles.content}
-          />
+            <FlatList
+              data={posts}
+              renderItem={({item, index}) => <RenderPosts item={item} index={index} navigation={navigation} />}
+              keyExtractor={item => item.id}
+              onEndReached={loadMoreData}
+              onEndReachedThreshold={0.3}
+              ListFooterComponent={isLoading && <Loading />}
+              style={styles.content}
+            />
           </View>
         </View>
         {showAlert && <Alert message={alertMessage} />}

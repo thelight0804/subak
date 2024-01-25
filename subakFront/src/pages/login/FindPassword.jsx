@@ -35,7 +35,6 @@ const SignUp = ({ navigation }) => {
     .then(response => {
       if (response.status === 200) {
         if (response.data) {
-          // TODO: 비밀번호 변경 백엔드 테스트
           //입력값 초기화
           setName('');
           setPhone('');

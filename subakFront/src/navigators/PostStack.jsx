@@ -6,6 +6,7 @@ import PostEdit from '../pages/post/PostEdit';
 import PostRecent from '../pages/post/PostRecent';
 import CategorySelection from '../pages/post/CategorySelection';
 import CategoryPosts from '../pages/post/CategoryPosts';
+import Search from '../pages/search/Search';
 
 const PostStack = () => {
   const Stack = createNativeStackNavigator(); //React navigation stack
@@ -18,6 +19,7 @@ const PostStack = () => {
       <Stack.Screen name="PostRecent" component={PostRecent}/>
       <Stack.Screen name="CategorySelection" component={CategorySelection}/>
       <Stack.Screen name="CategoryPosts" component={CategoryPosts}/>
+      <Stack.Screen name="Search" component={Search}/>
     </Stack.Navigator>
   )
 }

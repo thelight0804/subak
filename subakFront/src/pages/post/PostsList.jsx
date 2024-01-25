@@ -179,7 +179,7 @@ const PostsList = ({navigation, route}) => {
           <View style={styles.inlineContainer}>
             <TouchableOpacity
               style={shared.iconButton}
-              onPress={() => console.log("search icon 클릭!")}>
+              onPress={() => navigation.navigate('PostStack', {screen: 'Search'})}>
               <Icon name="search" size={30} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
