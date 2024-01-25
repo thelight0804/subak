@@ -258,7 +258,7 @@ const NewPost = ({navigation}) => {
           <TextInput
             style={[
               shared.blankTextInput,
-              noTitle && {borderColor: '#dc645b', borderWidth: 1},
+              noTitle && {borderWidth: 1, borderColor: '#dc645b'},
             ]}
             onChangeText={text => {
               setTitle(text);
@@ -336,7 +336,7 @@ const NewPost = ({navigation}) => {
           <TextInput
             style={[
               shared.blankTextInput,
-              noContent && {borderColor: '#dc645b', borderWidth: 1},
+              noContent && {borderWidth: 1, borderColor: '#dc645b'},
             ]}
             onChangeText={text => {
               setContent(text);

@@ -10,14 +10,17 @@ import Alert from '../components/Alert';
 import Loading from '../components/Loading';
 import RenderPosts from '../components/RenderPosts';
 import PriceInput from './PriceInput';
+import CommaPrice from '../components/CommaPrice';
 
 const Search = ({navigation}) => {
   const [searchQuery, setSearchQuery] = useState(''); // 검색어
   const [posts, setPosts] = useState([]); // 포스트 목록
 
   const [isPrice, setIsPrice] = useState(false); // 가격 필터링
-  const [minPrice, setminPrice] = useState(1000); // 최소 금액
-  const [maxPrice, setMaxPrice] = useState(50000); // 최대 금액
+  const [openModal, setOpenModal] = useState(false); // 가격 모달 상태
+  const [minPrice, setMinPrice] = useState(0); // 최소 금액
+  const [maxPrice, setMaxPrice] = useState(0); // 최대 금액
+
   const [isNewest, setIsNewest] = useState(false); // 최신순 정렬
   const [isLiked, setIsLiked] = useState(false); // 좋아요 정렬
   const [isOnSale, setIsOnSale] = useState(false); // 판매중인 상품만 보기
@@ -49,7 +52,7 @@ const Search = ({navigation}) => {
       setNoMore(false);
       // 거래가능만 보기 API 불러오기
     }
-  }, [isOnSale])
+  }, [isOnSale]);
 
   // 최신순 정렬 데이터 불러오기
   useEffect(() => {
@@ -59,7 +62,7 @@ const Search = ({navigation}) => {
       setNoMore(false);
       // 최신순 정렬 API 불러오기
     }
-  }, [isNewest])
+  }, [isNewest]);
 
   // 좋아요순 정렬 데이터 불러오기
   useEffect(() => {
@@ -69,7 +72,7 @@ const Search = ({navigation}) => {
       setNoMore(false);
       // 좋아요순 정렬 API 불러오기
     }
-  }, [isLiked])
+  }, [isLiked]);
 
   /**
    * 추가 데이터 로딩 함수
@@ -84,7 +87,14 @@ const Search = ({navigation}) => {
       getSearchData(searchQuery, page);  // 추가 데이터 로딩
       setIsLoading(false);
     }, 1000);
-  }
+  };
+
+  /**
+   * 가격 필터링 함수
+   */
+  const handleSetPrice = () => {
+    setOpenModal(true);
+  };
 
   /**
    * 최신순 정렬 함수
@@ -92,7 +102,7 @@ const Search = ({navigation}) => {
   const setNewest = () => {
     setIsNewest(true);
     setIsLiked(false);
-  }
+  };
 
   /**
    * 좋아요순 정렬 함수
@@ -100,7 +110,7 @@ const Search = ({navigation}) => {
   const setLiked = () => {
     setIsLiked(true);
     setIsNewest(false);
-  }
+  };
 
   // 검색 데이터 불러오는 함수
   const getSearchData = (query, start) => {
@@ -144,12 +154,32 @@ const Search = ({navigation}) => {
           }, 6000);
           console.log('Search Unexpected error', error.message);
     }});
-  }
+  };
+
+  /**
+   * 조건에 따라 가격 필터링 렌더링
+   */
+  const PriceRender = () => {
+    if (isPrice) {
+      if (minPrice === 0) {
+        return <Text style={[styles.toggleText, isPrice && styles.selectedToggleText]}>{`${CommaPrice(maxPrice)}원 이하`}</Text>
+      }
+      else if (maxPrice === 0) {
+        return <Text style={[styles.toggleText, isPrice && styles.selectedToggleText]}>{`${CommaPrice(minPrice)}원 이상`}</Text>
+      }
+      else {
+        return <Text style={[styles.toggleText, isPrice && styles.selectedToggleText]}>{`${CommaPrice(minPrice)}원 ~ ${CommaPrice(maxPrice)}원`}</Text>
+      }
+    } 
+    else {
+      return <Text style={[styles.toggleText, isPrice && styles.selectedToggleText]}>가격</Text>
+    }
+  };
 
   return (
     <>
       <View style={shared.container}>
-        {isPrice && <PriceInput maxPrice={maxPrice} minPrice={minPrice} setMaxPrice={setMaxPrice} setminPrice={setminPrice}/>}
+        {openModal && <PriceInput setIsPrice={setIsPrice} maxPrice={maxPrice} minPrice={minPrice} setMaxPrice={setMaxPrice} setMinPrice={setMinPrice} setOpenModal={setOpenModal}/>}
         <View style={[shared.inlineContainer, styles.header]}>
           <TouchableOpacity
             style={styles.iconButton}
@@ -182,10 +212,10 @@ const Search = ({navigation}) => {
           <View style={[shared.inlineContainer, styles.toggleContainer]}>
             <TouchableOpacity 
               style={[styles.toggle, isPrice && styles.selectedToggle]}
-              onPress={() => {isPrice ? setIsPrice(false) : setIsPrice(true)}}
+              onPress={() => handleSetPrice()}
             >
               <View style={[shared.inlineContainer]}>
-                <Text style={[styles.toggleText, isPrice && styles.selectedToggleText]}>가격</Text>
+                <PriceRender />
                 <Icon name="chevron-down" size={15} color={isPrice ? "black" : "white"} />
               </View>
             </TouchableOpacity>

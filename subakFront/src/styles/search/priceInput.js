@@ -54,6 +54,11 @@ const styles = StyleSheet.create({
     color: 'white',
   },
 
+  // 가격 오류
+  priceError: {
+    height: 19.5,
+  },
+
   // 푸터
   footer: {
     flexDirection: 'row',
@@ -67,6 +72,9 @@ const styles = StyleSheet.create({
   redButton: { // 적용하기
     flex: 3,
     marginRight: 10,
+  },
+  disabledButton: { // 비활성화 버튼
+    backgroundColor: '#434750',
   },
 });
 
