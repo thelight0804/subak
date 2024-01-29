@@ -10,7 +10,7 @@ import Alert from '../components/Alert';
 
 const PostsList = ({navigation}) => {
   const userData = useSelector((state) => state.userData); // 유저 데이터
-  const profileImg = '../../assets/image/user-profile.png'; // 프로필 이미지
+  const profileImg = userData.image ? {uri: userData.image} : require('../../assets/image/user-profile.png'); // 프로필 이미지
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
 
@@ -40,7 +40,7 @@ const PostsList = ({navigation}) => {
           <View style={shared.inlineContainer}>
             <Image 
               style={styles.profileImage}
-              source={require(profileImg)}
+              source={profileImg}
             />
             <Text style={shared.text}>{userData.name}</Text>
             <Text style={[shared.text, {color: '#868b94'}]}>{` ${userData.id}`}</Text>

@@ -14,12 +14,11 @@ import ChoiceDiaglog from '../components/ChoiceDiaglog';
 
 const PostsList = ({navigation}) => {
   const userData = useSelector((state) => state.userData); // 유저 데이터
-  const prevProfileImg = '../../assets/image/user-profile.png'; // 기존 프로필 이미지
+  
+  const prevProfileImg = userData.image ? {uri: userData.image} : require('../../assets/image/user-profile.png'); // 기존 프로필 이미지
   const [profileImg, setProfileImg] = useState(null); // 업로드 되는 프로필 이미지
 
   let [image, setImage] = useState({uri: profileImg, type: 'jpg', name: 'ILoveReact.jpg'});
-  let token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwMDFAZ21haWwuY29tIiwiaWF0IjoxNzAyNDY5Mjc2LCJleHAiOjE3MDI0NzI4NzZ9.g_9E-PbL0_N9-408J30VZ3S866OjCJ-e35lRuzzhwN0";
-
 
   const [prevName, setPrevName] = useState(userData.name); // 이전 닉네임
   const [newName, setNewName] = useState(userData.name); // 닉네임
@@ -159,7 +158,7 @@ const PostsList = ({navigation}) => {
             }}>
             <Image
               style={styles.profileImage}
-              source={profileImg ? {uri: profileImg} : require(prevProfileImg)}
+              source={profileImg ? {uri: profileImg} : prevProfileImg}
             />
             <Image
               style={styles.cameraIcon}

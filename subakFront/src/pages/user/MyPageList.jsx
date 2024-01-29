@@ -7,7 +7,7 @@ import styles from '../../styles/user/myPageList';
 
 const MyPage = ({navigation}) => {
   const userData = useSelector((state) => state.userData); // 유저 데이터
-  const profileImg = '../../assets/image/user-profile.png'; // 프로필 이미지
+  const profileImg = userData.image ? {uri: userData.image} : require('../../assets/image/user-profile.png'); // 프로필 이미지
 
   return (
     <>
@@ -28,7 +28,7 @@ const MyPage = ({navigation}) => {
             <View style={styles.leftContainer}>
               <Image 
                 style={styles.profileImage}
-                source={require(profileImg)}
+                source={profileImg}
               />
               <Text style={[shared.text, {fontSize: 20}]}>{userData.name}</Text>
             </View>
