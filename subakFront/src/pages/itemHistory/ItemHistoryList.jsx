@@ -6,11 +6,12 @@ import { useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import { shared } from '../../styles/shared';
+import { colorPalette, shared } from '../../styles/shared';
 import styles from '../../styles/itemHistory/itemHistoryList';
 import Loading from '../components/Loading';
 import RenderPosts from '../components/RenderPosts';
 import Alert from '../components/Alert';
+import ItemTabs from './ItemTabs';
 
 const ItemHistoryList = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -44,6 +45,7 @@ const ItemHistoryList = ({navigation}) => {
           />
         </View>
 
+        <ItemTabs/>
 
       </View>
     );
