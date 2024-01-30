@@ -6,6 +6,7 @@ const styles = StyleSheet.create({
     backgroundColor: colorPalette.background, 
     borderBottomWidth: 1,
     borderBottomColor: '#333335',
+    marginBottom: 10,
   },
 })
 

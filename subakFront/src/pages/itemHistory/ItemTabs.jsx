@@ -19,8 +19,8 @@ const ItemTabs = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const layout = useWindowDimensions();
-  const [index, setIndex] = useState(0);
-  const [routes] = useState([
+  const [index, setIndex] = useState(0); // 탭 인덱스
+  const [routes] = useState([ // 탭 라우트
     {key: 'sales', title: '판매중'},
     {key: 'completed', title: '거래완료'},
     {key: 'hidden', title: '숨김'},
