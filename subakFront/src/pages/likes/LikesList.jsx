@@ -139,7 +139,6 @@ const LikesList = ({navigation}) => {
   }
   else { // 관심목록 게시글이 없을 경우
     return (
-      <>
       <View style={shared.container}>
         <View style={styles.inlineContainer}>
           <TouchableOpacity
@@ -156,7 +155,6 @@ const LikesList = ({navigation}) => {
           <Text style={styles.noPostsText}>우리 동네에 올라온 글을 탐색하고 관심 표시 해보세요!</Text>
         </View>
       </View>
-      </>
     )
   }
 };

@@ -3,6 +3,13 @@ import { View, Modal, TouchableWithoutFeedback, Text, TouchableOpacity } from 'r
 import styles from '../../styles/components/ChoiceDiaglog'
 import { shared } from '../../styles/shared';
 
+/**
+ * 
+ * @param {Array} choices 선택 목록
+ * @param {Boolean} openModal 모달 오픈 여부
+ * @param {Function} setOpenModal 모달 오픈 여부를 설정하는 함수
+ * @param {Function} setModalIndex 선택한 목록의 인덱스를 설정하는 함수
+ */
 const ChoiceDiaglog = props => {
   const choices = props.choices;
   return (
