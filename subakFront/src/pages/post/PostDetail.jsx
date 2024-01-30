@@ -211,8 +211,6 @@ const PostDetail = ({navigation, route}) => {
    * 게시물 삭제 함수
    */
   const deletePost = () => {
-    console.log(post.id);
-    console.log(userData.token);
     axios.delete(`http://${Config.DB_IP}/post/${post.id}`,
         {
           headers: { 'Authorization': `Bearer ${userData.token}`}, // 로그인 토큰
@@ -280,7 +278,7 @@ const PostDetail = ({navigation, route}) => {
     )
     .then(response => {
       if (response.status === 200) {
-        setAlertMessage(`게시글이 .`);
+        setAlertMessage(`게시글을 숨겼어요.`);
         setShowAlert(true);
         setTimeout(() => {
           setShowAlert(false);

@@ -187,36 +187,177 @@ const SalesScreen = () => {
     }, 1000);
   }
 
-    /**
-   * 옵션 모달 선택 버튼에 따라 실행
-   */ 
-    useEffect(() => {
-      if (modalIndex === 0) { // 예약중
-        // navigation.navigate('PostStack', {screen: 'PostEdit', params: {postId: post.id}})
-        console.log('예약중')
+  /**
+  * 게시물 상태 변경 함수
+  */
+  const SalesScreen = ({status, id}) => {
+    axios.patch(`http://${Config.DB_IP}/post/${id}/product-status`,
+      {
+          productStatus: status,
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${userData.token}` // 토큰 값을 추가
+        },
+        timeout: 2000 // 타임아웃을 2초로 설정
       }
-      else if (modalIndex === 1) { // 거래완료
-        // navigation.navigate('PostStack', {screen: 'PostRecent', params: {postId: post.id, postTitle: post.postTitle, postImage: post.postImages[0], postPrice: post.price}})
-        console.log('거래완료')
+    )
+    .then(response => {
+      if (response.status === 200) {
+        setAlertMessage('게시글 상태가 변경되었습니다.');
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        console.log('SalesScreen response.data', response.data);
       }
-      else if (modalIndex === 2) { // 게시글 수정
-        console.log('게시글 수정')
+    })
+    .catch(error => { 
+      if (error.response) { // 요청은 성공했으나 응답은 실패
+        setAlertMessage(`데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`);
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        console.log('SalesScreen error.response', error.response);
+      } else if (error.request) { // timeout으로 요청 실패
+        setAlertMessage('서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+      } else { // 기타 오류 발생
+        setAlertMessage(`데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`);
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        console.log('SalesScreen Unexpected error', error.message);
+      }}
+    )
+  }
+
+  /**
+  * 게시물 숨기기 함수
+  */
+  const hidePost = (id) => {
+    axios.patch(`http://${Config.DB_IP}/post/${id}/status`,
+      {
+          postStatus: 'HIDE',
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${userData.token}` // 토큰 값을 추가
+        },
+        timeout: 2000 // 타임아웃을 2초로 설정
       }
-      else if (modalIndex === 3) { // 숨기기
-        // hidePost();
-        console.log('숨기기')
+    )
+    .then(response => {
+      if (response.status === 200) {
+        setAlertMessage(`게시글을 숨겼어요.`);
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
       }
-      else if (modalIndex === 4) { // 삭제
-        // deletePost();
-        console.log('삭제')
-      }
-      setModalIndex(-1); // 모달 선택 인덱스 초기화
-      setModalPostId(-1); // 모달 선택 게시글 아이디 초기화
-      setOpenModal(false); // 모달 창 닫기
-    }, [modalIndex]);
+      navigation.navigate('PostsList'); // 게시글 목록으로 이동
+    })
+    .catch(error => { 
+      if (error.response) { // 요청은 성공했으나 응답은 실패
+        setAlertMessage(`데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`);
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        console.log('SalesScreen error.response', error.response);
+      } else if (error.request) { // timeout으로 요청 실패
+        setAlertMessage('서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+      } else { // 기타 오류 발생
+        setAlertMessage(`데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`);
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        console.log('SalesScreen Unexpected error', error.message);
+      }}
+    )
+  }
+
+  /**
+  * 게시물 삭제 함수
+  */
+  const deletePost = (id) => {
+    axios.delete(`http://${Config.DB_IP}/post/${id}`, {
+        headers: {Authorization: `Bearer ${userData.token}`}, // 로그인 토큰
+        timeout: 2000, // 2초 타임아웃
+      })
+      .then(response => {
+        if (response.status === 200) {
+          setAlertMessage(`게시글이 삭제되었습니다.`);
+          setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 6000);
+        }
+      })
+      .catch(error => {
+        if (error.response) {
+          // 요청은 성공했으나 응답은 실패
+          setAlertMessage(`데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`);
+          setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 6000);
+          console.log('SalesScreen error.response', error.response.data);
+        } else if (error.request) {
+          // timeout으로 요청 실패
+          setAlertMessage('서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
+          setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 6000);
+        } else {
+          // 기타 오류 발생
+          setAlertMessage(`데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`);
+          setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 6000);
+          console.log('SalesScreen Unexpected error', error.message);
+        }
+      });
+  };
+
+  /**
+  * 옵션 모달 선택 버튼에 따라 실행
+  */ 
+  useEffect(() => {
+    if (modalIndex === 0) { // 예약중
+      SalesScreen('RESERVATION', modalPostId);
+    }
+    else if (modalIndex === 1) { // 거래완료
+      SalesScreen('COMPLETE', modalPostId);
+    }
+    else if (modalIndex === 2) { // 게시글 수정
+      navigation.navigate('PostStack', {screen: 'PostEdit', params: {postId: setModalPostId}})
+    }
+    else if (modalIndex === 3) { // 숨기기
+      hidePost(modalPostId);
+    }
+    else if (modalIndex === 4) { // 삭제
+      deletePost(modalPostId);
+    }
+    setModalIndex(-1); // 모달 선택 인덱스 초기화
+    setModalPostId(-1); // 모달 선택 게시글 아이디 초기화
+    setOpenModal(false); // 모달 창 닫기
+  }, [modalIndex]);
 
 
-
+  
   if (isLoading) {
     return <Loading />;
   }
