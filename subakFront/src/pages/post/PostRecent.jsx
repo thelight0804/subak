@@ -95,7 +95,7 @@ const PostRecent = ({navigation, route}) => {
           <Text style={[styles.text, styles.wonText]}>원</Text>
           <TextInput
             style={shared.blankTextInput}
-            value={ newPrice > 0 && CommaPrice(newPrice)}
+            value={ newPrice > 0 ? CommaPrice(newPrice) : '0'}
             onChangeText={handleInputChange}
             inputMode="numeric"
             keyboardType="number-pad"
