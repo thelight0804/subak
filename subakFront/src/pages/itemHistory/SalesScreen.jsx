@@ -1,20 +1,18 @@
 import { useState, useEffect, useCallback } from "react";
 import { Text, View, TouchableOpacity, FlatList } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useSelector } from "react-redux";
-import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import Config from 'react-native-config';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import { shared } from "../../styles/shared";
-import styles from "./../../styles/itemHistory/salesScreen"
+import styles from "../../styles/itemHistory/tabsScreen"
 
 import Loading from '../components/Loading';
 import RenderHistoryPosts from "./RenderHistoryPosts";
 import Alert from '../components/Alert';
 import ChoiceDiaglog from "../components/ChoiceDiaglog";
-import { set } from "react-native-reanimated";
 
 const SalesScreen = () => {
   const userData = useSelector((state) => state.userData); // 유저 데이터
@@ -121,7 +119,7 @@ const SalesScreen = () => {
    * 판매중 게시글 목록을 불러오는 함수
    */
   const fetchpost = useCallback((page) => {
-    // TODO: API 연동
+    // TODO: 판매중 API 연동
     axios.get(`http://${Config.DB_IP}/URL`,
       {headers: {
         'Authorization': `Bearer ${userData.token}` // 토큰 값
@@ -152,7 +150,7 @@ const SalesScreen = () => {
         setTimeout(() => {
           setShowAlert(false);
         }, 6000);
-        console.log('LikesList error.response', error.response);
+        console.log('SalesScreen error.response', error.response);
       } else if (error.request) { // timeout으로 요청 실패
         setAlertMessage('서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
         setShowAlert(true);
@@ -165,7 +163,7 @@ const SalesScreen = () => {
         setTimeout(() => {
           setShowAlert(false);
         }, 6000);
-        console.log('LikesList Unexpected error', error.message);
+        console.log('SalesScreen Unexpected error', error.message);
       }
       setPosts([]);
     });
