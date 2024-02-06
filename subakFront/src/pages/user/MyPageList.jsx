@@ -59,7 +59,7 @@ const MyPage = ({navigation}) => {
 
           <TouchableOpacity 
             style={[shared.inlineContainer, styles.listButton]} 
-            onPress={() => console.log("구매내역")}
+            onPress={() => navigation.navigate('UserStack', {screen: 'PurchaseHistory'})}
           >
             <Icon name="bag-outline" size={25} color="#ffffff" style={styles.icon}/>
             <Text style={[shared.text, styles.text]}>구매내역</Text>
