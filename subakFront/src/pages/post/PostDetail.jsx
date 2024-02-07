@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { Text, View, TouchableOpacity, ScrollView, Image } from 'react-native';
 import axios from 'axios';
@@ -16,11 +16,13 @@ import ChoiceDiaglog from '../components/ChoiceDiaglog';
 
 const PostDetail = ({navigation, route}) => {
   const userData = useSelector((state) => state.userData); // 유저 데이터
+  const scrollRef = useRef(); // 스크롤 뷰 ref
   const prevProfileImg = '../../assets/image/user-profile.png'; // 기존 프로필 이미지
   
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태
+  const [commentPosition, setCommentPosition] = useState(0); // 댓글 y축 위치
   
   const [postStatus, setPostStatus] = useState(''); // 게시물 상태
   const [liked, setLiked] = useState(false); // 좋아요 여부
@@ -462,6 +464,13 @@ const PostDetail = ({navigation, route}) => {
    * 게시물 상세 데이터 렌더링 함수
    */
   const RenderContent = () => {
+    /**
+     * 댓글 컴포넌트 y축 위치 저장 함수
+     */
+    const onLayout = (event) => {
+      setCommentPosition(event.nativeEvent.layout.y);
+    }
+
     return (
       <>
         {[post.postImages.length > 0 ? (
@@ -519,7 +528,10 @@ const PostDetail = ({navigation, route}) => {
           <Text style={[styles.text, styles.content]}>{post.content}</Text>
         </View>
 
-        <View style={styles.commentContainer}>
+        <View 
+          style={styles.commentContainer}
+          onLayout={onLayout}
+        >
           {comments.map((comment, index) => {
             return (
               <TouchableOpacity 
@@ -570,6 +582,15 @@ const PostDetail = ({navigation, route}) => {
    * 게시물 하단 렌더링 함수
    */
   const RenderFooter = () => {
+    const handleBuy = () => {
+      setAlertMessage('댓글을 선택해서 구매하기를 선택해주세요.');
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 6000);
+      scrollRef.current.scrollTo({y: commentPosition, animated: true});
+    }
+
     return (
       <>
         <View style={styles.heartContainer}>
@@ -592,7 +613,7 @@ const PostDetail = ({navigation, route}) => {
         </View>
 
         {post && userData.id !== post.memberId && (
-          <TouchableOpacity style={shared.button}>
+          <TouchableOpacity style={shared.button} onPress={handleBuy}>
             <Text style={[styles.buttonText, shared.redButton]}>구매하기</Text>
           </TouchableOpacity>
         )}
@@ -622,7 +643,7 @@ const PostDetail = ({navigation, route}) => {
         {post && userData.id === post.memberId && <RenderOption />}
       </View>
 
-      <ScrollView style={styles.content}>
+      <ScrollView style={styles.content} ref={scrollRef}>
         {post ? <RenderContent/> : <Loading />}
       </ScrollView>
 
