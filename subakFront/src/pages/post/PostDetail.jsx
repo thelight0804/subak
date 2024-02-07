@@ -17,34 +17,53 @@ import ChoiceDiaglog from '../components/ChoiceDiaglog';
 const PostDetail = ({navigation, route}) => {
   const userData = useSelector((state) => state.userData); // 유저 데이터
   const prevProfileImg = '../../assets/image/user-profile.png'; // 기존 프로필 이미지
-  const [post, setPost] = useState(null); // 게시물 상세 데이터
-
+  
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태
-
+  
   const [postStatus, setPostStatus] = useState(''); // 게시물 상태
   const [liked, setLiked] = useState(false); // 좋아요 여부
   const [category, setCategory] = useState(''); // 게시물 카테고리
-
+  
   const [openOptionModal, setOpenOptionModal] = useState(false); // 옵션 모달 창
   const [modalIndex, setModalIndex] = useState(-1); // 옵션 모달 선택 인덱스
   const [openStateModal, setOpenStateModal] = useState(false); // 옵션 모달 창
   const [modalStateIndex, setModalStateIndex] = useState(-1); // 옵션 모달 선택 인덱스
-
+  
   // FIX: 테스트용 코드
-  // const [post, setPost] = useState({
-  //   "id": 5004,
-  //   "postImages": ["http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg"],
-  //   "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg",
-  //   "memberName": "IamYourFather",
-  //   "address": "경남 창원시",
-  //   "temp": 68.7,
-  //   "price": 65000,
-  //   "postTitle": "titleddd",
-  //   "postDateTime": "3일 전",
-  //   "content": "도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도"
-  // })
+  // const [post, setPost] = useState(null); // 게시물 상세 데이터
+  const [post, setPost] = useState({
+    "id": 5004,
+    "postImages": ["http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg"],
+    "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg",
+    "memberName": "IamYourFather",
+    "address": "경남 창원시",
+    "temp": 68.7,
+    "price": 65000,
+    "postTitle": "titleddd",
+    "postDateTime": "3일 전",
+    "content": "도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도"
+  })
+
+  // const [comments, setComments] = useState([]); // 댓글 목록
+  const [comments, setComments] = useState([
+    // FIX: 테스트용 코드
+    {
+      "id": 123,
+      "name": "유저 1",
+      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg",
+      "comment": "댓글 1",
+      "commentDateTime": "2024-02-07"
+    },
+    {
+      "id": 234,
+      "name": "유저 2",
+      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg",
+      "comment": "댓글 2",
+      "commentDateTime": "2023-02-08"
+    }
+  ]);
 
   const [tempColor, setTempColor] = useState('white'); // 매너 온도 색상
   const [tempEmoji, setTempEmoji] = useState('❔'); // 매너 온도 이모지
@@ -498,6 +517,35 @@ const PostDetail = ({navigation, route}) => {
             {`${category} ㆍ ${post.postDateTime}`}
           </Text>
           <Text style={[styles.text, styles.content]}>{post.content}</Text>
+        </View>
+
+        <View style={styles.commentContainer}>
+          {comments.map((comment, index) => {
+            return (
+              <TouchableOpacity 
+                style={styles.comment}
+                key={index}
+                onPress={() => console.log('댓글 클릭', index)}
+              >
+                <View style={[styles.profileContainer, {justifyContent: 'space-between'}]}>
+                  <View style={shared.inlineContainer}>
+                    <Image
+                      style={styles.profileImage}
+                      source={comment.profileImage ? {uri: comment.profileImage} : require(prevProfileImg)}
+                    />
+                    <View style={styles.profileNameContainer}>
+                      <Text style={styles.text}>{comment.name}</Text>
+                    </View>
+                  </View>
+                  <View style-={styles.profileInfoContainer}>
+                    <Text style={[styles.textGray, {textAlign: 'right'}]}>{comment.id}</Text>
+                    <Text style={[styles.textGray, {textAlign: 'right'}]}>{comment.commentDateTime}</Text>
+                  </View>
+                </View>
+                <Text style={styles.commentText}>{comment.comment}</Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
       </>
     );

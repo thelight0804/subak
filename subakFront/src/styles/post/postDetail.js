@@ -152,7 +152,24 @@ const styles = StyleSheet.create({
     color: colorPalette.white,
     fontSize: 14,
     fontWeight: "bold",
-  }
+  },
+
+  // 댓글
+  commentContainer: {
+    paddingTop: 15,
+  },
+  comment: {
+    paddingTop: 15,
+    paddingBottom: 15,
+    borderTopWidth: 1.5,
+    borderColor: "#2b2b2d",
+  },
+  commentText: { // 댓글 나용
+    paddingTop: 10,
+    paddingLeft: 10,
+    fontSize: 14,
+    color: colorPalette.white,
+  },
 })
 
 export default styles;
