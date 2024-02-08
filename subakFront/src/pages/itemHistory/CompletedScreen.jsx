@@ -190,53 +190,46 @@ const CompletedScreen = () => {
    * @param {Number} id 게시글 id
    */
   const changeSelling = (id) => {
-    // TODO: 판매중 API 연동
-    axios.patch(`http://${Config.DB_IP}/URL`,
-      {
-          postStatus: 'HIDE',
+    axios.patch(`http://${Config.DB_IP}/post/${id}/product-status`,
+    {
+        productStatus: 'COMPLETE',
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${userData.token}` // 토큰 값을 추가
       },
-      {
-        headers: {
-          'Authorization': `Bearer ${userData.token}` // 토큰 값을 추가
-        },
-        timeout: 2000 // 타임아웃을 2초로 설정
-      }
-    )
-    .then(response => {
-      if (response.status === 200) {
-        setAlertMessage(`게시글을 숨겼어요.`);
-        setShowAlert(true);
-        setTimeout(() => {
-          setShowAlert(false);
-        }, 6000);
-      }
-      navigation.navigate('PostsList'); // 게시글 목록으로 이동
-    })
-    .catch(error => { 
-      if (error.response) { // 요청은 성공했으나 응답은 실패
-        setAlertMessage(`데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`);
-        setShowAlert(true);
-        setTimeout(() => {
-          setShowAlert(false);
-        }, 6000);
-        console.log('CompletedScreen error.response', error.response);
-      } else if (error.request) { // timeout으로 요청 실패
-        setAlertMessage('서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
-        setShowAlert(true);
-        setTimeout(() => {
-          setShowAlert(false);
-        }, 6000);
-      } else { // 기타 오류 발생
-        setAlertMessage(`데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`);
-        setShowAlert(true);
-        setTimeout(() => {
-          setShowAlert(false);
-        }, 6000);
-        console.log('CompletedScreen Unexpected error', error.message);
-      }}
-    )
-  
-  }
+      timeout: 2000 // 타임아웃을 2초로 설정
+    }
+  )
+  .then(response => {
+    if (response.status === 200) {
+      setPostStatus(status); // 게시물 상태 state 변경
+    }
+  })
+  .catch(error => { 
+    if (error.response) { // 요청은 성공했으나 응답은 실패
+      setAlertMessage(`데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`);
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 6000);
+      console.log('CompletedScreen error.response', error.response);
+    } else if (error.request) { // timeout으로 요청 실패
+      setAlertMessage('서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 6000);
+    } else { // 기타 오류 발생
+      setAlertMessage(`데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`);
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 6000);
+      console.log('CompletedScreen Unexpected error', error.message);
+    }}
+  )
+}
 
   /**
   * 게시물 숨기기 함수
@@ -340,6 +333,7 @@ const CompletedScreen = () => {
   */ 
   useEffect(() => {
     if (modalIndex === 0) { // 판매중
+      
       changeSelling(modalPostId);
     }
     else if (modalIndex === 1) { // 게시글 수정

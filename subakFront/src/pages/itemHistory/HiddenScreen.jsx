@@ -116,10 +116,10 @@ const HiddenScreen = () => {
   );
 
   /**
-   * 거래완료 게시글 목록을 불러오는 함수
+   * 숨긴 게시글 목록을 불러오는 함수
    */
   const fetchpost = useCallback((page) => {
-    // TODO: 거래완료 API 연동
+    // TODO: 숨김 API 연동
     axios.get(`http://${Config.DB_IP}/URL`,
       {headers: {
         'Authorization': `Bearer ${userData.token}` // 토큰 값

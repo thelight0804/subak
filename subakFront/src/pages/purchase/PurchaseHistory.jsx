@@ -116,7 +116,7 @@ const PurchaseHistory = ({navigation}) => {
   */ 
   useEffect(() => {
     if (modalIndex === 0) { // 목록에서 지우기
-      // TODO: 목록에서 지우기 API 연결'
+      // TODO: 목록에서 지우기 API 연결
     }
     setModalIndex(-1); // 모달 선택 인덱스 초기화
     setModalPostId(-1); // 모달 선택 게시글 아이디 초기화

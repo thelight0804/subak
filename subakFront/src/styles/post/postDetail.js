@@ -170,6 +170,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colorPalette.white,
   },
+  commentMenuButton: {
+    width: 30,
+    marginLeft: 10,
+  },
 })
 
 export default styles;

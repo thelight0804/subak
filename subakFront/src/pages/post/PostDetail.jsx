@@ -30,8 +30,10 @@ const PostDetail = ({navigation, route}) => {
   
   const [openOptionModal, setOpenOptionModal] = useState(false); // 옵션 모달 창
   const [modalIndex, setModalIndex] = useState(-1); // 옵션 모달 선택 인덱스
-  const [openStateModal, setOpenStateModal] = useState(false); // 옵션 모달 창
-  const [modalStateIndex, setModalStateIndex] = useState(-1); // 옵션 모달 선택 인덱스
+  const [openStateModal, setOpenStateModal] = useState(false); // 게시물 상태 모달 창
+  const [modalStateIndex, setModalStateIndex] = useState(-1); // 게시물 상태 모달 선택 인덱스
+  const [openCommentModal, setOpenCommentModal] = useState(false); // 게시물 상태 모달 창
+  const [modalCommentIndex, setModalCommentIndex] = useState(-1); // 게시물 상태 모달 선택 인덱스
   
   // FIX: 테스트용 코드
   // const [post, setPost] = useState(null); // 게시물 상세 데이터
@@ -537,7 +539,7 @@ const PostDetail = ({navigation, route}) => {
               <TouchableOpacity 
                 style={styles.comment}
                 key={index}
-                onPress={() => console.log('댓글 클릭', index)}
+                onPress={() => setOpenCommentModal(true)}
               >
                 <View style={[styles.profileContainer, {justifyContent: 'space-between'}]}>
                   <View style={shared.inlineContainer}>
@@ -549,9 +551,14 @@ const PostDetail = ({navigation, route}) => {
                       <Text style={styles.text}>{comment.name}</Text>
                     </View>
                   </View>
-                  <View style-={styles.profileInfoContainer}>
-                    <Text style={[styles.textGray, {textAlign: 'right'}]}>{comment.id}</Text>
-                    <Text style={[styles.textGray, {textAlign: 'right'}]}>{comment.commentDateTime}</Text>
+                  <View style={shared.inlineContainer}>
+                    <View>
+                      <Text style={[styles.textGray, {textAlign: 'right'}]}>{comment.id}</Text>
+                      <Text style={[styles.textGray, {textAlign: 'right'}]}>{comment.commentDateTime}</Text>
+                    </View>
+                    <View style={[shared.grayButton, styles.commentMenuButton]}>
+                      <Icon name="ellipsis-horizontal" size={12} color="white" />
+                    </View>
                   </View>
                 </View>
                 <Text style={styles.commentText}>{comment.comment}</Text>
@@ -664,6 +671,14 @@ const PostDetail = ({navigation, route}) => {
           setOpenModal={setOpenStateModal}
           setModalIndex={setModalStateIndex}
           choices={['판매중', '예약중', '거래완료']}
+        />
+      )}
+      {openCommentModal && (
+        <ChoiceDiaglog
+          openModal={openCommentModal}
+          setOpenModal={setOpenCommentModal}
+          setModalIndex={setModalCommentIndex}
+          choices={['판매하기', '삭제']}
         />
       )}
     {showAlert && <Alert message={alertMessage} />}
