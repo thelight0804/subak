@@ -1,31 +1,25 @@
 package subak.backend.controller;
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import subak.backend.domain.Member;
-import subak.backend.domain.Post;
 import subak.backend.domain.enumType.Category;
+import subak.backend.dto.request.member.BuyerIdRequest;
 import subak.backend.dto.request.post.*;
+import subak.backend.dto.response.member.GetCommenterMemberResponse;
 import subak.backend.dto.response.post.PostResponse;
 import subak.backend.dto.response.post.PostDetailResponse;
-import subak.backend.repository.PostRepository;
 import subak.backend.service.AuthService;
-import subak.backend.service.CommentService;
 import subak.backend.service.PostService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -168,6 +162,25 @@ public class PostController {
             @RequestParam(value = "limit", defaultValue = "10") int limit) {
         List<PostResponse> posts = postService.searchPostsByCategory(category, offset, limit);
         return ResponseEntity.ok(posts);
+    }
+
+    @ApiOperation(value = "판매하기(댓글단 사용자들 조회)")
+    @GetMapping("/posts/{postId}/commenters")
+    public ResponseEntity<List<GetCommenterMemberResponse>> getCommenters(
+            @PathVariable Long postId,
+            HttpServletRequest httpServletRequest) {
+        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
+        List<GetCommenterMemberResponse> commenters = postService.getCommenters(postId, loginMember);
+        return ResponseEntity.ok(commenters);
+    }
+
+    @ApiOperation(value = "상품 판매 완료 처리")
+    @PostMapping("/posts/{postId}/sell")
+    public ResponseEntity<Void> sellPost(
+            @PathVariable Long postId,
+            @RequestBody BuyerIdRequest BuyerIdRequest) {
+        postService.sellPost(postId, BuyerIdRequest.getBuyerId());
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -2,11 +2,6 @@ package subak.backend.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,13 +12,17 @@ import subak.backend.domain.PostImage;
 import subak.backend.domain.enumType.Category;
 import subak.backend.domain.enumType.PostStatus;
 import subak.backend.domain.enumType.ProductStatus;
+import subak.backend.domain.Comment;
 import subak.backend.dto.request.post.CreatePostRequest;
 import subak.backend.dto.request.post.UpdatePostRequest;
 import subak.backend.dto.response.comment.CommentResponse;
+import subak.backend.dto.response.member.GetCommenterMemberResponse;
 import subak.backend.dto.response.post.PostResponse;
 import subak.backend.dto.response.post.PostDetailResponse;
+import subak.backend.exception.MemberException;
 import subak.backend.exception.PostException;
 import subak.backend.repository.HeartRepository;
+import subak.backend.repository.MemberRepository;
 import subak.backend.repository.PostRepository;
 
 import javax.persistence.EntityManager;
@@ -39,6 +38,7 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final MemberRepository memberRepository;
     private final FileUploadService fileUploadService;
     private final HeartRepository heartRepository;
     private final EntityManager entityManager;
@@ -116,6 +116,17 @@ public class PostService {
         }
 
         return convertToPostDetailResponse(post, authenticatedMember);
+    }
+
+    /**
+     * 판매하기
+     */
+    public void sellPost(Long postId, Long buyerId) {
+        Post post = getPostById(postId);
+        Member buyer = memberRepository.findById(buyerId).orElseThrow(() ->
+                new MemberException.MemberNotFoundException("존재하지 않는 회원입니다."));
+        post.sellPost(buyer); // 판매자와 구매자 설정 및 상태 변경, 매너온도 증가
+        postRepository.save(post);
     }
 
 
@@ -391,6 +402,17 @@ public class PostService {
         redisTemplate.opsForValue().set(viewsKey, views);
 
         post.setViews(views);
+    }
+
+    // 댓글단 사람들 조회
+    public List<GetCommenterMemberResponse> getCommenters(Long postId, Member loginMember) {
+        Post post = getPostById(postId);
+        if (!post.getMember().equals(loginMember)) {
+            throw new MemberException.UnauthorizedException("자신이 작성한 게시글만 판매할 수 있습니다.");
+        }
+        return post.getComments().stream()
+                .map(comment -> new GetCommenterMemberResponse(comment.getMember()))
+                .collect(Collectors.toList());
     }
 
 

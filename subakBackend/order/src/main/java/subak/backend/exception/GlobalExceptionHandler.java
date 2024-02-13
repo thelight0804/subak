@@ -68,6 +68,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
-
+    @ExceptionHandler(MemberException.UnauthorizedException.class)
+    public ResponseEntity<String> handleUnauthorizedException(MemberException.UnauthorizedException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
 
 }
