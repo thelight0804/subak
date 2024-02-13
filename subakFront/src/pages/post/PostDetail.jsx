@@ -32,42 +32,25 @@ const PostDetail = ({navigation, route}) => {
   const [modalIndex, setModalIndex] = useState(-1); // 옵션 모달 선택 인덱스
   const [openStateModal, setOpenStateModal] = useState(false); // 게시물 상태 모달 창
   const [modalStateIndex, setModalStateIndex] = useState(-1); // 게시물 상태 모달 선택 인덱스
-  const [openCommentModal, setOpenCommentModal] = useState(false); // 게시물 상태 모달 창
-  const [modalCommentIndex, setModalCommentIndex] = useState(-1); // 게시물 상태 모달 선택 인덱스
+  const [openCommentModal, setOpenCommentModal] = useState(false); // 댓글 상태 모달 창
+  const [modalCommentIndex, setModalCommentIndex] = useState(-1); // 댓글 상태 모달 선택 인덱스
   
   // FIX: 테스트용 코드
-  // const [post, setPost] = useState(null); // 게시물 상세 데이터
-  const [post, setPost] = useState({
-    "id": 5004,
-    "postImages": ["http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg"],
-    "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg",
-    "memberName": "IamYourFather",
-    "address": "경남 창원시",
-    "temp": 68.7,
-    "price": 65000,
-    "postTitle": "titleddd",
-    "postDateTime": "3일 전",
-    "content": "도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도"
-  })
-
-  // const [comments, setComments] = useState([]); // 댓글 목록
-  const [comments, setComments] = useState([
-    // FIX: 테스트용 코드
-    {
-      "id": 123,
-      "name": "유저 1",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg",
-      "comment": "댓글 1",
-      "commentDateTime": "2024-02-07"
-    },
-    {
-      "id": 234,
-      "name": "유저 2",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg",
-      "comment": "댓글 2",
-      "commentDateTime": "2023-02-08"
-    }
-  ]);
+  // const [post, setPost] = useState({
+  //   "id": 5004,
+  //   "postImages": ["http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg"],
+  //   "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg",
+  //   "memberName": "IamYourFather",
+  //   "address": "경남 창원시",
+  //   "temp": 68.7,
+  //   "price": 65000,
+  //   "postTitle": "titleddd",
+  //   "postDateTime": "3일 전",
+  //   "content": "도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도"
+  // })
+  const [post, setPost] = useState(null); // 게시물 상세 데이터
+  const [comments, setComments] = useState([]); // 댓글
+  const [selectedCommentID, setselectedCommentID] = useState(''); // 선택된 댓글 ID
 
   const [tempColor, setTempColor] = useState('white'); // 매너 온도 색상
   const [tempEmoji, setTempEmoji] = useState('❔'); // 매너 온도 이모지
@@ -158,6 +141,20 @@ const PostDetail = ({navigation, route}) => {
   }, [modalStateIndex]);
 
   /**
+   * 댓글 선택 버튼에 따라 실행
+   */
+  useEffect(() => {
+    if (modalCommentIndex === 0) {
+      console.log('판매하기');
+    }
+    else if (modalCommentIndex === 1) {
+      deleteComment();
+    }
+    setModalCommentIndex(-1); // 모달 선택 인덱스 초기화
+    setOpenStateModal(false); // 모달 창 닫기
+  }, [modalCommentIndex]);
+
+  /**
    * 게시물 상세 데이터 가져오기 함수
    */
   const fetchPost = useCallback(() => {
@@ -172,6 +169,7 @@ const PostDetail = ({navigation, route}) => {
         if (response.status === 200) {
           setPost(response.data);
           setLiked(response.data.liked);
+          setComments(response.data.comments);
         }
       })
       .catch(error => { 
@@ -539,29 +537,32 @@ const PostDetail = ({navigation, route}) => {
               <TouchableOpacity 
                 style={styles.comment}
                 key={index}
-                onPress={() => setOpenCommentModal(true)}
+                onPress={() => {
+                  setOpenCommentModal(true);
+                  setselectedCommentID(comment.id);
+                }}
               >
                 <View style={[styles.profileContainer, {justifyContent: 'space-between'}]}>
                   <View style={shared.inlineContainer}>
                     <Image
-                      style={styles.profileImage}
+                      style={styles.commentProfileImage}
                       source={comment.profileImage ? {uri: comment.profileImage} : require(prevProfileImg)}
                     />
                     <View style={styles.profileNameContainer}>
-                      <Text style={styles.text}>{comment.name}</Text>
+                      <Text style={styles.text}>{comment.memberName}</Text>
                     </View>
                   </View>
                   <View style={shared.inlineContainer}>
                     <View>
                       <Text style={[styles.textGray, {textAlign: 'right'}]}>{comment.id}</Text>
-                      <Text style={[styles.textGray, {textAlign: 'right'}]}>{comment.commentDateTime}</Text>
+                      <Text style={[styles.textGray, {textAlign: 'right'}]}>{comment.cmDateTime}</Text>
                     </View>
                     <View style={[shared.grayButton, styles.commentMenuButton]}>
                       <Icon name="ellipsis-horizontal" size={12} color="white" />
                     </View>
                   </View>
                 </View>
-                <Text style={styles.commentText}>{comment.comment}</Text>
+                <Text style={styles.commentText}>{comment.content}</Text>
               </TouchableOpacity>
             );
           })}
@@ -627,6 +628,60 @@ const PostDetail = ({navigation, route}) => {
       </>
     );
   };
+
+  /**
+   * 댓글 삭제 함수
+   */
+  const deleteComment = () => {
+    axios.delete(`http://${Config.DB_IP}/post/${route.params.postId}/comments/${selectedCommentID}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${userData.token}`
+        },
+        timeout: 2000
+      }
+    )
+    .then(response => {
+      if (response.status === 200) {
+        setComments(comments.filter(comment => comment.id !== selectedCommentID));
+        setAlertMessage(`댓글이 삭제되었습니다.`);
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+      }
+    })
+    .catch(error => {
+      if (error.response) {
+        setAlertMessage(
+          `데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`,
+        );
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        console.log('deleteComment error.response', error.response.data);
+      } else if (error.request) {
+        setAlertMessage(
+          '서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.',
+        );
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+      } else {
+        setAlertMessage(
+          `데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`,
+        );
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        console.log('deleteComment Unexpected error', error.message);
+      }
+    });
+  }
+
 
   if (isLoading) {
     return <Loading />

@@ -159,8 +159,8 @@ const styles = StyleSheet.create({
     paddingTop: 15,
   },
   comment: {
-    paddingTop: 15,
-    paddingBottom: 15,
+    paddingTop: 10,
+    paddingBottom: 10,
     borderTopWidth: 1.5,
     borderColor: "#2b2b2d",
   },
@@ -173,6 +173,11 @@ const styles = StyleSheet.create({
   commentMenuButton: {
     width: 30,
     marginLeft: 10,
+  },
+  commentProfileImage: { // 프로필 사진
+    width: 30,
+    height: 30,
+    borderRadius: 25,
   },
 })
 
