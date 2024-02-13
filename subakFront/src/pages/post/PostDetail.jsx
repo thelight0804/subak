@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { Text, View, TouchableOpacity, ScrollView, Image, TextInput } from 'react-native';
 import { useSelector } from 'react-redux';
-import { Text, View, TouchableOpacity, ScrollView, Image } from 'react-native';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Config from 'react-native-config';
@@ -51,6 +51,7 @@ const PostDetail = ({navigation, route}) => {
   const [post, setPost] = useState(null); // 게시물 상세 데이터
   const [comments, setComments] = useState([]); // 댓글
   const [selectedCommentID, setselectedCommentID] = useState(''); // 선택된 댓글 ID
+  const [inputComment, setinputComment] = useState(''); // 입력된 댓글
 
   const [tempColor, setTempColor] = useState('white'); // 매너 온도 색상
   const [tempEmoji, setTempEmoji] = useState('❔'); // 매너 온도 이모지
@@ -145,13 +146,15 @@ const PostDetail = ({navigation, route}) => {
    */
   useEffect(() => {
     if (modalCommentIndex === 0) {
+      // TODO: 판매하기
       console.log('판매하기');
     }
     else if (modalCommentIndex === 1) {
       deleteComment();
+      //TODO: 댓글 작성자 ID 비교해서 삭제 가능하게
     }
     setModalCommentIndex(-1); // 모달 선택 인덱스 초기화
-    setOpenStateModal(false); // 모달 창 닫기
+    setOpenCommentModal(false); // 모달 창 닫기
   }, [modalCommentIndex]);
 
   /**
@@ -448,6 +451,57 @@ const PostDetail = ({navigation, route}) => {
   }
 
   /**
+   * 댓글 삭제 함수
+   */
+  const deleteComment = () => {
+    axios.delete(`http://${Config.DB_IP}/post/${route.params.postId}/comments/${selectedCommentID}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${userData.token}`
+        },
+        timeout: 2000
+      }
+    )
+    .then(response => {
+      setAlertMessage(`댓글이 삭제되었습니다.`);
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 6000);
+      fetchPost(); // 댓글 삭제 후 데이터 다시 가져오기
+    })
+    .catch(error => {
+      if (error.response) {
+        setAlertMessage(
+          `데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`,
+        );
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        console.log('deleteComment error.response', error.response.data);
+      } else if (error.request) {
+        setAlertMessage(
+          '서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.',
+        );
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+      } else {
+        setAlertMessage(
+          `데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`,
+        );
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        console.log('deleteComment Unexpected error', error.message);
+      }
+    });
+  }
+
+  /**
    * 옵션 버튼 렌더링 함수
    */
   const RenderOption = () => {
@@ -473,20 +527,28 @@ const PostDetail = ({navigation, route}) => {
 
     return (
       <>
-        {[post.postImages.length > 0 ? (
+        {[
+          post.postImages.length > 0 ? (
             <View style={styles.imageContainer} key={post.postImages}>
-              <Image style={styles.mainImage} source={{uri: post.postImages[0]}} />
+              <Image
+                style={styles.mainImage}
+                source={{uri: post.postImages[0]}}
+              />
             </View>
           ) : (
-            <View style={styles.notImageContainger} key={"postImage"} />
+            <View style={styles.notImageContainger} key={'postImage'} />
           ),
         ]}
-  
+
         <View style={styles.titleContainer}>
           <View style={styles.profileContainer}>
             <Image
               style={styles.profileImage}
-              source={post.profileImage ? {uri: post.profileImage} : require(prevProfileImg)}
+              source={
+                post.profileImage
+                  ? {uri: post.profileImage}
+                  : require(prevProfileImg)
+              }
             />
             <View style={styles.profileNameContainer}>
               <Text style={styles.text}>{post.memberName}</Text>
@@ -528,25 +590,29 @@ const PostDetail = ({navigation, route}) => {
           <Text style={[styles.text, styles.content]}>{post.content}</Text>
         </View>
 
-        <View 
-          style={styles.commentContainer}
-          onLayout={onLayout}
-        >
+        <View style={styles.commentContainer} onLayout={onLayout}>
           {comments.map((comment, index) => {
             return (
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.comment}
                 key={index}
                 onPress={() => {
                   setOpenCommentModal(true);
                   setselectedCommentID(comment.id);
-                }}
-              >
-                <View style={[styles.profileContainer, {justifyContent: 'space-between'}]}>
+                }}>
+                <View
+                  style={[
+                    styles.profileContainer,
+                    {justifyContent: 'space-between'},
+                  ]}>
                   <View style={shared.inlineContainer}>
                     <Image
                       style={styles.commentProfileImage}
-                      source={comment.profileImage ? {uri: comment.profileImage} : require(prevProfileImg)}
+                      source={
+                        comment.profileImage
+                          ? {uri: comment.profileImage}
+                          : require(prevProfileImg)
+                      }
                     />
                     <View style={styles.profileNameContainer}>
                       <Text style={styles.text}>{comment.memberName}</Text>
@@ -554,11 +620,19 @@ const PostDetail = ({navigation, route}) => {
                   </View>
                   <View style={shared.inlineContainer}>
                     <View>
-                      <Text style={[styles.textGray, {textAlign: 'right'}]}>{comment.id}</Text>
-                      <Text style={[styles.textGray, {textAlign: 'right'}]}>{comment.cmDateTime}</Text>
+                      <Text style={[styles.textGray, {textAlign: 'right'}]}>
+                        {comment.id}
+                      </Text>
+                      <Text style={[styles.textGray, {textAlign: 'right'}]}>
+                        {comment.cmDateTime}
+                      </Text>
                     </View>
                     <View style={[shared.grayButton, styles.commentMenuButton]}>
-                      <Icon name="ellipsis-horizontal" size={12} color="white" />
+                      <Icon
+                        name="ellipsis-horizontal"
+                        size={12}
+                        color="white"
+                      />
                     </View>
                   </View>
                 </View>
@@ -590,13 +664,50 @@ const PostDetail = ({navigation, route}) => {
    * 게시물 하단 렌더링 함수
    */
   const RenderFooter = () => {
-    const handleBuy = () => {
-      setAlertMessage('댓글을 선택해서 구매하기를 선택해주세요.');
-      setShowAlert(true);
-      setTimeout(() => {
-        setShowAlert(false);
-      }, 6000);
-      scrollRef.current.scrollTo({y: commentPosition, animated: true});
+    const handleComment = () => {
+      axios.post(`http://${Config.DB_IP}/post/${post.id}/comments`,
+        {
+          content: inputComment,
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${userData.token}`
+          },
+          timeout: 2000
+        }
+      )
+      .then(response => {
+        setAlertMessage('댓글을 작성했습니다.');
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        fetchPost();
+        setinputComment('');
+      })
+      .catch(error => {
+        if (error.response) {
+          setAlertMessage(`${error.response.data}`);
+          setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 6000);
+          console.error('handleComment error.response', error.response.data);
+        } else if (error.request) {
+          setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.');
+          setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 6000);
+        } else {
+          setAlertMessage(`오류가 발생했습니다. \n[${error.message}]`);
+          setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 6000);
+          console.error('handleComment Unexpected error', error.message);
+        }
+      });
     }
 
     return (
@@ -620,67 +731,12 @@ const PostDetail = ({navigation, route}) => {
           </Text>
         </View>
 
-        {post && userData.id !== post.memberId && (
-          <TouchableOpacity style={shared.button} onPress={handleBuy}>
-            <Text style={[styles.buttonText, shared.redButton]}>구매하기</Text>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity style={shared.button} onPress={handleComment}>
+          <Text style={[styles.buttonText, shared.redButton]}>댓글달기</Text>
+        </TouchableOpacity>
       </>
     );
   };
-
-  /**
-   * 댓글 삭제 함수
-   */
-  const deleteComment = () => {
-    axios.delete(`http://${Config.DB_IP}/post/${route.params.postId}/comments/${selectedCommentID}`,
-      {
-        headers: {
-          'Authorization': `Bearer ${userData.token}`
-        },
-        timeout: 2000
-      }
-    )
-    .then(response => {
-      if (response.status === 200) {
-        setComments(comments.filter(comment => comment.id !== selectedCommentID));
-        setAlertMessage(`댓글이 삭제되었습니다.`);
-        setShowAlert(true);
-        setTimeout(() => {
-          setShowAlert(false);
-        }, 6000);
-      }
-    })
-    .catch(error => {
-      if (error.response) {
-        setAlertMessage(
-          `데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`,
-        );
-        setShowAlert(true);
-        setTimeout(() => {
-          setShowAlert(false);
-        }, 6000);
-        console.log('deleteComment error.response', error.response.data);
-      } else if (error.request) {
-        setAlertMessage(
-          '서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.',
-        );
-        setShowAlert(true);
-        setTimeout(() => {
-          setShowAlert(false);
-        }, 6000);
-      } else {
-        setAlertMessage(
-          `데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`,
-        );
-        setShowAlert(true);
-        setTimeout(() => {
-          setShowAlert(false);
-        }, 6000);
-        console.log('deleteComment Unexpected error', error.message);
-      }
-    });
-  }
 
 
   if (isLoading) {
@@ -709,9 +765,25 @@ const PostDetail = ({navigation, route}) => {
         {post ? <RenderContent/> : <Loading />}
       </ScrollView>
 
+      <View style={styles.commentInputContainer}>
+        <TextInput
+          style={styles.textInput}
+          onChangeText={(text) => setinputComment(text)}
+          value={inputComment}
+          inputMode="text"
+          placeholder="댓글을 입력해 주세요."
+          placeholderTextColor="#676c74" />
+        <TouchableOpacity 
+          style={styles.closeIcon}
+          onPress={() => setinputComment('')}>
+          <Icon name="close" size={10} color="#212123" />
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.footer}>
         {post && <RenderFooter /> }
       </View>
+
       {openOptionModal && (
         <ChoiceDiaglog
           openModal={openOptionModal}
@@ -727,8 +799,7 @@ const PostDetail = ({navigation, route}) => {
           setModalIndex={setModalStateIndex}
           choices={['판매중', '예약중', '거래완료']}
         />
-      )}
-      {openCommentModal && (
+      )}{openCommentModal && (
         <ChoiceDiaglog
           openModal={openCommentModal}
           setOpenModal={setOpenCommentModal}

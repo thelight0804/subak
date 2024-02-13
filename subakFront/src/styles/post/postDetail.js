@@ -128,9 +128,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     height: 60,
-    
-    borderTopWidth: 1.5,
-    borderTopColor: "#2b2b2d",
   },
   heartContainer: { // 좋아요, 가격 컨테이너
     flexDirection: "row",
@@ -164,7 +161,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1.5,
     borderColor: "#2b2b2d",
   },
-  commentText: { // 댓글 나용
+  commentText: { // 댓글 내용
     paddingTop: 10,
     paddingLeft: 10,
     fontSize: 14,
@@ -178,6 +175,31 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 25,
+  },
+  commentInputContainer: { // 댓글 입력 컨테이너
+    flexDirection: 'row',
+    alignItems: 'center',
+
+    paddingTop: 10,
+
+    borderTopWidth: 1.5,
+    borderTopColor: "#2b2b2d",
+  },
+  textInput: {
+    width: '100%',
+    backgroundColor: '#2a2e32',
+    borderRadius: 8,
+    paddingLeft: 10,
+    color: colorPalette.white,
+  },
+  closeIcon: {
+    position: 'absolute',
+    bottom: 17,
+    right: 10,
+    padding: 2,
+
+    backgroundColor: colorPalette.gray,
+    borderRadius: 50,
   },
 })
 
