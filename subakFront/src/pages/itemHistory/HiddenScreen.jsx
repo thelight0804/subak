@@ -28,90 +28,16 @@ const HiddenScreen = () => {
   const [noMore, setNoMore] = useState(false); // 더 이상 데이터가 없는지 확인
   const [page, setPage] = useState(1); // 페이지 번호
 
-  // const [posts, setPosts] = useState([]); // 게시글 목록
-  const [posts, setPosts] = useState([
-    {
-      "id": 0,
-      "memberName": "0",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg",
-      "postTitle": "0",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702468776/ab63209a-9fdf-44d0-bafa-ccecd61c1f9f.png.jpg",
-      "price": 0,
-      "postDateTime": "3일 전",
-      "address": "00",
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 1,
-      "memberName": "1",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "1",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 1,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 2,
-      "memberName": "2",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "2",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 2,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 3,
-      "memberName": "3",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "3",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 3,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 4,
-      "memberName": "4",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "4",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 4,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    },
-    {
-      "id": 5,
-      "memberName": "5",
-      "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702546076/96eafb54-faab-407e-ab30-4f907000af7c.png.jpg",
-      "postTitle": "5",
-      "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702806437/2716f2b3-7b39-4245-ba10-ba82c8bf307d.jpg.jpg",
-      "price": 5,
-      "postDateTime": "3일 전",
-      "address": null,
-      "heartCount": 0,
-      "commentCount": 0
-    }
-  ]);
+  const [posts, setPosts] = useState([]); // 게시글 목록
 
   useEffect(() => {
-    // fetchpost(1);
+    fetchpost(1);
     setIsLoading(false);
   }, []);
 
   useFocusEffect(
     useCallback(() => {
-      // fetchpost(page);
+      fetchpost(page);
     }, [])
   );
 
@@ -120,7 +46,7 @@ const HiddenScreen = () => {
    */
   const fetchpost = useCallback((page) => {
     // TODO: 숨김 API 연동
-    axios.get(`http://${Config.DB_IP}/URL`,
+    axios.get(`http://${Config.DB_IP}/posts/hide?offset=${page}&limit=10`,
       {headers: {
         'Authorization': `Bearer ${userData.token}` // 토큰 값
       },
@@ -190,6 +116,7 @@ const HiddenScreen = () => {
    * @param {Number} id 게시글 id
    */
   const changeSelling = (id) => {
+    //TODO: 판매중으로 변경 API 연동
     axios.patch(`http://${Config.DB_IP}/URL`,
       {
         postStatus: 'SALE',
@@ -299,14 +226,13 @@ const HiddenScreen = () => {
   }, [modalIndex]);
 
 
-  
   if (isLoading) {
     return <Loading />;
   }
   else if (posts.length === 0) {
     return (
       <View style={styles.noPostsContainer}>
-        <Text style={styles.noPostsText}>판매중인 게시글이 없어요.</Text>
+        <Text style={styles.noPostsText}>숨긴 게시글이 없어요.</Text>
       </View>
     );
   }
