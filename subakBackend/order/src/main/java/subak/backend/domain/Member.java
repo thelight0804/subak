@@ -61,9 +61,13 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Comment> comments = new ArrayList<>();
 
-    @JsonBackReference
-    @OneToMany(mappedBy = "member")
-    private List<Review> reviews = new ArrayList<>();
+    @JsonManagedReference
+    @OneToMany(mappedBy = "seller")
+    private List<Review> sellerReviews = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "buyer")
+    private List<Review> buyerReviews = new ArrayList<>();
 
     public void updateProfileImage(String newImageUrl) {
         this.profileImage = newImageUrl;
