@@ -146,12 +146,15 @@ const PostDetail = ({navigation, route}) => {
    */
   useEffect(() => {
     if (modalCommentIndex === 0) {
-      // TODO: 판매하기
+      // TODO: 댓글 판매하기, 수정하기
       console.log('판매하기');
     }
     else if (modalCommentIndex === 1) {
-      deleteComment();
+      console.log('수정하기');
+    }
+    else if (modalCommentIndex === 2) {
       //TODO: 댓글 작성자 ID 비교해서 삭제 가능하게
+      deleteComment();
     }
     setModalCommentIndex(-1); // 모달 선택 인덱스 초기화
     setOpenCommentModal(false); // 모달 창 닫기
@@ -804,7 +807,7 @@ const PostDetail = ({navigation, route}) => {
           openModal={openCommentModal}
           setOpenModal={setOpenCommentModal}
           setModalIndex={setModalCommentIndex}
-          choices={['판매하기', '삭제']}
+          choices={['판매하기', '수정하기', '삭제']}
         />
       )}
     {showAlert && <Alert message={alertMessage} />}

@@ -129,7 +129,11 @@ const CompletedScreen = () => {
   )
   .then(response => {
     if (response.status === 200) {
-      setPostStatus(status); // 게시물 상태 state 변경
+      setAlertMessage('게시글 상태가 변경되었습니다.');
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 6000);
     }
   })
   .catch(error => { 

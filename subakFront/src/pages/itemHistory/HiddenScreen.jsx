@@ -116,8 +116,7 @@ const HiddenScreen = () => {
    * @param {Number} id 게시글 id
    */
   const changeSelling = (id) => {
-    //TODO: 판매중으로 변경 API 연동
-    axios.patch(`http://${Config.DB_IP}/URL`,
+    axios.patch(`http://${Config.DB_IP}/post/${id}/product-status`,
       {
         postStatus: 'SALE',
       },
@@ -136,7 +135,6 @@ const HiddenScreen = () => {
           setShowAlert(false);
         }, 6000);
       }
-      navigation.navigate('PostsList'); // 게시글 목록으로 이동
     })
     .catch(error => { 
       if (error.response) { // 요청은 성공했으나 응답은 실패
@@ -214,8 +212,8 @@ const HiddenScreen = () => {
   * 옵션 모달 선택 버튼에 따라 실행
   */ 
   useEffect(() => {
-    if (modalIndex === 0) { // 판매중
-      navigation.navigate('PostStack', {screen: 'PostEdit', params: {postId: setModalPostId}})
+    if (modalIndex === 0) { // 게시글 수정
+      navigation.navigate('PostStack', {screen: 'PostEdit', params: {postId: modalPostId}})
     }
     else if (modalIndex === 1) { // 삭제
       deletePost(modalPostId);
