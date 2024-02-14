@@ -101,6 +101,16 @@ public class PostService {
 
 
     /**
+     * 검색 후 필터링 (가격, 최신순, 좋아요 순,)
+     */
+
+
+    /**
+     * 거래가능만 보기
+     */
+
+
+    /**
      * 글 상세보기
      */
     public PostDetailResponse getPostDetail(Long postId, Member authenticatedMember) {
@@ -127,6 +137,21 @@ public class PostService {
                 new MemberException.MemberNotFoundException("존재하지 않는 회원입니다."));
         post.sellPost(buyer); // 판매자와 구매자 설정 및 상태 변경, 매너온도 증가
         postRepository.save(post);
+    }
+
+    /**
+     * '판매중' 게시글 조회 ('예약중' 게시글 포함)
+     */
+    public List<PostResponse> getSellingPosts(int offset, int limit, Long memberId) {
+        List<Post> posts = entityManager.createQuery(
+                        "SELECT p FROM Post p WHERE p.member.id = :memberId AND (p.productStatus = 'SALE' OR p.productStatus = 'RESERVATION') ORDER BY p.postDateTime DESC", Post.class)
+                .setParameter("memberId", memberId)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+        return posts.stream()
+                .map(this::convertToPostResponse)
+                .collect(Collectors.toList());
     }
 
 
@@ -413,6 +438,30 @@ public class PostService {
         return post.getComments().stream()
                 .map(comment -> new GetCommenterMemberResponse(comment.getMember()))
                 .collect(Collectors.toList());
+    }
+
+    // '판매중' 게시글 개수 조회 ('예약중' 게시글 개수 포함)
+    public long countSellingPosts(Long memberId) {
+        return entityManager.createQuery(
+                        "SELECT COUNT(p) FROM Post p WHERE p.member.id = :memberId AND (p.productStatus = 'SALE' OR p.productStatus = 'RESERVATION')", Long.class)
+                .setParameter("memberId", memberId)
+                .getSingleResult();
+    }
+
+    // '판매완료' 게시글 개수 조회
+    public long countCompletePosts(Long memberId) {
+        return entityManager.createQuery(
+                        "SELECT COUNT(p) FROM Post p WHERE p.member.id = :memberId AND p.productStatus = 'COMPLETE'", Long.class)
+                .setParameter("memberId", memberId)
+                .getSingleResult();
+    }
+
+    // '숨김' 게시글 개수 조회
+    public long countHidePosts(Long memberId) {
+        return entityManager.createQuery(
+                        "SELECT COUNT(p) FROM Post p WHERE p.member.id = :memberId AND p.postStatus = 'HIDE'", Long.class)
+                .setParameter("memberId", memberId)
+                .getSingleResult();
     }
 
 
