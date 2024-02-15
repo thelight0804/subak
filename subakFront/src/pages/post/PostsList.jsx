@@ -119,13 +119,13 @@ const PostsList = ({navigation, route}) => {
           <View style={styles.inlineContainer}>
             <TouchableOpacity
               style={shared.iconButton}
-              onPress={() => navigation.navigate('PostStack', {screen: 'Search'})}>
+              onPress={() => navigation.navigate('HomeStack', {screen: 'Search'})}>
               <Icon name="search" size={30} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
           <TouchableOpacity
             style={styles.menuButtonContainer}
-            onPress={() => navigation.navigate('PostStack', {screen: 'CategorySelection'})}>
+            onPress={() => navigation.navigate('HomeStack', {screen: 'CategorySelection'})}>
               <Icon name="menu" size={20} color="#FFFFFF"/>
           </TouchableOpacity>
         </View>

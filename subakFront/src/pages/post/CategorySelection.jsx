@@ -14,7 +14,6 @@ const CategorySelection = ({navigation}) => {
       <View style={styles.inlineContainer}>
         <TouchableOpacity
           style={shared.iconButton}
-          // onPress={() => navigation.navigate('PostsList', {params: {category: 'all'}})}>
           onPress={() => navigation.goBack()}>
           <Icon name="chevron-back" size={30} color="#FFFFFF" />
         </TouchableOpacity>
@@ -25,15 +24,16 @@ const CategorySelection = ({navigation}) => {
       <View style={styles.categoryContainer}>
         {categories.map((category, index) => (
           <TouchableOpacity
-            key={index} 
+            key={index}
             style={styles.button}
-            onPress={() => navigation.navigate('CategoryPosts', {params: {category: categoriesEng[index]}})}
-          >
+            onPress={() =>
+              navigation.navigate('HomeStack', {
+                screen: 'CategorySelection',
+                params: {category: categoriesEng[index]},
+              })
+            }>
             <View style={styles.imageContainer}>
-              <Image
-                style={styles.image}
-                source={categoriesImages[index]}
-              />
+              <Image style={styles.image} source={categoriesImages[index]} />
             </View>
             <Text style={shared.text}>{category}</Text>
           </TouchableOpacity>

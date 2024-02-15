@@ -9,6 +9,7 @@ import LoginStack from './LoginStack';
 import UserStack from './UserStack';
 import FooterTabs from './FooterTabs';
 import PostStack from './PostStack';
+import HomeStack from './HomeStack';
 import Loading from '../pages/components/Loading';
 
 const DrawerNavigator = () => {
@@ -30,9 +31,10 @@ const DrawerNavigator = () => {
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="LoginStack" component={LoginStack}/>
-      <Stack.Screen name="UserStack" component={UserStack}/>
       <Stack.Screen name="FooterTabs" component={FooterTabs}/>
+      <Stack.Screen name="HomeStack" component={HomeStack}/>
       <Stack.Screen name="PostStack" component={PostStack}/>
+      <Stack.Screen name="UserStack" component={UserStack}/>
     </Stack.Navigator>
   );
 }
