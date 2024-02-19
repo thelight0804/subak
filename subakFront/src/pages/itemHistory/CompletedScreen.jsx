@@ -26,7 +26,7 @@ const CompletedScreen = () => {
   const [modalPostId, setModalPostId] = useState(-1); // 모달창 게시글 아이디
 
   const [noMore, setNoMore] = useState(false); // 더 이상 데이터가 없는지 확인
-  const [page, setPage] = useState(1); // 페이지 번호
+  const [page, setPage] = useState(0); // 페이지 번호
 
   const [posts, setPosts] = useState([]); // 게시글 목록
 

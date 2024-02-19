@@ -31,7 +31,7 @@ const SalesScreen = () => {
   const [posts, setPosts] = useState([]); // 게시글 목록
 
   useEffect(() => {
-    fetchpost(1);
+    fetchpost(0);
     setIsLoading(false);
   }, []);
 
@@ -46,11 +46,11 @@ const SalesScreen = () => {
    */
   const fetchpost = useCallback((page) => {
     // TODO: 판매중 API 연동
-    axios.get(`http://${Config.DB_IP}/posts/selling`,
+    axios.get(`http://${Config.DB_IP}/posts/selling?offset=${page}&limit=10`,
       {headers: {
         'Authorization': `Bearer ${userData.token}` // 토큰 값
       },
-      timeout: 2000 // 타임아웃
+        timeout: 2000 // 타임아웃
       }
     )
     .then(response => {
@@ -128,6 +128,7 @@ const SalesScreen = () => {
     )
     .then(response => {
       if (response.status === 200) {
+        // TODO: 게시물 상태 변경 후 리렌더링 및 posts 업데이트
         setAlertMessage('게시글 상태가 변경되었습니다.');
         setShowAlert(true);
         setTimeout(() => {

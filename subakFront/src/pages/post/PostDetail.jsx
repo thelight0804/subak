@@ -11,7 +11,7 @@ import styles from '../../styles/post/postDetail';
 
 import Alert from '../components/Alert';
 import Loading from '../components/Loading';
-import CommaPrice from '../components/CommaPrice'
+import CommaPrice from '../components/CommaPrice';
 import ChoiceDiaglog from '../components/ChoiceDiaglog';
 
 const PostDetail = ({navigation, route}) => {
@@ -32,8 +32,10 @@ const PostDetail = ({navigation, route}) => {
   const [modalIndex, setModalIndex] = useState(-1); // 옵션 모달 선택 인덱스
   const [openStateModal, setOpenStateModal] = useState(false); // 게시물 상태 모달 창
   const [modalStateIndex, setModalStateIndex] = useState(-1); // 게시물 상태 모달 선택 인덱스
-  const [openCommentModal, setOpenCommentModal] = useState(false); // 댓글 상태 모달 창
-  const [modalCommentIndex, setModalCommentIndex] = useState(-1); // 댓글 상태 모달 선택 인덱스
+  const [openSellerCommentModal, setSellerOpenCommentModal] = useState(false); // 판매자 댓글 상태 모달 창
+  const [modalSellerCommentIndex, setModalSellerCommentIndex] = useState(-1); // 판매자 댓글 상태 모달 선택 인덱스
+  const [openBuyerCommentModal, setBuyerOpenCommentModal] = useState(false); // 구매자 댓글 상태 모달 창
+  const [modalBuyerCommentIndex, setModalBuyerCommentIndex] = useState(-1); // 구매자 댓글 상태 모달 선택 인덱스
   
   // FIX: 테스트용 코드
   // const [post, setPost] = useState({
@@ -142,23 +144,32 @@ const PostDetail = ({navigation, route}) => {
   }, [modalStateIndex]);
 
   /**
-   * 댓글 선택 버튼에 따라 실행
+   * 판매자 댓글 선택 버튼에 따라 실행
    */
   useEffect(() => {
-    if (modalCommentIndex === 0) {
-      // TODO: 댓글 판매하기, 수정하기
+    if (modalSellerCommentIndex === 0) {
       console.log('판매하기');
     }
-    else if (modalCommentIndex === 1) {
+    else if (modalSellerCommentIndex === 1) {
+      console.log('삭제하기');
+    }
+    setModalSellerCommentIndex(-1);
+    setSellerOpenCommentModal(false);
+  }, [modalSellerCommentIndex]);
+
+  /**
+   * 구매자 댓글 선택 버튼에 따라 실행
+   */
+  useEffect(() => {
+    if (modalBuyerCommentIndex === 0) {
       console.log('수정하기');
     }
-    else if (modalCommentIndex === 2) {
-      //TODO: 댓글 작성자 ID 비교해서 삭제 가능하게
-      deleteComment();
+    else if (modalBuyerCommentIndex === 1) {
+      console.log('삭제하기');
     }
-    setModalCommentIndex(-1); // 모달 선택 인덱스 초기화
-    setOpenCommentModal(false); // 모달 창 닫기
-  }, [modalCommentIndex]);
+    setModalBuyerCommentIndex(-1);
+    setBuyerOpenCommentModal(false);
+  }, [modalBuyerCommentIndex]);
 
   /**
    * 게시물 상세 데이터 가져오기 함수
@@ -395,6 +406,18 @@ const PostDetail = ({navigation, route}) => {
   }
 
   /**
+   * 댓글 설정 모달
+   * @param {Number} index 댓글 인덱스
+   */
+  const handleCommentModal = (index) => {
+    if (userData.id === post.memberId && userData.id !== post.comments[index].commentMemberId) { // 판매자 댓글 모달
+      setSellerOpenCommentModal(true);
+    } else { // 구매자 댓글 모달
+      setBuyerOpenCommentModal(true);
+    }
+  }
+
+  /**
    * 게시물 상태 변경 함수
    */
   const patchStatus = (status) => {
@@ -596,26 +619,15 @@ const PostDetail = ({navigation, route}) => {
         <View style={styles.commentContainer} onLayout={onLayout}>
           {comments.map((comment, index) => {
             return (
-              <TouchableOpacity
+              <View
                 style={styles.comment}
                 key={index}
-                onPress={() => {
-                  setOpenCommentModal(true);
-                  setselectedCommentID(comment.id);
-                }}>
-                <View
-                  style={[
-                    styles.profileContainer,
-                    {justifyContent: 'space-between'},
-                  ]}>
+              >
+                <View style={[styles.profileContainer, {justifyContent: 'space-between'}]}>
                   <View style={shared.inlineContainer}>
                     <Image
                       style={styles.commentProfileImage}
-                      source={
-                        comment.profileImage
-                          ? {uri: comment.profileImage}
-                          : require(prevProfileImg)
-                      }
+                      source={comment.profileImage ? {uri: comment.profileImage} : require(prevProfileImg)}
                     />
                     <View style={styles.profileNameContainer}>
                       <Text style={styles.text}>{comment.memberName}</Text>
@@ -624,23 +636,23 @@ const PostDetail = ({navigation, route}) => {
                   <View style={shared.inlineContainer}>
                     <View>
                       <Text style={[styles.textGray, {textAlign: 'right'}]}>
-                        {comment.id}
+                        {comment.commentMemberId}
                       </Text>
                       <Text style={[styles.textGray, {textAlign: 'right'}]}>
                         {comment.cmDateTime}
                       </Text>
                     </View>
-                    <View style={[shared.grayButton, styles.commentMenuButton]}>
-                      <Icon
-                        name="ellipsis-horizontal"
-                        size={12}
-                        color="white"
-                      />
-                    </View>
+                    {userData.id === comment.commentMemberId && (
+                      <TouchableOpacity
+                        style={[shared.grayButton, styles.commentMenuButton]}
+                        onPress={() => handleCommentModal(index)}>
+                        <Icon name="ellipsis-horizontal" size={12} color="white"/>
+                      </TouchableOpacity>
+                    )}
                   </View>
                 </View>
                 <Text style={styles.commentText}>{comment.content}</Text>
-              </TouchableOpacity>
+              </View>
             );
           })}
         </View>
@@ -802,12 +814,21 @@ const PostDetail = ({navigation, route}) => {
           setModalIndex={setModalStateIndex}
           choices={['판매중', '예약중', '거래완료']}
         />
-      )}{openCommentModal && (
+      )}
+      {openSellerCommentModal && (
         <ChoiceDiaglog
-          openModal={openCommentModal}
-          setOpenModal={setOpenCommentModal}
-          setModalIndex={setModalCommentIndex}
-          choices={['판매하기', '수정하기', '삭제']}
+          openModal={openSellerCommentModal}
+          setOpenModal={setSellerOpenCommentModal}
+          setModalIndex={setModalSellerCommentIndex}
+          choices={['판매하기', '삭제']}
+        />
+      )}
+      {openBuyerCommentModal && (
+        <ChoiceDiaglog
+          openModal={openBuyerCommentModal}
+          setOpenModal={setBuyerOpenCommentModal}
+          setModalIndex={setModalBuyerCommentIndex}
+          choices={['수정하기', '삭제']}
         />
       )}
     {showAlert && <Alert message={alertMessage} />}

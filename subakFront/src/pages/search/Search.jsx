@@ -112,6 +112,7 @@ const Search = ({navigation}) => {
 
   // 검색 데이터 불러오는 함수
   const getSearchData = (query, start) => {
+    // TODO: 가격 필터링
     setPosts([]); // 검색어가 바뀌면 포스트 목록 초기화
     axios.get(`http://${Config.DB_IP}/posts/search?keyword=${query}&offset=${start}&limit=10&maxPrice=${maxPrice}&minPrice=${minPrice}&onlyAvailable=${isOnSale}&orderByLikes=${isLiked}`,
         {
