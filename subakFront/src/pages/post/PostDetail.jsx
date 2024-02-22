@@ -6,13 +6,14 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Config from 'react-native-config';
 import { useFocusEffect } from '@react-navigation/native';
 
-import { shared } from '../../styles/shared';
-import styles from '../../styles/post/postDetail';
-
 import Alert from '../components/Alert';
 import Loading from '../components/Loading';
 import CommaPrice from '../components/CommaPrice';
 import ChoiceDiaglog from '../components/ChoiceDiaglog';
+import UpdateCommentModal from './UpdateCommentModal';
+
+import { colorPalette, shared } from '../../styles/shared';
+import styles from '../../styles/post/postDetail';
 
 const PostDetail = ({navigation, route}) => {
   const userData = useSelector((state) => state.userData); // 유저 데이터
@@ -32,10 +33,12 @@ const PostDetail = ({navigation, route}) => {
   const [modalIndex, setModalIndex] = useState(-1); // 옵션 모달 선택 인덱스
   const [openStateModal, setOpenStateModal] = useState(false); // 게시물 상태 모달 창
   const [modalStateIndex, setModalStateIndex] = useState(-1); // 게시물 상태 모달 선택 인덱스
+  const [openUpdateCommentModal, setUpdateCommentModal] = useState(false); // 입력 텍스트 모달 창
+
   const [openSellerCommentModal, setSellerOpenCommentModal] = useState(false); // 판매자 댓글 상태 모달 창
   const [modalSellerCommentIndex, setModalSellerCommentIndex] = useState(-1); // 판매자 댓글 상태 모달 선택 인덱스
   const [openBuyerCommentModal, setBuyerOpenCommentModal] = useState(false); // 구매자 댓글 상태 모달 창
-  const [modalBuyerCommentIndex, setModalBuyerCommentIndex] = useState(-1); // 구매자 댓글 상태 모달 선택 인덱스
+  const [modalBuyerCommentIndex, setModalBuyerCommentIndex] = useState(-1); // 구매자 댓글 상태 모달 선택 인덱스\
   
   // FIX: 테스트용 코드
   // const [post, setPost] = useState({
@@ -52,8 +55,8 @@ const PostDetail = ({navigation, route}) => {
   // })
   const [post, setPost] = useState(null); // 게시물 상세 데이터
   const [comments, setComments] = useState([]); // 댓글
-  const [selectedCommentID, setselectedCommentID] = useState(''); // 선택된 댓글 ID
-  const [inputComment, setinputComment] = useState(''); // 입력된 댓글
+  const [selectedCommentID, setSelectedCommentID] = useState(-1); // 선택된 댓글 ID
+  const [inputComment, setInputComment] = useState(''); // 입력된 댓글
 
   const [tempColor, setTempColor] = useState('white'); // 매너 온도 색상
   const [tempEmoji, setTempEmoji] = useState('❔'); // 매너 온도 이모지
@@ -151,7 +154,7 @@ const PostDetail = ({navigation, route}) => {
       console.log('판매하기');
     }
     else if (modalSellerCommentIndex === 1) {
-      console.log('삭제하기');
+      deleteComment();
     }
     setModalSellerCommentIndex(-1);
     setSellerOpenCommentModal(false);
@@ -162,10 +165,10 @@ const PostDetail = ({navigation, route}) => {
    */
   useEffect(() => {
     if (modalBuyerCommentIndex === 0) {
-      console.log('수정하기');
+      setUpdateCommentModal(true); // 수정하기 모달 창 열기
     }
     else if (modalBuyerCommentIndex === 1) {
-      console.log('삭제하기');
+      deleteComment();
     }
     setModalBuyerCommentIndex(-1);
     setBuyerOpenCommentModal(false);
@@ -410,6 +413,7 @@ const PostDetail = ({navigation, route}) => {
    * @param {Number} index 댓글 인덱스
    */
   const handleCommentModal = (index) => {
+    setSelectedCommentID(index); // 선택된 댓글 ID
     if (userData.id === post.memberId && userData.id !== post.comments[index].commentMemberId) { // 판매자 댓글 모달
       setSellerOpenCommentModal(true);
     } else { // 구매자 댓글 모달
@@ -619,25 +623,32 @@ const PostDetail = ({navigation, route}) => {
         <View style={styles.commentContainer} onLayout={onLayout}>
           {comments.map((comment, index) => {
             return (
-              <View
-                style={styles.comment}
-                key={index}
-              >
-                <View style={[styles.profileContainer, {justifyContent: 'space-between'}]}>
+              <View style={styles.comment} key={index}>
+                <View
+                  style={[
+                    styles.profileContainer,
+                    {justifyContent: 'space-between'},
+                  ]}>
                   <View style={shared.inlineContainer}>
                     <Image
                       style={styles.commentProfileImage}
-                      source={comment.profileImage ? {uri: comment.profileImage} : require(prevProfileImg)}
+                      source={
+                        comment.profileImage
+                          ? {uri: comment.profileImage}
+                          : require(prevProfileImg)
+                      }
                     />
                     <View style={styles.profileNameContainer}>
-                      <Text style={styles.text}>{comment.memberName}</Text>
+                      <Text style={styles.text}>
+                        {comment.memberName}{" "}
+                        <Text style={{color: colorPalette.gray}}>
+                          {comment.commentMemberId}
+                        </Text>
+                      </Text>
                     </View>
                   </View>
                   <View style={shared.inlineContainer}>
                     <View>
-                      <Text style={[styles.textGray, {textAlign: 'right'}]}>
-                        {comment.commentMemberId}
-                      </Text>
                       <Text style={[styles.textGray, {textAlign: 'right'}]}>
                         {comment.cmDateTime}
                       </Text>
@@ -646,7 +657,11 @@ const PostDetail = ({navigation, route}) => {
                       <TouchableOpacity
                         style={[shared.grayButton, styles.commentMenuButton]}
                         onPress={() => handleCommentModal(index)}>
-                        <Icon name="ellipsis-horizontal" size={12} color="white"/>
+                        <Icon
+                          name="ellipsis-horizontal"
+                          size={12}
+                          color="white"
+                        />
                       </TouchableOpacity>
                     )}
                   </View>
@@ -680,6 +695,7 @@ const PostDetail = ({navigation, route}) => {
    */
   const RenderFooter = () => {
     const handleComment = () => {
+      // TODO: 댓글 내용이 없을 때 알림창 띄우기
       axios.post(`http://${Config.DB_IP}/post/${post.id}/comments`,
         {
           content: inputComment,
@@ -698,7 +714,7 @@ const PostDetail = ({navigation, route}) => {
           setShowAlert(false);
         }, 6000);
         fetchPost();
-        setinputComment('');
+        setInputComment('');
       })
       .catch(error => {
         if (error.response) {
@@ -783,14 +799,14 @@ const PostDetail = ({navigation, route}) => {
       <View style={styles.commentInputContainer}>
         <TextInput
           style={styles.textInput}
-          onChangeText={(text) => setinputComment(text)}
+          onChangeText={(text) => setInputComment(text)}
           value={inputComment}
           inputMode="text"
           placeholder="댓글을 입력해 주세요."
           placeholderTextColor="#676c74" />
         <TouchableOpacity 
           style={styles.closeIcon}
-          onPress={() => setinputComment('')}>
+          onPress={() => setInputComment('')}>
           <Icon name="close" size={10} color="#212123" />
         </TouchableOpacity>
       </View>
@@ -830,6 +846,18 @@ const PostDetail = ({navigation, route}) => {
           setModalIndex={setModalBuyerCommentIndex}
           choices={['수정하기', '삭제']}
         />
+      )}
+      {openUpdateCommentModal && (
+        <>
+          <UpdateCommentModal
+            comment={comments[selectedCommentID]}
+            openModal={openUpdateCommentModal}
+            setOpenModal={setUpdateCommentModal}
+            postId={post.id}
+            token={userData.token}
+          />
+          {/* {fetchPost()} */}
+        </>
       )}
     {showAlert && <Alert message={alertMessage} />}
   </View>
