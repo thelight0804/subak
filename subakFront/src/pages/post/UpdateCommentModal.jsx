@@ -92,6 +92,7 @@ const UpdateCommentModal = ({comment, openModal, setOpenModal, postId, token}) =
               inputMode="text"
               textAlignVertical="top" // 커서를 위쪽에 배치
               placeholderTextColor="#676c74"
+              placeholder={`${comment.content}`}
           />
           <View style={[shared.inlineContainer, {justifyContent: 'flex-end'}]}>
             <TouchableOpacity

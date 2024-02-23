@@ -42,17 +42,47 @@ const PostDetail = ({navigation, route}) => {
   
   // FIX: 테스트용 코드
   // const [post, setPost] = useState({
-  //   "id": 5004,
-  //   "postImages": ["http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg"],
-  //   "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg",
-  //   "memberName": "IamYourFather",
-  //   "address": "경남 창원시",
-  //   "temp": 68.7,
-  //   "price": 65000,
-  //   "postTitle": "titleddd",
-  //   "postDateTime": "3일 전",
-  //   "content": "도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도\n레\n미\n파\n솔\n라\n시\n도"
-  // })
+  //   address: '부산광역시 부산진구 엄광로 176',
+  //   category: 'ELECTRONICS',
+  //   commentCount: 4,
+  //   comments: [
+  //     {
+  //       cmDateTime: '9일 전',
+  //       commentMemberId: 1008,
+  //       content: '댓글 테스트 3',
+  //       id: 19009,
+  //       memberName: '난상현이지롱',
+  //       profileImage:
+  //         'http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg',
+  //     },
+  //     {
+  //       cmDateTime: '3분 전',
+  //       commentMemberId: 24001,
+  //       content: '나눔 좋네요!',
+  //       id: 24002,
+  //       memberName: '상현',
+  //       profileImage: null,
+  //     },
+  //   ],
+  //   content: '무료 나눔입니다~',
+  //   heartCount: 2,
+  //   id: 17001,
+  //   liked: true,
+  //   memberId: 1008,
+  //   memberName: '난상현이지롱',
+  //   postDateTime: '35일 전',
+  //   postImages: [
+  //     'http://res.cloudinary.com/dp3fl7ntb/image/upload/v1705553365/90b91cbb-73d0-4c78-8a67-157eca4ca017.jpg.jpg',
+  //   ],
+  //   postTitle: '무료 나눔',
+  //   price: 0,
+  //   productStatus: 'SALE',
+  //   profileImage:
+  //     'http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg',
+  //   temp: 51.1,
+  //   views: 1488,
+  // });
+
   const [post, setPost] = useState(null); // 게시물 상세 데이터
   const [comments, setComments] = useState([]); // 댓글
   const [selectedCommentID, setSelectedCommentID] = useState(-1); // 선택된 댓글 ID
@@ -151,7 +181,7 @@ const PostDetail = ({navigation, route}) => {
    */
   useEffect(() => {
     if (modalSellerCommentIndex === 0) {
-      console.log('판매하기');
+      sellPost();
     }
     else if (modalSellerCommentIndex === 1) {
       deleteComment();
@@ -409,19 +439,6 @@ const PostDetail = ({navigation, route}) => {
   }
 
   /**
-   * 댓글 설정 모달
-   * @param {Number} index 댓글 인덱스
-   */
-  const handleCommentModal = (index) => {
-    setSelectedCommentID(index); // 선택된 댓글 ID
-    if (userData.id === post.memberId && userData.id !== post.comments[index].commentMemberId) { // 판매자 댓글 모달
-      setSellerOpenCommentModal(true);
-    } else { // 구매자 댓글 모달
-      setBuyerOpenCommentModal(true);
-    }
-  }
-
-  /**
    * 게시물 상태 변경 함수
    */
   const patchStatus = (status) => {
@@ -481,10 +498,104 @@ const PostDetail = ({navigation, route}) => {
   }
 
   /**
+   * 판매 완료 처리
+   */
+  const sellPost = () => {
+    axios.post(`http://${Config.DB_IP}/post/${post.id}/sell`,
+      { buyerId: post.comments[selectedCommentID].commentMemberId },
+      {
+        headers: {
+          'Authorization': `Bearer ${userData.token}`
+        },
+        timeout: 2000
+      })
+    .then(response => {
+      setAlertMessage('판매가 완료되었습니다.');
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 6000);
+      patchStatus('거래완료');
+      fetchPost();
+    })
+    .catch(error => {
+      if (error.response) {
+        setAlertMessage(`${error.response.data}`);
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        console.error('sellPost error.response : ', error.response.data);
+      } else if (error.request) {
+        setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.');
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+      } else {
+        setAlertMessage(`오류가 발생했습니다. \n[${error.message}]`);
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        console.error('sellPost Unexpected error : ', error.message);
+      }
+    });
+  }
+  
+  /**
+   * 댓글 작성 함수
+   */
+  const addComment = () => {
+    axios.post(`http://${Config.DB_IP}/post/${post.id}/comments`,
+      { content: inputComment },
+      {
+        headers: {
+          'Authorization': `Bearer ${userData.token}`
+        },
+        timeout: 2000
+      })
+    .then(response => {
+      setAlertMessage('댓글을 작성했습니다.');
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 6000);
+      fetchPost();
+      setInputComment('');
+    })
+    .catch(error => {
+      if (error.response) {
+        setAlertMessage(`${error.response.data}`);
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        console.error('addComment error.response : ', error.response.data);
+      } else if (error.request) {
+        setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.');
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+      } else {
+        setAlertMessage(`오류가 발생했습니다. \n[${error.message}]`);
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        console.error('addComment Unexpected error : ', error.message);
+      }
+    });
+  }
+
+  /**
    * 댓글 삭제 함수
    */
   const deleteComment = () => {
-    axios.delete(`http://${Config.DB_IP}/post/${route.params.postId}/comments/${selectedCommentID}`,
+    const commentID = post.comments[selectedCommentID].id; // 선택된 댓글 ID
+    
+    axios.delete(`http://${Config.DB_IP}/post/${route.params.postId}/comments/${commentID}`,
       {
         headers: {
           'Authorization': `Bearer ${userData.token}`
@@ -503,13 +614,13 @@ const PostDetail = ({navigation, route}) => {
     .catch(error => {
       if (error.response) {
         setAlertMessage(
-          `데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`,
+          `데이터를 불러오는데 에러가 발생했습니다. \n[${error.response.data}]`,
         );
         setShowAlert(true);
         setTimeout(() => {
           setShowAlert(false);
         }, 6000);
-        console.log('deleteComment error.response', error.response.data);
+        console.log('deleteComment error.response : ', error.response.data);
       } else if (error.request) {
         setAlertMessage(
           '서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.',
@@ -526,9 +637,22 @@ const PostDetail = ({navigation, route}) => {
         setTimeout(() => {
           setShowAlert(false);
         }, 6000);
-        console.log('deleteComment Unexpected error', error.message);
+        console.log('deleteComment Unexpected error : ', error.message);
       }
     });
+  }
+
+  /**
+   * 댓글 설정 모달
+   * @param {Number} index 댓글 인덱스
+   */
+  const handleCommentModal = (index) => {
+    setSelectedCommentID(index); // 선택된 댓글 ID
+    if (userData.id === post.memberId && userData.id !== post.comments[index].commentMemberId) { // 판매자 댓글 모달
+      setSellerOpenCommentModal(true);
+    } else { // 구매자 댓글 모달
+      setBuyerOpenCommentModal(true);
+    }
   }
 
   /**
@@ -640,7 +764,7 @@ const PostDetail = ({navigation, route}) => {
                     />
                     <View style={styles.profileNameContainer}>
                       <Text style={styles.text}>
-                        {comment.memberName}{" "}
+                        {comment.memberName}{' '}
                         <Text style={{color: colorPalette.gray}}>
                           {comment.commentMemberId}
                         </Text>
@@ -653,7 +777,7 @@ const PostDetail = ({navigation, route}) => {
                         {comment.cmDateTime}
                       </Text>
                     </View>
-                    {userData.id === comment.commentMemberId && (
+                    {userData.id === comment.commentMemberId || userData.id === post.memberId ? (
                       <TouchableOpacity
                         style={[shared.grayButton, styles.commentMenuButton]}
                         onPress={() => handleCommentModal(index)}>
@@ -663,7 +787,7 @@ const PostDetail = ({navigation, route}) => {
                           color="white"
                         />
                       </TouchableOpacity>
-                    )}
+                      ) : null}
                   </View>
                 </View>
                 <Text style={styles.commentText}>{comment.content}</Text>
@@ -695,50 +819,17 @@ const PostDetail = ({navigation, route}) => {
    */
   const RenderFooter = () => {
     const handleComment = () => {
-      // TODO: 댓글 내용이 없을 때 알림창 띄우기
-      axios.post(`http://${Config.DB_IP}/post/${post.id}/comments`,
-        {
-          content: inputComment,
-        },
-        {
-          headers: {
-            'Authorization': `Bearer ${userData.token}`
-          },
-          timeout: 2000
-        }
-      )
-      .then(response => {
-        setAlertMessage('댓글을 작성했습니다.');
+      if (inputComment === '') { // 댓글 내용이 없을 경우
+        setAlertMessage('댓글 내용을 입력해주세요.');
         setShowAlert(true);
         setTimeout(() => {
           setShowAlert(false);
         }, 6000);
-        fetchPost();
-        setInputComment('');
-      })
-      .catch(error => {
-        if (error.response) {
-          setAlertMessage(`${error.response.data}`);
-          setShowAlert(true);
-          setTimeout(() => {
-            setShowAlert(false);
-          }, 6000);
-          console.error('handleComment error.response', error.response.data);
-        } else if (error.request) {
-          setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.');
-          setShowAlert(true);
-          setTimeout(() => {
-            setShowAlert(false);
-          }, 6000);
-        } else {
-          setAlertMessage(`오류가 발생했습니다. \n[${error.message}]`);
-          setShowAlert(true);
-          setTimeout(() => {
-            setShowAlert(false);
-          }, 6000);
-          console.error('handleComment Unexpected error', error.message);
-        }
-      });
+        return;
+      }
+      else { // 댓글 내용이 있을 경우
+        addComment();
+      }
     }
 
     return (
@@ -773,7 +864,6 @@ const PostDetail = ({navigation, route}) => {
   if (isLoading) {
     return <Loading />
   }
-  
   return (
     <View style={shared.container}>
       <View style={styles.header}>
@@ -848,16 +938,13 @@ const PostDetail = ({navigation, route}) => {
         />
       )}
       {openUpdateCommentModal && (
-        <>
-          <UpdateCommentModal
-            comment={comments[selectedCommentID]}
-            openModal={openUpdateCommentModal}
-            setOpenModal={setUpdateCommentModal}
-            postId={post.id}
-            token={userData.token}
-          />
-          {/* {fetchPost()} */}
-        </>
+        <UpdateCommentModal
+          comment={comments[selectedCommentID]}
+          openModal={openUpdateCommentModal}
+          setOpenModal={setUpdateCommentModal}
+          postId={post.id}
+          token={userData.token}
+        />
       )}
     {showAlert && <Alert message={alertMessage} />}
   </View>
