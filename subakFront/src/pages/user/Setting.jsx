@@ -27,33 +27,37 @@ const Setting = ({navigation}) => {
           <View style={shared.iconButton}></View>
         </View>
         <View style={styles.content}>
-          <TouchableOpacity style={[shared.inlineContainer, styles.listButton]} onPress={() => console.log("공지사항")}>
-            <Text style={[shared.text, styles.text]}>공지사항</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[shared.inlineContainer, styles.listButton, styles.languageContainer]} onPress={() => console.log("언어 설정")}>
+          <TouchableOpacity
+            style={[
+              shared.inlineContainer,
+              styles.listButton,
+              styles.languageContainer,
+            ]}
+            onPress={() => console.log('언어 설정')}>
             <Text style={[shared.text, styles.text]}>언어 설정</Text>
-            <Text style={[shared.text, styles.text, styles.languageText]}>{language}</Text>
+            <Text style={[shared.text, styles.text, styles.languageText]}>
+              {language}
+            </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity 
-            style={[shared.inlineContainer, styles.listButton]} 
+          <TouchableOpacity
+            style={[shared.inlineContainer, styles.listButton]}
             onPress={() => {
               navigation.navigate('LoginStack', {screen: 'Start'});
               logoutUser(dispatch);
-            }}
-          >
+            }}>
             <Text style={[shared.text, styles.text]}>로그아웃</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[shared.inlineContainer, styles.listButton]} onPress={() => console.log("탈퇴하기")}>
-            {/* 회원 탈퇴는 PATCH /user/{email}로 해야 합니다 */}
+          <TouchableOpacity
+            style={[shared.inlineContainer, styles.listButton]}
+            onPress={() => navigation.navigate('DeleteAccount')}>
             <Text style={[shared.text, styles.text]}>탈퇴하기</Text>
           </TouchableOpacity>
         </View>
       </View>
     </>
-  )
+  );
 };
 
 export default Setting;
