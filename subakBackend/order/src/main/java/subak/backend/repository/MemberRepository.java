@@ -16,9 +16,4 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByNameAndPhone(String name, String phone);
 
     Optional<Member> findByEmailAndNameAndPhone(String email, String name, String phone);
-
-    @Transactional
-    @Modifying
-    @Query("update Member m set m.password = :newPassword where m.email = :email and m.name = :name and m.phone = :phone")
-    void updatePassword(@Param("email") String email, @Param("name") String name, @Param("phone") String phone, @Param("newPassword") String newPassword);
 }

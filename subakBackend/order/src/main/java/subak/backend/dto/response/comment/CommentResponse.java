@@ -11,14 +11,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CommentResponse {
     private Long id; // 댓글 ID
+    private Long commentMemberId; // 댓글 작성자 ID
     private String memberName; // 유저 이름
     private String content; // 댓글 내용
     private String profileImage; // 댓글 작성자 프로필
     private String cmDateTime; // 댓글 작성 시간
 
 
-    public CommentResponse(Long id, String memberName, String content, LocalDateTime cmDateTime, String profileImage) {
+    public CommentResponse(Long id, Long commentMemberId,String memberName, String content, LocalDateTime cmDateTime, String profileImage) {
         this.id = id;
+        this.commentMemberId = commentMemberId;
         this.memberName = memberName;
         this.content = content;
         this.setCmDateTime(cmDateTime);
