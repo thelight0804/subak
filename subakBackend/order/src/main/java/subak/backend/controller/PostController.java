@@ -130,7 +130,7 @@ public class PostController {
             @RequestParam(value = "limit", defaultValue = "10") int limit,
             HttpServletRequest httpServletRequest) {
         Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
-        return ResponseEntity.ok(postService.getCompletePosts(offset, limit, loginMember.getId()));
+        return ResponseEntity.ok(postService.getSellingPosts(offset, limit, loginMember.getId()));
     }
 
     @ApiOperation(value = "판매 완료된 상품 조회")
