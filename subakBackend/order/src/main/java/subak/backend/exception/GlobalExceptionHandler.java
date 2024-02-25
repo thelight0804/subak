@@ -78,4 +78,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
+    @ExceptionHandler(ReviewException.InvalidReviewAccessException.class)
+    public ResponseEntity<String> handleInvalidReviewAccessException(ReviewException.InvalidReviewAccessException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
 }
