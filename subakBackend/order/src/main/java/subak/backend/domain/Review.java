@@ -43,6 +43,17 @@ public class Review {
     private String sellerReview;
 
     @Enumerated(EnumType.STRING)
-    private ReviewStatus status; //후기 상태 [PENDING, BUYER_REVIEWED, SELLER_REVIEWED, BOTH_REVIEWED]
+    private ReviewStatus reviewStatus; //후기 상태 [PENDING, BUYER_REVIEWED, SELLER_REVIEWED, BOTH_REVIEWED]
 
+
+    public void setReviewStatus(ReviewStatus reviewStatus) {
+        this.reviewStatus = reviewStatus;
+    }
+
+    public Review(Post post, Member seller, Member buyer) {
+        this.post = post;
+        this.seller = seller;
+        this.buyer = buyer;
+        this.reviewStatus = ReviewStatus.PENDING;
+    }
 }

@@ -5,14 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import subak.backend.domain.Heart;
-import subak.backend.domain.Member;
-import subak.backend.domain.Post;
-import subak.backend.domain.PostImage;
+import subak.backend.domain.*;
 import subak.backend.domain.enumType.Category;
 import subak.backend.domain.enumType.PostStatus;
 import subak.backend.domain.enumType.ProductStatus;
-import subak.backend.domain.Comment;
 import subak.backend.dto.request.post.CreatePostRequest;
 import subak.backend.dto.request.post.UpdatePostRequest;
 import subak.backend.dto.response.comment.CommentResponse;
@@ -24,8 +20,10 @@ import subak.backend.exception.PostException;
 import subak.backend.repository.HeartRepository;
 import subak.backend.repository.MemberRepository;
 import subak.backend.repository.PostRepository;
+import subak.backend.repository.ReviewRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +39,7 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final FileUploadService fileUploadService;
     private final HeartRepository heartRepository;
+    private final ReviewService reviewService;
     private final EntityManager entityManager;
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -63,20 +62,45 @@ public class PostService {
     /**
      * 게시글 키워드 검색
      */
-    public List<PostResponse> searchPosts(String keyword, boolean showHide, int offset, int limit) {
+    public List<PostResponse> searchPosts(String keyword, int offset, int limit, Integer minPrice, Integer maxPrice, boolean orderByLikes, boolean onlyAvailable) {
 
+        // 기본 쿼리 세팅
         String query = "SELECT p FROM Post p WHERE (p.postTitle LIKE :keyword OR p.content LIKE :keyword)";
-        if (!showHide) {
-            query += " AND p.postStatus != 'HIDE'";
-        }
-        query += " ORDER BY p.postDateTime DESC";
 
-        List<Post> posts = entityManager.createQuery(query, Post.class)
+        // 가격 최소값, 최대값 설정
+        if (minPrice != null && maxPrice != null) {
+            query += " AND (p.price BETWEEN :minPrice AND :maxPrice)";
+        }
+
+        // 거래 가능 게시글만 보기 옵션
+        // 기본값: 활성화 (판매중인 게시글만 조회), 클릭시 비활성화 (판매중, 예약중, 판매완료 게시글 조회)
+        if (onlyAvailable) {
+            query += " AND p.productStatus IN ('SALE', 'RESERVATION', 'COMPLETE')";
+        } else {
+            query += " AND p.productStatus = 'SALE'";
+        }
+
+        // 정렬 옵션 (좋아요 순 / 최신순(기본값))
+        if (orderByLikes) {
+            query += " ORDER BY p.likes DESC";
+        } else {
+            query += " ORDER BY p.postDateTime DESC";
+        }
+
+        // 쿼리 실행
+        Query queryObj = entityManager.createQuery(query, Post.class)
                 .setParameter("keyword", "%" + keyword + "%")
                 .setFirstResult(offset)
-                .setMaxResults(limit)
-                .getResultList();
+                .setMaxResults(limit);
 
+        if (minPrice != null && maxPrice != null) {
+            queryObj.setParameter("minPrice", minPrice);
+            queryObj.setParameter("maxPrice", maxPrice);
+        }
+
+        List<Post> posts = queryObj.getResultList();
+
+        // 결과 반환
         return posts.stream()
                 .map(this::convertToPostResponse)
                 .collect(Collectors.toList());
@@ -98,16 +122,6 @@ public class PostService {
                 .map(this::convertToPostResponse)
                 .collect(Collectors.toList());
     }
-
-
-    /**
-     * 검색 후 필터링 (가격, 최신순, 좋아요 순,)
-     */
-
-
-    /**
-     * 거래가능만 보기
-     */
 
 
     /**
@@ -137,6 +151,9 @@ public class PostService {
                 new MemberException.MemberNotFoundException("존재하지 않는 회원입니다."));
         post.sellPost(buyer); // 판매자와 구매자 설정 및 상태 변경, 매너온도 증가
         postRepository.save(post);
+
+        // 판매 완료 후 Review 객체 생성
+        reviewService.createReview(post, post.getMember(), buyer);
     }
 
     /**
@@ -194,6 +211,21 @@ public class PostService {
         List<Post> posts = entityManager.createQuery(
                 "SELECT p FROM Post p JOIN p.hearts h WHERE h.member.id = :memberId ORDER BY p.postDateTime DESC", Post.class)
                 .setParameter("memberId", memberId)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+        return posts.stream()
+                .map(this::convertToPostResponse)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 구매내역
+     */
+    public List<PostResponse> getPurchasedPosts(int offset, int limit, Long buyerId) {
+        List<Post> posts = entityManager.createQuery(
+                        "SELECT p FROM Post p WHERE p.buyer.id = :buyerId ORDER BY p.postDateTime DESC", Post.class)
+                .setParameter("buyerId", buyerId)
                 .setFirstResult(offset)
                 .setMaxResults(limit)
                 .getResultList();
@@ -379,6 +411,7 @@ public class PostService {
         response.setComments(post.getComments().stream()
                 .map(comment -> new CommentResponse(
                         comment.getId(),
+                        comment.getMember().getId(),
                         comment.getMember().getName(),
                         comment.getContent(),
                         comment.getCmDateTime(),
@@ -463,7 +496,5 @@ public class PostService {
                 .setParameter("memberId", memberId)
                 .getSingleResult();
     }
-
-
 
 }

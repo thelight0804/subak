@@ -31,7 +31,6 @@ public class Post {
     @JoinColumn(name = "member_id")
     private Member member; // 글 올린 사람(판매자)
 
-
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "buyer_id")
     private Member buyer; // 구매자

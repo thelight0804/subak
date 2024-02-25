@@ -143,6 +143,17 @@ public class PostController {
         return ResponseEntity.ok(postService.getCompletePosts(offset, limit, loginMember.getId()));
     }
 
+    @ApiOperation(value = "내가 구매한 게시글 조회")
+    @GetMapping("/posts/purchased")
+    public ResponseEntity<List<PostResponse>> getPurchasedPosts(
+            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            HttpServletRequest httpServletRequest) {
+        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
+        return ResponseEntity.ok(postService.getPurchasedPosts(offset, limit, loginMember.getId()));
+    }
+
+
     @ApiOperation(value = "숨김 게시물 조회")
     @GetMapping("/posts/hide")
     public ResponseEntity<List<PostResponse>> getHidePosts(
@@ -157,10 +168,13 @@ public class PostController {
     @GetMapping("/posts/search")
     public ResponseEntity<List<PostResponse>> search(
             @RequestParam(required = false) String keyword,
-            @RequestParam(value = "showHide", defaultValue = "false") boolean showHide,
             @RequestParam(value = "offset", defaultValue = "0") int offset,
-            @RequestParam(value = "limit", defaultValue = "10") int limit) {
-        List<PostResponse> posts = postService.searchPosts(keyword, showHide, offset, limit);
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            @RequestParam(required = false) Integer minPrice,
+            @RequestParam(required = false) Integer maxPrice,
+            @RequestParam(value = "orderByLikes", defaultValue = "false") boolean orderByLikes,
+            @RequestParam(value = "onlyAvailable", defaultValue = "true") boolean onlyAvailable) {
+        List<PostResponse> posts = postService.searchPosts(keyword, offset, limit, minPrice, maxPrice, orderByLikes, onlyAvailable);
         return ResponseEntity.ok(posts);
     }
 

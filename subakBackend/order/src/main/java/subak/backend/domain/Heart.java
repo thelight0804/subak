@@ -1,5 +1,6 @@
 package subak.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,10 +20,12 @@ public class Heart {
     @Column(name = "heart_id")
     private Long id;
 
+    @JsonManagedReference
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @JsonManagedReference
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
