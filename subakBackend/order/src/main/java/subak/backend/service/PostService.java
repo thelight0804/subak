@@ -70,6 +70,10 @@ public class PostService {
         // 가격 최소값, 최대값 설정
         if (minPrice != null && maxPrice != null) {
             query += " AND (p.price BETWEEN :minPrice AND :maxPrice)";
+        } else if (minPrice != null) {
+            query += " AND (p.price >= :minPrice)";
+        } else if (maxPrice != null) {
+            query += " AND (p.price <= :maxPrice)";
         }
 
         // 거래 가능 게시글만 보기 옵션
@@ -82,7 +86,7 @@ public class PostService {
 
         // 정렬 옵션 (좋아요 순 / 최신순(기본값))
         if (orderByLikes) {
-            query += " ORDER BY p.likes DESC";
+            query += " ORDER BY SIZE(p.hearts) DESC";
         } else {
             query += " ORDER BY p.postDateTime DESC";
         }
@@ -95,6 +99,10 @@ public class PostService {
 
         if (minPrice != null && maxPrice != null) {
             queryObj.setParameter("minPrice", minPrice);
+            queryObj.setParameter("maxPrice", maxPrice);
+        } else if (minPrice != null) {
+            queryObj.setParameter("minPrice", minPrice);
+        } else if (maxPrice != null) {
             queryObj.setParameter("maxPrice", maxPrice);
         }
 
