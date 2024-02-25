@@ -28,7 +28,7 @@ const CategorySelection = ({navigation}) => {
             style={styles.button}
             onPress={() =>
               navigation.navigate('HomeStack', {
-                screen: 'CategorySelection',
+                screen: 'CategoryPosts',
                 params: {category: categoriesEng[index]},
               })
             }>

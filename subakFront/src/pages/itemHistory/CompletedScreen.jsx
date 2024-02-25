@@ -41,11 +41,26 @@ const CompletedScreen = () => {
     }, [])
   ); 
 
+  
+  /**
+   * 추가 데이터 로딩 함수
+   * @returns 추가 데이터
+   */
+  const loadMoreData = () => {
+    if (isLoading || noMore || posts.length < 10) return; // 이미 로딩 중이면 중복 요청 방지
+    setIsLoading(true);
+
+    setTimeout(() => { // 추가 데이터 로딩
+      setPage(page + 1); // 페이지 번호 증가
+      fetchpost(page); // 추가 데이터 로딩
+      setIsLoading(false);
+    }, 1000);
+  }
+
   /**
    * 거래완료 게시글 목록을 불러오는 함수
    */
   const fetchpost = useCallback((page) => {
-    // TODO: 거래완료 API 연동
     axios.get(`http://${Config.DB_IP}/posts/completed?offset=${page}&limit=10`,
       {headers: {
         'Authorization': `Bearer ${userData.token}` // 토큰 값
@@ -95,21 +110,6 @@ const CompletedScreen = () => {
     });
     setPosts([]);
   })
-
-  /**
-   * 추가 데이터 로딩 함수
-   * @returns 추가 데이터
-   */
-  const loadMoreData = () => {
-    if (isLoading || noMore || posts.length < 10) return; // 이미 로딩 중이면 중복 요청 방지
-    setIsLoading(true);
-
-    setTimeout(() => { // 추가 데이터 로딩
-      setPage(page + 1); // 페이지 번호 증가
-      fetchpost(page); // 추가 데이터 로딩
-      setIsLoading(false);
-    }, 1000);
-  }
 
   /**
    * 판매중으로 변경 함수

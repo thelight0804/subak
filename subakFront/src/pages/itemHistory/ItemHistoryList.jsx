@@ -25,14 +25,7 @@ const ItemHistoryList = ({navigation}) => {
           <Text style={styles.header}>나의 판매내역</Text>
           <TouchableOpacity
             style={[shared.grayButton, {width: 80,}]}
-            // onPress={() => navigation.navigate('PostStack', {screen: 'NewPost'})}>
-            //TODO: 코드 초기화
-            // onPress={() => navigation.navigate('PostStack', {screen: 'ReviewDetail'})}>
-            onPress={() =>
-              navigation.navigate('PostStack', {
-                screen: 'BuyerReview',
-              })
-            }>
+            onPress={() => navigation.navigate('PostStack', {screen: 'NewPost'})}>
             <Text style={shared.text}>글쓰기</Text>
           </TouchableOpacity>
         </View>

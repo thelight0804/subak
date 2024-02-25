@@ -19,8 +19,7 @@ const CategoryPosts = ({navigation, route}) => {
   const [page, setPage] = useState(1); // 페이지 번호
 
   const [posts, setPosts] = useState([]); // 게시글 목록
-  const category = route.params.params.category; // 카테고리
-  const [categoryKorean, setCategoryKorean] = useState(''); // 카테고리 한글로 변환
+  const category = route.params.category; // 카테고리
 
   useEffect(() => {
     fetchpost(1, category);

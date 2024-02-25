@@ -45,33 +45,6 @@ const Search = ({navigation}) => {
     }, [])
   );
 
-  // 거래 가능 데이터 불러오기
-  useEffect(() => {
-    if (isOnSale) {
-      setPosts([]);
-      setPage(1);
-      setNoMore(false);
-    }
-  }, [isOnSale]);
-
-  // 최신순 정렬 데이터 불러오기
-  useEffect(() => {
-    if (isNewest) {
-      setPosts([]);
-      setPage(1);
-      setNoMore(false);
-    }
-  }, [isNewest]);
-
-  // 좋아요순 정렬 데이터 불러오기
-  useEffect(() => {
-    if (isLiked) {
-      setPosts([]);
-      setPage(1);
-      setNoMore(false);
-    }
-  }, [isLiked]);
-
   /**
    * 추가 데이터 로딩 함수
    * @returns 추가 데이터
@@ -110,66 +83,72 @@ const Search = ({navigation}) => {
     setIsNewest(false);
   };
 
-  // 검색 데이터 불러오는 함수
+  /**
+   * 검색 데이터 불러오는 함수
+   */
   const getSearchData = (query, start) => {
-    // TODO: 가격 필터링
-    setPosts([]); // 검색어가 바뀌면 포스트 목록 초기화
-    axios.get(`http://${Config.DB_IP}/posts/search?keyword=${query}&offset=${start}&limit=10&maxPrice=${maxPrice}&minPrice=${minPrice}&onlyAvailable=${isOnSale}&orderByLikes=${isLiked}`,
-        {
-          headers: {
-            Authorization: `Bearer ${userToken}`, // 토큰 값
-          },
-          timeout: 2000, // 타임아웃
-        },
-      )
-      .then(response => {
-        if (response.status === 200) {
-          if (response.data.length > 0) {
-            const copyPosts = [...posts];
-            const newPosts = [...response.data];
-            setPosts([...copyPosts, ...newPosts]);
-          } else {
-            setNoMore(true); // 더 이상 데이터가 없음을 알림
-            setAlertMessage('더 이상 데이터가 없습니다.');
-            setShowAlert(true);
-            setTimeout(() => {
-              setShowAlert(false);
-            }, 6000);
-          }
-        }
-      })
-      .catch(error => {
-        if (error.response) {
-          // 요청은 성공했으나 응답은 실패
-          setAlertMessage(
-            `데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`,
-          );
-          setShowAlert(true);
-          setTimeout(() => {
-            setShowAlert(false);
-          }, 6000);
-          console.log('Search error.response', error.response);
-        } else if (error.request) {
-          // timeout으로 요청 실패
-          setAlertMessage(
-            '서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.',
-          );
-          setShowAlert(true);
-          setTimeout(() => {
-            setShowAlert(false);
-          }, 6000);
-        } else {
-          // 기타 오류 발생
-          setAlertMessage(
-            `데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`,
-          );
-          setShowAlert(true);
-          setTimeout(() => {
-            setShowAlert(false);
-          }, 6000);
-          console.log('Search Unexpected error', error.message);
-        }
-      });
+    let url = `http://${Config.DB_IP}/posts/search`; // 기본 URL
+    const params = {}; // 파라미터 객체
+
+    params.keyword = query; // 검색어
+    params.limit = 10; // 데이터 개수
+    params.offset = start; // 시작점
+    if (maxPrice > 0) params.maxPrice = maxPrice; // 최대 가격
+    if (minPrice > 0) params.minPrice = minPrice; // 최소 가격
+    if (isOnSale) params.onlyAvailable = true; // 전체 상품 보기
+    if (isLiked) params.orderByLikes = true; // 좋아요순 정렬
+
+    axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${userToken}`, // 토큰 값
+      },
+      params: params, // 파라미터
+      timeout: 2000, // 타임아웃
+    })
+    .then(response => {
+      if (response.data.length > 0) {
+        setPosts([...response.data]);
+      } else {
+        setNoMore(true);
+        setAlertMessage('더 이상 데이터가 없습니다.');
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+      }
+    })
+    .catch(error => {
+      if (error.response) {
+        // 요청은 성공했으나 응답은 실패
+        setAlertMessage(
+          `데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`,
+        );
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        console.log('Search error.response : ', error.response.data);
+      } else if (error.request) {
+        // timeout으로 요청 실패
+        setAlertMessage(
+          '서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.',
+        );
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+      } else {
+        // 기타 오류 발생
+        setAlertMessage(
+          `데이터를 불러오는데 에러가 발생했습니다. \n[${error.message}]`,
+        );
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 6000);
+        console.log('Search Unexpected error : ', error.message);
+      }
+    });
   };
 
   /**
@@ -206,10 +185,11 @@ const Search = ({navigation}) => {
             <TextInput
               style={styles.textInput}
               onChangeText={text => setSearchQuery(text)}
-              onSubmitEditing={() => {
+              onSubmitEditing={async () => {
                 setIsLoading(true);
-                getSearchData(searchQuery, 0)
+                getSearchData(searchQuery, 0);
                 setIsLoading(false);
+                console.log(posts);
               }}
               value={searchQuery}
               inputMode="text"
@@ -253,7 +233,7 @@ const Search = ({navigation}) => {
               </View>
             </TouchableOpacity>
           </View>
-          <View>
+          <View style={{marginBottom: 10}}>
             <TouchableOpacity
               style={[shared.inlineContainer, styles.checkBoxContainer]}
               onPress={() => {isOnSale ? setIsOnSale(false) : setIsOnSale(true)}}

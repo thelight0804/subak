@@ -23,18 +23,17 @@ const BuyerReview = ({navigation, route}) => {
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
 
-  // const [review, setReview] = useState({}); // 리뷰 데이터
-  const [review, setReview] = useState({ // 테스트용 리뷰 데이터
-    buyerName: "빛날빈",
-    buyerProfileImage: "판매자 프로필 이미지",
-    buyerReview: "제가 있는 곳까지 와서 거래했어요.",
-    postTitle: "닌텐도 스위치 링피트 새상품",
-    reviewStatus: "PENDING",
-    sellerName: "카레",
-    sellerProfileImage: "구매자 프로필 이미지",
-    sellerReview: "판매자님이 친절하셔서 좋았어요.",
-  });
-
+  const [review, setReview] = useState({}); // 리뷰 데이터
+  // const [review, setReview] = useState({ // 테스트용 리뷰 데이터
+  //   buyerName: "빛날빈",
+  //   buyerProfileImage: "판매자 프로필 이미지",
+  //   buyerReview: "제가 있는 곳까지 와서 거래했어요.",
+  //   postTitle: "닌텐도 스위치 링피트 새상품",
+  //   reviewStatus: "PENDING",
+  //   sellerName: "카레",
+  //   sellerProfileImage: "구매자 프로필 이미지",
+  //   sellerReview: "판매자님이 친절하셔서 좋았어요.",
+  // });
 
   // 리뷰 여부 확인
   useEffect(() => {
@@ -49,6 +48,10 @@ const BuyerReview = ({navigation, route}) => {
       fetchReview();
     }
   }, [isBuyerReview, isSellerReview])
+
+  useEffect(() => {
+    fetchReview();
+  }, []);
   
 
   /**
