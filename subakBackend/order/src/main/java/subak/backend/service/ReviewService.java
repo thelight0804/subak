@@ -62,6 +62,8 @@ public class ReviewService {
 
         ReviewResponse response = new ReviewResponse(
                 review.getPost().getPostTitle(),
+                review.getSeller().getId(),
+                review.getBuyer().getId(),
                 review.getSeller().getName(),
                 review.getBuyer().getName(),
                 review.getSeller().getProfileImage(),
@@ -90,15 +92,16 @@ public class ReviewService {
         Member buyer = review.getBuyer();
         String postTitle = review.getPost().getPostTitle();
 
-
+        Long sellerId = seller.getId();
+        Long buyerId = buyer.getId();
         String sellerName = seller.getName();
         String buyerName = buyer.getName();
         String sellerProfileImage = seller.getProfileImage();
         String buyerProfileImage = buyer.getProfileImage();
-        String sellerReview = review.getSellerReview() != null ? review.getSellerReview() : "판매자가 후기를 입력하지 않았습니다.";
-        String buyerReview = review.getBuyerReview() != null ? review.getBuyerReview() : "구매자가 후기를 입력하지 않았습니다.";
+        String sellerReview = review.getSellerReview() != null ? review.getSellerReview() : "";
+        String buyerReview = review.getBuyerReview() != null ? review.getBuyerReview() : "";
 
-        return new ReviewResponse(postTitle, sellerName, buyerName, sellerProfileImage, buyerProfileImage,
+        return new ReviewResponse(postTitle, sellerId, buyerId, sellerName, buyerName, sellerProfileImage, buyerProfileImage,
                 sellerReview, buyerReview, review.getReviewStatus());
     }
 
