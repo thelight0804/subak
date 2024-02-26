@@ -21,39 +21,55 @@ const DeleteAccount = ({navigation}) => {
    * 회원 탈퇴 핸들러
    */
   deleteAccount = () => {
-    axios.patch(`http://${Config.DB_IP}/user/${userData.email}`, {
-      headers: {
-        'Authorization': `Bearer ${userData.token}`,
-      },
-      timeout: 2000,
-    }).then(response => {
-      navigation.navigate('LoginStack', {screen: 'Start'}); // 로그인 화면으로 이동
-      logoutUser(dispatch); // Redux store에서 유저 데이터 제거
-    }
-    ).catch(error => {
-      if (error.response) { // 요청은 성공했으나 응답은 실패
-        setAlertMessage(`${error.response.data}`);
-        setShowAlert(true);
-        setTimeout(() => {
-          setShowAlert(false);
-        }, 6000);
-        console.error('DeleteAccount error.response : ', error.response.data);
-      } else if (error.request) { // timeout으로 요청 실패
-        setAlertMessage('서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.'); // 오류 메시지
-        setShowAlert(true); // 오류 알림창
-        setTimeout(() => {
-          setShowAlert(false);
-        }, 6000);
-        console.error('DeleteAccount error.request : ', error.request);
-      } else { // 요청 실패
-        setAlertMessage('알 수 없는 오류가 발생했습니다. \n잠시 후 다시 시도해주세요.'); // 오류 메시지
-        setShowAlert(true); // 오류 알림창
-        setTimeout(() => {
-          setShowAlert(false);
-        }, 6000);
+    axios.patch(`http://${Config.DB_IP}/user/withdraw`,
+        {email: userData.email}, // 데이터
+        { // 설정 옵션 부분
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
+          timeout: 2000,
+        },
+      )
+      .then(response => {
+        navigation.navigate('LoginStack', {screen: 'Start'}); // 로그인 화면으로 이동
+        logoutUser(dispatch); // Redux store에서 유저 데이터 제거
+      })
+      //...중략
+      .then(response => {
+        navigation.navigate('LoginStack', {screen: 'Start'}); // 로그인 화면으로 이동
+        logoutUser(dispatch); // Redux store에서 유저 데이터 제거
+      })
+      .catch(error => {
+        if (error.response) {
+          // 요청은 성공했으나 응답은 실패
+          setAlertMessage(`${error.response.data}`);
+          setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 6000);
+          console.error('DeleteAccount error.response : ', error.response.data);
+        } else if (error.request) {
+          // timeout으로 요청 실패
+          setAlertMessage(
+            '서버와의 연결이 원활하지 않습니다. \n잠시 후 다시 시도해주세요.',
+          ); // 오류 메시지
+          setShowAlert(true); // 오류 알림창
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 6000);
+          console.error('DeleteAccount error.request : ', error.request);
+        } else {
+          // 요청 실패
+          setAlertMessage(
+            '알 수 없는 오류가 발생했습니다. \n잠시 후 다시 시도해주세요.',
+          ); // 오류 메시지
+          setShowAlert(true); // 오류 알림창
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 6000);
           console.error('DeleteAccount error.message : ', error.message);
-      }
-    });
+        }
+      });
   }
 
   return (
