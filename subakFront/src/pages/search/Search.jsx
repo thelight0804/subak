@@ -99,8 +99,7 @@ const Search = ({navigation}) => {
     if (isLiked) params.orderByLikes = true; // 좋아요순 정렬
 
     axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${userToken}`, // 토큰 값
+      headers: { Authorization: `Bearer ${userToken}`, // 토큰 값
       },
       params: params, // 파라미터
       timeout: 2000, // 타임아웃
@@ -185,11 +184,10 @@ const Search = ({navigation}) => {
             <TextInput
               style={styles.textInput}
               onChangeText={text => setSearchQuery(text)}
-              onSubmitEditing={async () => {
+              onSubmitEditing={() => {
                 setIsLoading(true);
                 getSearchData(searchQuery, 0);
                 setIsLoading(false);
-                console.log(posts);
               }}
               value={searchQuery}
               inputMode="text"
