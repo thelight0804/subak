@@ -155,8 +155,10 @@ const PurchaseHistory = ({navigation}) => {
                   <TouchableOpacity
                     style={[shared.grayButton, styles.recentButton]}
                     onPress={() => {
-                      // TODO: 받은 후기 보기
-                      console.log('받은 후기 보기')
+                      navigation.navigate('PostStack', {
+                        screen: 'BuyerReview',
+                        params: {postId: item.id},
+                      });
                     }}>
                     <Text style={shared.text}>받은 후기 보기</Text>
                   </TouchableOpacity>

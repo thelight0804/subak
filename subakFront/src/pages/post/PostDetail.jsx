@@ -501,7 +501,7 @@ const PostDetail = ({navigation, route}) => {
    * 판매 완료 처리
    */
   const sellPost = () => {
-    axios.post(`http://${Config.DB_IP}/post/${post.id}/sell`,
+    axios.post(`http://${Config.DB_IP}/posts/${post.id}/sell`,
       { buyerId: post.comments[selectedCommentID].commentMemberId },
       {
         headers: {

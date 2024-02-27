@@ -91,7 +91,7 @@ const CompletedScreen = () => {
         setTimeout(() => {
           setShowAlert(false);
         }, 6000);
-        console.log('CompletedScreen error.response', error.response);
+        console.log('fetchpost error.response', error.response);
       } else if (error.request) { // timeout으로 요청 실패
         setAlertMessage('서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
         setShowAlert(true);
@@ -143,7 +143,7 @@ const CompletedScreen = () => {
       setTimeout(() => {
         setShowAlert(false);
       }, 6000);
-      console.log('CompletedScreen error.response', error.response);
+      console.log('changeSelling error.response', error.response);
     } else if (error.request) { // timeout으로 요청 실패
       setAlertMessage('서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
       setShowAlert(true);
@@ -156,7 +156,7 @@ const CompletedScreen = () => {
       setTimeout(() => {
         setShowAlert(false);
       }, 6000);
-      console.log('CompletedScreen Unexpected error', error.message);
+      console.log('changeSelling Unexpected error', error.message);
     }}
   )
 }
@@ -194,7 +194,7 @@ const CompletedScreen = () => {
         setTimeout(() => {
           setShowAlert(false);
         }, 6000);
-        console.log('CompletedScreen error.response', error.response);
+        console.log('hidePost error.response', error.response);
       } else if (error.request) { // timeout으로 요청 실패
         setAlertMessage('서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
         setShowAlert(true);
@@ -207,7 +207,7 @@ const CompletedScreen = () => {
         setTimeout(() => {
           setShowAlert(false);
         }, 6000);
-        console.log('CompletedScreen Unexpected error', error.message);
+        console.log('hidePost Unexpected error', error.message);
       }}
     )
   }
@@ -238,7 +238,7 @@ const CompletedScreen = () => {
           setTimeout(() => {
             setShowAlert(false);
           }, 6000);
-          console.log('CompletedScreen error.response', error.response.data);
+          console.log('deletePost error.response', error.response.data);
         } else if (error.request) {
           // timeout으로 요청 실패
           setAlertMessage('서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
@@ -253,7 +253,7 @@ const CompletedScreen = () => {
           setTimeout(() => {
             setShowAlert(false);
           }, 6000);
-          console.log('CompletedScreen Unexpected error', error.message);
+          console.log('deletePost Unexpected error', error.message);
         }
       });
   };

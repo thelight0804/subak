@@ -76,7 +76,7 @@ const SalesScreen = () => {
         setTimeout(() => {
           setShowAlert(false);
         }, 6000);
-        console.log('SalesScreen error.response', error.response);
+        console.log('SalesScreen fetchpost error.response', error.response);
       } else if (error.request) { // timeout으로 요청 실패
         setAlertMessage('서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
         setShowAlert(true);
@@ -89,7 +89,7 @@ const SalesScreen = () => {
         setTimeout(() => {
           setShowAlert(false);
         }, 6000);
-        console.log('SalesScreen Unexpected error', error.message);
+        console.log('SalesScreen fetchpost Unexpected error', error.message);
       }
       setPosts([]);
     });
@@ -143,7 +143,7 @@ const SalesScreen = () => {
         setTimeout(() => {
           setShowAlert(false);
         }, 6000);
-        console.log('SalesScreen error.response', error.response);
+        console.log('SalesScreen setPostStatus error.response', error.response);
       } else if (error.request) { // timeout으로 요청 실패
         setAlertMessage('서버와의 연결이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
         setShowAlert(true);
@@ -156,7 +156,7 @@ const SalesScreen = () => {
         setTimeout(() => {
           setShowAlert(false);
         }, 6000);
-        console.log('SalesScreen Unexpected error', error.message);
+        console.log('SalesScreen setPostStatus Unexpected error', error.message);
       }}
     )
   }

@@ -16,50 +16,24 @@ const BuyerReview = ({navigation, route}) => {
   const userData = useSelector((state) => state.userData); // 유저 데이터
   const postId = route.params.postId; // 게시글 아이디
 
-  const [isBuyerReview, setIsBuyerReview] = useState(false); // 구매자 후기 여부
-  const [isSellerReview, setIsSellerReview] = useState(false); // 판매자 후기 여부
+  const [isSeller, setIsSeller] = useState(false); // 판매자 여부
 
   const [isLoading, setIsLoading] = useState(true); // 로딩 여부
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
 
   const [review, setReview] = useState({}); // 리뷰 데이터
-  // const [review, setReview] = useState({ // 테스트용 리뷰 데이터
-  //   buyerName: "빛날빈",
-  //   buyerProfileImage: "판매자 프로필 이미지",
-  //   buyerReview: "제가 있는 곳까지 와서 거래했어요.",
-  //   postTitle: "닌텐도 스위치 링피트 새상품",
-  //   reviewStatus: "PENDING",
-  //   sellerName: "카레",
-  //   sellerProfileImage: "구매자 프로필 이미지",
-  //   sellerReview: "판매자님이 친절하셔서 좋았어요.",
-  // });
-
-  // 리뷰 여부 확인
-  useEffect(() => {
-    getIsBuyerReview();
-    getIsSellerReview();
-    setIsLoading(false);
-  }, []);
 
   // 리뷰 데이터 불러오기
-  useEffect(() => {
-    if (isBuyerReview || isSellerReview) {
-      fetchReview();
-    }
-  }, [isBuyerReview, isSellerReview])
-
   useEffect(() => {
     fetchReview();
   }, []);
   
-
   /**
    * 리뷰 데이터를 불러오는 함수
    */
   const fetchReview = () => {
-    console.log(userData.token);
-    axios.get(`http://${Config.DB_IP}/reviews/${postId}`,
+    axios.get(`http://${Config.DB_IP}/review/${postId}`,
       {headers: {
         'Authorization': `Bearer ${userData.token}` // 토큰 값
       },
@@ -68,6 +42,7 @@ const BuyerReview = ({navigation, route}) => {
     )
     .then(response => {
       setReview(response.data); // 리뷰 데이터 저장
+      setIsSeller(response.data.sellerId === userData.id); // 판매자 여부 저장
       setIsLoading(false); // 로딩 종료
   })
     .catch(error => { 
@@ -99,7 +74,7 @@ const BuyerReview = ({navigation, route}) => {
    * 구매자 리뷰 작성 여부 확인 함수
    */
   const getIsBuyerReview = () => {
-    axios.get(`http://${Config.DB_IP}/reviews/buyer/${postId}`,
+    axios.get(`http://${Config.DB_IP}/review/buyer/${postId}`,
       {headers: {
         'Authorization': `Bearer ${userData.token}` // 토큰 값
       },
@@ -118,7 +93,7 @@ const BuyerReview = ({navigation, route}) => {
    * 판매자 리뷰 작성 여부 확인 함수
    */
   const getIsSellerReview = () => {
-    axios.get(`http://${Config.DB_IP}/reviews/seller/${postId}`,
+    axios.get(`http://${Config.DB_IP}/review/seller/${postId}`,
       {headers: {
         'Authorization': `Bearer ${userData.token}` // 토큰 값
       },
@@ -133,10 +108,13 @@ const BuyerReview = ({navigation, route}) => {
     });
   }
 
-  if (isLoading) { // 로딩 중일 경우
-    return <Loading />
-  }
-  else if (Object.keys(review).length === 0) { // 리뷰가 없을 경우
+  if (isLoading) {
+    // 로딩 중일 경우
+    return <Loading />;
+  } else if ( // 리뷰가 없을 경우
+    (isSeller && review.buyerReview.length === 0) ||
+    (!isSeller && review.sellerReview.length === 0)
+  ) {
     return (
       <View style={shared.container}>
         <View style={styles.inlineContainer}>
@@ -148,35 +126,37 @@ const BuyerReview = ({navigation, route}) => {
           <View style={shared.iconButton}></View>
         </View>
         <View>
-          <Text style={styles.header}>{`아직 ${review.buyerName}님이`}</Text>
+          <Text style={styles.header}>
+            {`아직 ${isSeller ? review.buyerName : review.sellerName}님이`}
+          </Text>
           <Text style={styles.header}>후기를 작성하지 않았어요.</Text>
-          <Text
-            style={
-              styles.grayText
-            }>{`${review.buyerName}님이 후기를 작성할 때까지 기다려주세요.`}</Text>
+          <Text style={styles.grayText}>
+            {`${isSeller ? review.buyerName : review.sellerName}님이 후기를 작성할 때까지 기다려주세요.`}
+          </Text>
         </View>
         <View style={styles.footer}>
-          {isSellerReview ? ( // 판매자 후기가 없을 경우
+          {(isSeller && review.sellerReview.length !== 0) ||
+          (!isSeller && review.buyerReview.length !== 0) ? ( // 판매자 후기가 있을 경우
             <TouchableOpacity
               style={[shared.redButton, styles.button]}
               onPress={() =>
                 navigation.navigate('SellerReview', {
-                  buyerName: review.buyerName,
+                  buyerName: isSeller ? review.buyerName : review.sellerName,
                   postTitle: review.postTitle,
-                  sellerReview: review.sellerReview,
+                  sellerReview: isSeller ? review.sellerReview : review.buyerReview,
                 })
               }>
               <Text style={shared.text}>보낸 후기 보기</Text>
             </TouchableOpacity>
           ) : (
-            // 판매자 후기가 있을 경우
+            // 판매자 후기가 없을 경우
             <TouchableOpacity
               style={[shared.redButton, styles.button]}
               onPress={() =>
                 navigation.navigate('NewReview', {
                   postId: postId,
                   postTitle: review.postTitle,
-                  buyerName: review.buyerName,
+                  buyerName: isSeller ? review.buyerName : review.sellerName,
                 })
               }>
               <Text style={shared.text}>후기 작성하기</Text>
@@ -185,8 +165,8 @@ const BuyerReview = ({navigation, route}) => {
         </View>
       </View>
     );
-  }
-  else { // 리뷰가 있을 경우
+  } else {
+    // 리뷰가 있을 경우
     return (
       <>
         <View style={shared.container}>
@@ -199,25 +179,45 @@ const BuyerReview = ({navigation, route}) => {
             <View style={shared.iconButton}></View>
           </View>
           <View>
-            <Text style={styles.header}>{`${review.buyerName}님이 보낸`}</Text>
+            <Text style={styles.header}>
+              {`${isSeller ? review.buyerName : review.sellerName}님이 보낸`}
+            </Text>
             <Text style={styles.header}>따뜻한 후기가 도착했어요.</Text>
-            <Text style={styles.grayText}>{`${review.buyerName}님과 ${review.postTitle}을 거래했어요.`}</Text>
-            <ReviewCard review={review.buyerReview} />
+            <Text style={styles.grayText}>
+              {`${isSeller ? review.buyerName : review.sellerName}님과 ${review.postTitle}을 거래했어요.`}
+            </Text>
+            <ReviewCard
+              review={isSeller ? review.buyerReview : review.sellerReview}
+            />
           </View>
           <View style={styles.footer}>
-            {review.sellerReview === null ? null :
+          {(isSeller && review.sellerReview.length !== 0) ||
+          (!isSeller && review.buyerReview.length !== 0) ? ( // 판매자 후기가 있을 경우
               <TouchableOpacity
                 style={[shared.redButton, styles.button]}
                 onPress={() =>
                   navigation.navigate('SellerReview', {
-                    buyerName: review.buyerName,
+                    buyerName: isSeller ? review.buyerName : review.sellerName,
                     postTitle: review.postTitle,
-                    sellerReview: review.sellerReview,
+                    sellerReview: isSeller ? review.sellerReview : review.buyerReview,
                   })
                 }>
                 <Text style={shared.text}>보낸 후기 보기</Text>
               </TouchableOpacity>
-            }
+            ) : (
+              // 판매자 후기가 없을 경우
+              <TouchableOpacity
+                style={[shared.redButton, styles.button]}
+                onPress={() =>
+                  navigation.navigate('NewReview', {
+                    postId: postId,
+                    postTitle: review.postTitle,
+                    buyerName: isSeller ? review.buyerName : review.sellerName,
+                  })
+                }>
+                <Text style={shared.text}>후기 작성하기</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
         {showAlert && <Alert message={alertMessage} />}

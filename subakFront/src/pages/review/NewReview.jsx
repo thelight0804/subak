@@ -39,7 +39,7 @@ const NewReview = ({navigation, route}) => {
    * 리뷰 작성 요청 함수
    */
   const updateReview = () => {
-    axios.post(`http://${Config.DB_IP}/reviews/${postId}`, {
+    axios.post(`http://${Config.DB_IP}/review/${postId}`, {
       reviewContent: content,
     }, {
       headers: {
@@ -48,7 +48,6 @@ const NewReview = ({navigation, route}) => {
       timeout: 2000,
     })
     .then((res) => {
-      console.log(res.data);
       navigation.navigate('SellerReview', {
         buyerName: buyerName,
         postTitle: postTitle,
