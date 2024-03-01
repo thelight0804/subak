@@ -48,24 +48,25 @@ public class PostService {
     /**
      * 메인페이지 글 보기 ('숨김' 게시글 제외)
      */
-    public List<PostResponse> getMainPosts(int offset, int limit) {
+    public List<PostResponse> getMainPosts(int offset, int limit, Member authenticatedMember) {
         List<Post> posts = entityManager.createQuery(
                 "SELECT p FROM Post p WHERE p.postStatus != 'HIDE' ORDER BY p.postDateTime DESC", Post.class)
                 .setFirstResult(offset) // 시작 지점
                 .setMaxResults(limit) // 최대 개수
                 .getResultList();
         return posts.stream()
-                .map(this::convertToPostResponse)
+                .map(post -> convertToPostResponse(post, authenticatedMember))
                 .collect(Collectors.toList());
     }
 
     /**
      * 게시글 키워드 검색
      */
-    public List<PostResponse> searchPosts(String keyword, int offset, int limit, Integer minPrice, Integer maxPrice, boolean orderByLikes, boolean onlyAvailable) {
+    public List<PostResponse> searchPosts(String keyword, int offset, int limit, Integer minPrice, Integer maxPrice, boolean orderByLikes, boolean onlyAvailable, Member authenticatedMember) {
 
         // 기본 쿼리 세팅
-        String query = "SELECT p FROM Post p WHERE (p.postTitle LIKE :keyword OR p.content LIKE :keyword)";
+        String query = "SELECT p FROM Post p WHERE (p.postStatus != 'HIDE') AND (p.postTitle LIKE :keyword OR p.content LIKE :keyword)";
+
 
         // 가격 최소값, 최대값 설정
         if (minPrice != null && maxPrice != null) {
@@ -79,9 +80,9 @@ public class PostService {
         // 거래 가능 게시글만 보기 옵션
         // 기본값: 활성화 (판매중인 게시글만 조회), 클릭시 비활성화 (판매중, 예약중, 판매완료 게시글 조회)
         if (onlyAvailable) {
-            query += " AND p.productStatus IN ('SALE', 'RESERVATION', 'COMPLETE')";
-        } else {
             query += " AND p.productStatus = 'SALE'";
+        } else {
+            query += " AND p.productStatus IN ('SALE', 'RESERVATION', 'COMPLETE')";
         }
 
         // 정렬 옵션 (좋아요 순 / 최신순(기본값))
@@ -110,7 +111,7 @@ public class PostService {
 
         // 결과 반환
         return posts.stream()
-                .map(this::convertToPostResponse)
+                .map(post -> convertToPostResponse(post, authenticatedMember))
                 .collect(Collectors.toList());
     }
 
@@ -118,7 +119,7 @@ public class PostService {
     /**
      * 게시글 카테고리별 검색
      */
-    public List<PostResponse> searchPostsByCategory(Category category, int offset, int limit) {
+    public List<PostResponse> searchPostsByCategory(Category category, int offset, int limit, Member authenticatedMember) {
         List<Post> posts = entityManager.createQuery(
                         "SELECT p FROM Post p WHERE p.category = :category AND p.postStatus != 'HIDE' ORDER BY p.postDateTime DESC", Post.class)
                 .setParameter("category", category)
@@ -127,7 +128,7 @@ public class PostService {
                 .getResultList();
 
         return posts.stream()
-                .map(this::convertToPostResponse)
+                .map(post -> convertToPostResponse(post, authenticatedMember))
                 .collect(Collectors.toList());
     }
 
@@ -167,7 +168,7 @@ public class PostService {
     /**
      * '판매중' 게시글 조회 ('예약중' 게시글 포함)
      */
-    public List<PostResponse> getSellingPosts(int offset, int limit, Long memberId) {
+    public List<PostResponse> getSellingPosts(int offset, int limit, Long memberId, Member authenticatedMember) {
         List<Post> posts = entityManager.createQuery(
                         "SELECT p FROM Post p WHERE p.member.id = :memberId AND (p.productStatus = 'SALE' OR p.productStatus = 'RESERVATION') ORDER BY p.postDateTime DESC", Post.class)
                 .setParameter("memberId", memberId)
@@ -175,7 +176,7 @@ public class PostService {
                 .setMaxResults(limit)
                 .getResultList();
         return posts.stream()
-                .map(this::convertToPostResponse)
+                .map(post -> convertToPostResponse(post, authenticatedMember))
                 .collect(Collectors.toList());
     }
 
@@ -183,7 +184,7 @@ public class PostService {
     /**
      * '판매 완료' 게시글 조회
      */
-    public List<PostResponse> getCompletePosts(int offset, int limit, Long memberId) {
+    public List<PostResponse> getCompletePosts(int offset, int limit, Long memberId, Member authenticatedMember) {
         List<Post> posts = entityManager.createQuery(
                 "SELECT p FROM Post p WHERE p.member.id = :memberId AND p.productStatus = 'COMPLETE' ORDER BY p.postDateTime DESC", Post.class)
                 .setParameter("memberId", memberId)
@@ -191,14 +192,14 @@ public class PostService {
                 .setMaxResults(limit)
                 .getResultList();
         return posts.stream()
-                .map(this::convertToPostResponse)
+                .map(post -> convertToPostResponse(post, authenticatedMember))
                 .collect(Collectors.toList());
     }
 
     /**
      * '숨김' 게시글 조회
      */
-    public List<PostResponse> getHidePosts(int offset, int limit, Long memberId) {
+    public List<PostResponse> getHidePosts(int offset, int limit, Long memberId, Member authenticatedMember) {
         List<Post> posts = entityManager.createQuery(
                 "SELECT p FROM Post p WHERE p.member.id = :memberId AND p.postStatus = 'HIDE' ORDER BY p.postDateTime DESC", Post.class)
                 .setParameter("memberId", memberId)
@@ -206,7 +207,7 @@ public class PostService {
                 .setMaxResults(limit)
                 .getResultList();
         return posts.stream()
-                .map(this::convertToPostResponse)
+                .map(post -> convertToPostResponse(post, authenticatedMember))
                 .collect(Collectors.toList());
     }
 
@@ -215,7 +216,7 @@ public class PostService {
     /**
      * '즐겨찾기' (좋아요 누른) 게시글 조회
      */
-    public List<PostResponse> getLikedPosts(int offset, int limit, Long memberId) {
+    public List<PostResponse> getLikedPosts(int offset, int limit, Long memberId, Member authenticatedMember) {
         List<Post> posts = entityManager.createQuery(
                 "SELECT p FROM Post p JOIN p.hearts h WHERE h.member.id = :memberId ORDER BY p.postDateTime DESC", Post.class)
                 .setParameter("memberId", memberId)
@@ -223,14 +224,14 @@ public class PostService {
                 .setMaxResults(limit)
                 .getResultList();
         return posts.stream()
-                .map(this::convertToPostResponse)
+                .map(post -> convertToPostResponse(post, authenticatedMember))
                 .collect(Collectors.toList());
     }
 
     /**
      * 구매내역
      */
-    public List<PostResponse> getPurchasedPosts(int offset, int limit, Long buyerId) {
+    public List<PostResponse> getPurchasedPosts(int offset, int limit, Long buyerId, Member authenticatedMember) {
         List<Post> posts = entityManager.createQuery(
                         "SELECT p FROM Post p WHERE p.buyer.id = :buyerId ORDER BY p.postDateTime DESC", Post.class)
                 .setParameter("buyerId", buyerId)
@@ -238,7 +239,7 @@ public class PostService {
                 .setMaxResults(limit)
                 .getResultList();
         return posts.stream()
-                .map(this::convertToPostResponse)
+                .map(post -> convertToPostResponse(post, authenticatedMember))
                 .collect(Collectors.toList());
     }
 
@@ -379,7 +380,7 @@ public class PostService {
     }
 
     // 메인페이지
-    private PostResponse convertToPostResponse(Post post){
+    private PostResponse convertToPostResponse(Post post, Member member){
         PostResponse response = new PostResponse();
 
         response.setId(post.getId());
@@ -393,6 +394,7 @@ public class PostService {
         response.setAddress(post.getMember().getAddress());
         response.setHeartCount(post.getHearts().size());
         response.setCommentCount(post.getComments().size());
+        response.setHearted(isPostLikedByMember(post, member));
         return response;
     }
 
@@ -426,7 +428,7 @@ public class PostService {
                         comment.getMember().getProfileImage()))
                 .collect(Collectors.toList()));
 
-        response.setLiked(isPostLikedByMember(post, member));
+        response.setHearted(isPostLikedByMember(post, member));
 
         return response;
     }
