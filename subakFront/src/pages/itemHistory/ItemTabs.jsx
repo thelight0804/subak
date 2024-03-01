@@ -4,14 +4,15 @@ import { useFocusEffect } from '@react-navigation/native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { useSelector } from "react-redux";
 import Config from 'react-native-config';
+import axios from 'axios';
 
 import { colorPalette } from '../../styles/shared';
 import styles from '../../styles/itemHistory/ItemTabs';
 
+import Loading from '../components/Loading';
 import SalesScreen from './SalesScreen';
 import CompletedScreen from './CompletedScreen';
 import HiddenScreen from './HiddenScreen';
-import axios from 'axios';
 
 const renderScene = SceneMap({
   sales: SalesScreen,
@@ -21,6 +22,7 @@ const renderScene = SceneMap({
 
 const ItemTabs = ({navigation}) => {
   const userToken = useSelector(state => state.userData.token); // 유저 데이터
+  const [isLoading, setIsLoading] = useState(true); // 로딩
   const [postCounts, setPostCounts] = useState({sales: 0, completed: 0, hidden: 0}); // 판매중, 거래완료, 숨김 게시글 수
 
   const layout = useWindowDimensions();
@@ -44,6 +46,7 @@ const ItemTabs = ({navigation}) => {
     getPostCounts().then((counts) => {
       setPostCounts(counts);
     });
+    setIsLoading(false);
   }, []);
 
   /**
@@ -87,24 +90,29 @@ const ItemTabs = ({navigation}) => {
     return counts;
   };
 
-  return (
-    <TabView
-      navigationState={{index, routes}} // 탭 인덱스, 라우트
-      renderScene={renderScene} // 탭 화면
-      onIndexChange={setIndex} // 탭 변경 시 인덱스 변경
-      initialLayout={{width: layout.width}} // 탭 너비
-      renderTabBar={props => 
-        <TabBar 
-          {...props}
-          style={styles.tabBar} // 탭 바 스타일
-          indicatorStyle={{ backgroundColor: 'white' }} // 탭 활성화 시 밑줄 색
-          activeColor='white' // 탭 활성화 시 글자 색
-          inactiveColor={colorPalette.gray} // 탭 비활성화 시 글자 색
-          labelStyle={{fontWeight: 'bold'}} // 탭 글자 굵기
-        />
-      }
-    />
-  );
+  if (isLoading) {
+    return <Loading />;
+  }
+  else {
+    return (
+      <TabView
+        navigationState={{index, routes}} // 탭 인덱스, 라우트
+        renderScene={renderScene} // 탭 화면
+        onIndexChange={setIndex} // 탭 변경 시 인덱스 변경
+        initialLayout={{width: layout.width}} // 탭 너비
+        renderTabBar={props => 
+          <TabBar 
+            {...props}
+            style={styles.tabBar} // 탭 바 스타일
+            indicatorStyle={{ backgroundColor: 'white' }} // 탭 활성화 시 밑줄 색
+            activeColor='white' // 탭 활성화 시 글자 색
+            inactiveColor={colorPalette.gray} // 탭 비활성화 시 글자 색
+            labelStyle={{fontWeight: 'bold'}} // 탭 글자 굵기
+          />
+        }
+      />
+    );
+  }
 };
 
 export default ItemTabs;
