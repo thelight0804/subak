@@ -10,6 +10,18 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     height: 50,
   },
+  textInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  closeIcon: {
+    position: 'absolute',
+    right: 60,
+    padding: 2,
+
+    backgroundColor: colorPalette.gray,
+    borderRadius: 50,
+  },
   button: {
     marginTop: 10,
     marginBottom: 10,

@@ -19,17 +19,6 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 15,
   },
-  // 입력 칸
-  textInput: {
-    width: '100%',
-    borderWidth: 1,
-    borderColor: '#868b94',
-    borderRadius: 8,
-    paddingTop: 10,
-    paddingLeft: 10,
-    marginBottom: 10,
-    color: colorPalette.white,
-  },
   button: {
     width: '100%',
     padding: 10,

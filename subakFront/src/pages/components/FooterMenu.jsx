@@ -60,7 +60,7 @@ const FooterMenu = ({navigation, state}) => {
       {menuItems.map((item, i) => (
         <TouchableOpacity 
           key={i} 
-          style={styles.menuBox}
+          style={styles.menuContainer}
           onPress={() => navigateHandler(i)}
         >
           <View style={styles.icon}>{item.icon}</View>

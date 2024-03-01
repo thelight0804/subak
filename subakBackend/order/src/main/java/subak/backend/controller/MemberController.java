@@ -47,9 +47,10 @@ public class MemberController {
     }
 
     @ApiOperation(value = "회원 탈퇴", notes = "회원 이메일을 통해 회원을 탈퇴시킨다.")
-    @PatchMapping("/user/{email}")
-    public ResponseEntity<String> withdraw(@PathVariable String email,
+    @PatchMapping("/user/withdraw")
+    public ResponseEntity<String> withdraw(@RequestBody WithdrawRequest withdrawRequest,
                                            HttpServletRequest request) {
+        String email = withdrawRequest.getEmail();
         memberService.withdraw(email, request);
         return ResponseEntity.ok("Withdraw success.");
     }

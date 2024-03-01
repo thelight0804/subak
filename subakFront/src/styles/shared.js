@@ -1,4 +1,4 @@
-import {StyleSheet} from "react-native";
+import {StyleSheet} from 'react-native';
 
 const colorPalette = {
   background: '#212123',
@@ -46,13 +46,24 @@ const shared = StyleSheet.create({
   iconButton: {
     display: 'flex',
     paddingBottom: 15,
-    paddingRight: 15
+    paddingRight: 15,
   },
   textInput: {
     width: '100%',
     backgroundColor: '#2a2e32',
     borderRadius: 8,
     paddingLeft: 10,
+  },
+  blankTextInput: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#868b94',
+    borderRadius: 8,
+    paddingTop: 10,
+    paddingLeft: 10,
+    marginBottom: 10,
+    color: colorPalette.white,
+    // fontWeight: 'bold',
   },
   inlineContainer: {
     flexDirection: 'row',

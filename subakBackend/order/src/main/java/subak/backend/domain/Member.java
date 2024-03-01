@@ -1,6 +1,9 @@
 package subak.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
 import subak.backend.domain.enumType.MemberStatus;
@@ -12,6 +15,9 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@JsonIdentityInfo( // Post엔티티
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Member {
 
     @Id @GeneratedValue
@@ -47,17 +53,27 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
+    @JsonBackReference
     @OneToMany(mappedBy = "member")
     private List<Heart> hearts = new ArrayList<>();
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "member")
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
-    private List<Review> reviews = new ArrayList<>();
+    @JsonManagedReference
+    @OneToMany(mappedBy = "seller")
+    private List<Review> sellerReviews = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "buyer")
+    private List<Review> buyerReviews = new ArrayList<>();
 
     public void updateProfileImage(String newImageUrl) {
         this.profileImage = newImageUrl;
     }
 
+    public void increaseTemp(float increment) {
+        this.temp += increment;
+    }
 }

@@ -73,4 +73,12 @@ public class MemberException {
         public EssentialMemberException(String message){
             super(message);}
     }
+
+    /**
+     * 현재 인증된 사용자가 게시글의 작성자인지 확인하는 예외처리
+     */
+    public static class UnauthorizedException extends RuntimeException{
+        public UnauthorizedException(String message){
+            super(message);}
+    }
 }

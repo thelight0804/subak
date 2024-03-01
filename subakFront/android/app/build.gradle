@@ -68,6 +68,12 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
 
+project.ext.envConfigFiles = [
+    debug: "env/.env.develop",
+    release: "env/.env.product",
+    anothercustombuild: ".env",
+]
+
 android {
     // ndkVersion rootProject.ext.ndkVersion
     ndkVersion '23.1.7779620'

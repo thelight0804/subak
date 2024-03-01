@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
+import subak.backend.domain.enumType.Category;
 import subak.backend.domain.enumType.PostStatus;
 import subak.backend.domain.enumType.ProductStatus;
 
@@ -28,9 +29,14 @@ public class Post {
     @JsonBackReference
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
-    private Member member;
+    private Member member; // 글 올린 사람(판매자)
 
-    private String category;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "buyer_id")
+    private Member buyer; // 구매자
+
+    @Enumerated(EnumType.STRING)
+    private Category category; // 상품 카테고리
 
     @Column(name = "post_title")
     private String postTitle; //글 제목
@@ -44,7 +50,7 @@ public class Post {
     @Column(name = "post_date_time")
     private LocalDateTime postDateTime; // 글 게시 시간
 
-    private int views = 0; // 조회수
+    private Long views = 0L; // 조회수
 
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus; // 상품 상태 [SALE, RESERVATION, COMPLETE]
@@ -56,6 +62,7 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostImage> postImages = new ArrayList<>();
 
+    @JsonBackReference
     @OneToMany(mappedBy = "post")
     private List<Heart> hearts = new ArrayList<>();
 
@@ -64,11 +71,12 @@ public class Post {
     //@OrderBy("createdAt desc")
     private List<Comment> comments = new ArrayList<>();
 
+    @JsonBackReference
     @OneToMany(mappedBy = "post")
     private List<Review> reviews = new ArrayList<>();
 
     public static Post createPost(Member member,
-                                  String category,
+                                  Category category,
                                   String postTitle,
                                   String content,
                                   int price,
@@ -98,12 +106,11 @@ public class Post {
 
 
     // 글 수정
-    public void updatePostInfo(String category, String postTitle, String content, int price, List<String> newImagePaths) {
+    public void updatePostInfo(Category category, String postTitle, String content, int price, List<String> newImagePaths) {
         this.category = category;
         this.postTitle = postTitle;
         this.content = content;
         this.price = price;
-        this.postDateTime = LocalDateTime.now();
 
         // 새 이미지 추가
         for (String newPath : newImagePaths) {
@@ -136,7 +143,21 @@ public class Post {
     }
 
     //끌어올리기
-    public void updatePostDateTime() {
+    public void updatePostDateTimeAndPrice(int newPrice) {
         this.postDateTime = LocalDateTime.now();
+        this.price = newPrice;
+    }
+
+    //판매하기 : 판매자와 구매자 설정 및 상태 변경, 매너온도 증가
+    public void sellPost(Member buyer) {
+        this.buyer = buyer;
+        this.productStatus = ProductStatus.COMPLETE;
+        this.member.increaseTemp(0.5f);
+        buyer.increaseTemp(0.3f);
+    }
+
+    //조회수
+    public void increaseViews() {
+        this.views++;
     }
 }
