@@ -21,7 +21,12 @@ public class AuthService {
     }
 
     public Member getAuthenticatedMember(HttpServletRequest httpServletRequest) {
-        String token = httpServletRequest.getHeader("Authorization").substring(7); // Bearer 뒤의 토큰만 추출
+        String authHeader = httpServletRequest.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new RuntimeException("Invalid or missing Authorization header");
+        }
+
+        String token = authHeader.substring(7); // Bearer 뒤의 토큰만 추출
         String email = jwtTokenProvider.getEmail(token); // 토큰에서 email 추출
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("해당 사용자가 없습니다."));
