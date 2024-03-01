@@ -218,7 +218,7 @@ const PostDetail = ({navigation, route}) => {
       .then(response => {
         if (response.status === 200) {
           setPost(response.data);
-          setLiked(response.data.liked);
+          setLiked(response.data.hearted);
           setComments(response.data.comments);
         }
       })

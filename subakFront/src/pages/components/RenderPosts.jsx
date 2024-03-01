@@ -3,6 +3,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import styles from "../../styles/post/postsList";
 import CommaPrice from "./CommaPrice";
+import { shared } from "../../styles/shared";
 
 /**
  * 포스트 컴포넌트 렌더링 함수
@@ -39,9 +40,19 @@ const RenderPosts = ({item, navigation}) => {
               `${CommaPrice(item.price)}원`
             )}
         </Text>
-        <View style={styles.heartCountContainer}>
-          <Text style={[styles.grayText, styles.heartCount]}>{item.heartCount}</Text>
-          <Icon name="heart-outline" size={18} color="#868b94"></Icon>
+        <View style={[shared.inlineContainer, {justifyContent: 'flex-end'}]}>
+          <View style={styles.countContainer}>
+            <Text style={[styles.grayText, styles.commentCount]}>{item.commentCount}</Text>
+            <Icon name="chatbubbles-outline" size={18} color="#868b94" />
+          </View>
+          <View style={styles.countContainer}>
+            <Text style={[styles.grayText, styles.heartCount]}>{item.heartCount}</Text>
+            {item.hearted ? (
+              <Icon name="heart" size={18} color="#dc645b" />
+            ) : (
+              <Icon name="heart-outline" size={18} color="#868b94" />
+            )}
+          </View>
         </View>
       </View>
     </TouchableOpacity>
