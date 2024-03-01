@@ -58,9 +58,10 @@ const styles = StyleSheet.create({
     paddingBottom: 3,
   },
   // 좋아요
-  heartCountContainer: {
+  countContainer: {
     flexDirection: 'row-reverse',
     alignItems: 'center',
+    marginRight: 5,
   },
 
   // 작성 완료 버튼

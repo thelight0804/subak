@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Config from 'react-native-config';
 import { useFocusEffect } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 import { shared } from '../../styles/shared';
 import styles from '../../styles/post/CategoryPosts';
@@ -12,6 +13,7 @@ import Loading from '../components/Loading';
 import RenderPosts from '../components/RenderPosts';
 
 const CategoryPosts = ({navigation, route}) => {
+  const userToken = useSelector((state) => state.userData.token); // 유저 데이터
   const [isLoading, setIsLoading] = useState(true); // 로딩 여부
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
@@ -37,7 +39,12 @@ const CategoryPosts = ({navigation, route}) => {
    * 카테고리 게시글 데이터 요청 함수
    */
   const fetchpost = useCallback((start, category) => {
-    axios.get(`http://${Config.DB_IP}/posts/category/${category}?offset=${start}&limit=10`, {timeout: 2000})
+    axios.get(`http://${Config.DB_IP}/posts/category/${category}?offset=${start}&limit=10`, {
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
+      timeout: 2000
+    })
       .then(response => {
           if (response.data.length > 0) {
           const copyPosts = [...posts]

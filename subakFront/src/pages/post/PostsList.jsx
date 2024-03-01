@@ -1,6 +1,7 @@
 import {useState, useEffect, useCallback} from 'react';
 import { View, Text, TouchableOpacity, Image, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useSelector } from "react-redux";
 import axios from 'axios';
 import Config from 'react-native-config';
 import { useFocusEffect } from '@react-navigation/native';
@@ -11,7 +12,8 @@ import Alert from '../components/Alert';
 import Loading from '../components/Loading';
 import RenderPosts from '../components/RenderPosts';
 
-const PostsList = ({navigation, route}) => {
+const PostsList = ({navigation}) => {
+  const userToken = useSelector(state => state.userData.token);
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
   const [isLoading, setIsLoading] = useState(false);
@@ -71,7 +73,12 @@ const PostsList = ({navigation, route}) => {
    * 전체 게시물 목록 가져오는 함수
    */
   const getAllPost = useCallback((start) => {
-    axios.get(`http://${Config.DB_IP}/posts?offset=${start*10}&limit=10`, {timeout: 2000})
+    axios.get(`http://${Config.DB_IP}/posts?offset=${start*10}&limit=10`, {
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
+      timeout: 2000
+    })
       .then(response => {
           if (response.status === 200) {
             if (response.data.length > 0) {
