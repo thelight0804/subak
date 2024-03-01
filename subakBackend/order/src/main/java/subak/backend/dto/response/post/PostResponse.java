@@ -20,6 +20,7 @@ public class PostResponse {
     private String address; // 위치
     private int heartCount; // 좋아요 개수
     private int commentCount; // 댓글 개수
+    private boolean isHearted; // 좋아요 여부
 
     public void setPostDateTime(LocalDateTime postDateTime) {
         LocalDateTime now = LocalDateTime.now();
