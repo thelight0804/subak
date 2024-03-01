@@ -68,6 +68,19 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
+    @ExceptionHandler(MemberException.UnauthorizedException.class)
+    public ResponseEntity<String> handleUnauthorizedException(MemberException.UnauthorizedException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
 
+    @ExceptionHandler(ReviewException.ReviewNotFoundException.class)
+    public ResponseEntity<String> handleReviewNotFoundException(ReviewException.ReviewNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(ReviewException.InvalidReviewAccessException.class)
+    public ResponseEntity<String> handleInvalidReviewAccessException(ReviewException.InvalidReviewAccessException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
 
 }

@@ -1,31 +1,25 @@
 package subak.backend.controller;
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import subak.backend.domain.Member;
-import subak.backend.domain.Post;
 import subak.backend.domain.enumType.Category;
+import subak.backend.dto.request.member.BuyerIdRequest;
 import subak.backend.dto.request.post.*;
+import subak.backend.dto.response.member.GetCommenterMemberResponse;
 import subak.backend.dto.response.post.PostResponse;
 import subak.backend.dto.response.post.PostDetailResponse;
-import subak.backend.repository.PostRepository;
 import subak.backend.service.AuthService;
-import subak.backend.service.CommentService;
 import subak.backend.service.PostService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -47,7 +41,7 @@ public class PostController {
     }
 
     @ApiOperation(value = "게시글 수정")
-    @PutMapping("/post/{postId}")
+    @PutMapping(value = "/post/{postId}", consumes = {"multipart/form-data"})
     public ResponseEntity<String> updatePost(@PathVariable Long postId,
                                              @ModelAttribute @Validated UpdatePostRequest UpdatePostRequest,
                                              @RequestPart(value = "postImage", required = false) List<MultipartFile> postImages,
@@ -96,10 +90,10 @@ public class PostController {
 
     @ApiOperation(value = "좋아요 추가 또는 취소", notes = "필수값 : 게시글 ID")
     @PostMapping("/post/{postId}/hearts")
-    public ResponseEntity<Void> addOrRemoveHeart(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<String> addOrRemoveHeart(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
         Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
         postService.addOrRemoveHeart(postId, loginMember);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("heart success");
     }
 
 
@@ -107,8 +101,10 @@ public class PostController {
     @GetMapping("/posts")
     public ResponseEntity<List<PostResponse>> getMainPosts(
             @RequestParam(value = "offset", defaultValue = "0") int offset,
-            @RequestParam(value = "limit", defaultValue = "10") int limit) {
-        return ResponseEntity.ok(postService.getMainPosts(offset, limit));
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            HttpServletRequest httpServletRequest) {
+        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
+        return ResponseEntity.ok(postService.getMainPosts(offset, limit, loginMember));
     }
 
     @ApiOperation(value = "게시글 상세페이지 출력")
@@ -126,7 +122,17 @@ public class PostController {
             @RequestParam(value = "limit", defaultValue = "10") int limit,
             HttpServletRequest httpServletRequest) {
         Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
-        return ResponseEntity.ok(postService.getLikedPosts(offset, limit, loginMember.getId()));
+        return ResponseEntity.ok(postService.getLikedPosts(offset, limit, loginMember.getId(), loginMember));
+    }
+
+    @ApiOperation(value = "판매중 게시물 상품 조회")
+    @GetMapping("/posts/selling")
+    public ResponseEntity<List<PostResponse>> getSellingPosts(
+            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            HttpServletRequest httpServletRequest) {
+        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
+        return ResponseEntity.ok(postService.getSellingPosts(offset, limit, loginMember.getId(), loginMember));
     }
 
     @ApiOperation(value = "판매 완료된 상품 조회")
@@ -136,8 +142,19 @@ public class PostController {
             @RequestParam(value = "limit", defaultValue = "10") int limit,
             HttpServletRequest httpServletRequest) {
         Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
-        return ResponseEntity.ok(postService.getCompletePosts(offset, limit, loginMember.getId()));
+        return ResponseEntity.ok(postService.getCompletePosts(offset, limit, loginMember.getId(), loginMember));
     }
+
+    @ApiOperation(value = "내가 구매한 게시글 조회")
+    @GetMapping("/posts/purchased")
+    public ResponseEntity<List<PostResponse>> getPurchasedPosts(
+            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            HttpServletRequest httpServletRequest) {
+        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
+        return ResponseEntity.ok(postService.getPurchasedPosts(offset, limit, loginMember.getId(), loginMember));
+    }
+
 
     @ApiOperation(value = "숨김 게시물 조회")
     @GetMapping("/posts/hide")
@@ -146,7 +163,7 @@ public class PostController {
             @RequestParam(value = "limit", defaultValue = "10") int limit,
             HttpServletRequest httpServletRequest) {
         Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
-        return ResponseEntity.ok(postService.getHidePosts(offset, limit, loginMember.getId()));
+        return ResponseEntity.ok(postService.getHidePosts(offset, limit, loginMember.getId(), loginMember));
     }
 
     @ApiOperation(value = "검색 기능", notes = "필수값 : 검색 키워드(제목, 내용 동시 검색)")
@@ -154,8 +171,14 @@ public class PostController {
     public ResponseEntity<List<PostResponse>> search(
             @RequestParam(required = false) String keyword,
             @RequestParam(value = "offset", defaultValue = "0") int offset,
-            @RequestParam(value = "limit", defaultValue = "10") int limit) {
-        List<PostResponse> posts = postService.searchPosts(keyword, offset, limit);
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            @RequestParam(required = false) Integer minPrice,
+            @RequestParam(required = false) Integer maxPrice,
+            @RequestParam(value = "orderByLikes", defaultValue = "false") boolean orderByLikes,
+            @RequestParam(value = "onlyAvailable", defaultValue = "true") boolean onlyAvailable,
+            HttpServletRequest httpServletRequest) {
+        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
+        List<PostResponse> posts = postService.searchPosts(keyword, offset, limit, minPrice, maxPrice, orderByLikes, onlyAvailable, loginMember);
         return ResponseEntity.ok(posts);
     }
 
@@ -164,9 +187,51 @@ public class PostController {
     public ResponseEntity<List<PostResponse>> searchByCategory(
             @PathVariable Category category,
             @RequestParam(value = "offset", defaultValue = "0") int offset,
-            @RequestParam(value = "limit", defaultValue = "10") int limit) {
-        List<PostResponse> posts = postService.searchPostsByCategory(category, offset, limit);
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            HttpServletRequest httpServletRequest) {
+        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
+        List<PostResponse> posts = postService.searchPostsByCategory(category, offset, limit, loginMember);
         return ResponseEntity.ok(posts);
+    }
+
+//    @ApiOperation(value = "판매하기(댓글단 사용자들 조회)")
+//    @GetMapping("/posts/{postId}/commenters")
+//    public ResponseEntity<List<GetCommenterMemberResponse>> getCommenters(
+//            @PathVariable Long postId,
+//            HttpServletRequest httpServletRequest) {
+//        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
+//        List<GetCommenterMemberResponse> commenters = postService.getCommenters(postId, loginMember);
+//        return ResponseEntity.ok(commenters);
+//    }
+
+    @ApiOperation(value = "상품 판매 완료 처리")
+    @PostMapping("/posts/{postId}/sell")
+    public ResponseEntity<Void> sellPost(
+            @PathVariable Long postId,
+            @RequestBody BuyerIdRequest BuyerIdRequest) {
+        postService.sellPost(postId, BuyerIdRequest.getBuyerId());
+        return ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation(value = "판매중인 상품 수 조회 ('예약중' 게시글 포함)")
+    @GetMapping("/posts/selling/count")
+    public ResponseEntity<Long> countSellingPosts(HttpServletRequest httpServletRequest) {
+        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
+        return ResponseEntity.ok(postService.countSellingPosts(loginMember.getId()));
+    }
+
+    @ApiOperation(value = "판매 완료된 상품 수 조회")
+    @GetMapping("/posts/completed/count")
+    public ResponseEntity<Long> countCompletePosts(HttpServletRequest httpServletRequest) {
+        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
+        return ResponseEntity.ok(postService.countCompletePosts(loginMember.getId()));
+    }
+
+    @ApiOperation(value = "숨김 게시물 수 조회")
+    @GetMapping("/posts/hide/count")
+    public ResponseEntity<Long> countHidePosts(HttpServletRequest httpServletRequest) {
+        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
+        return ResponseEntity.ok(postService.countHidePosts(loginMember.getId()));
     }
 
 }

@@ -27,7 +27,7 @@ public class PostDetailResponse {
     private int heartCount; // 좋아요 개수
     private int commentCount; // 댓글 개수
     private Long views; // 조회수
-    private boolean isLiked; // 좋아요 여부
+    private boolean isHearted; // 좋아요 여부
     private Category category; // 카테고리
     private ProductStatus productStatus; // 게시글 상태 [판매중, 예약중, 거래완료]
 
