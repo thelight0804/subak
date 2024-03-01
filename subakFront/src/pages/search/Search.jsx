@@ -26,7 +26,7 @@ const Search = ({navigation}) => {
 
   const [isNewest, setIsNewest] = useState(true); // 최신순 정렬
   const [isLiked, setIsLiked] = useState(false); // 좋아요 정렬
-  const [isOnSale, setIsOnSale] = useState(false); // 거래가능 상품만 보기
+  const [isOnSale, setIsOnSale] = useState(true); // 거래가능 상품만 보기
 
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
@@ -95,7 +95,7 @@ const Search = ({navigation}) => {
     params.offset = start; // 시작점
     if (maxPrice > 0) params.maxPrice = maxPrice; // 최대 가격
     if (minPrice > 0) params.minPrice = minPrice; // 최소 가격
-    if (isOnSale) params.onlyAvailable = true; // 전체 상품 보기
+    if (!isOnSale) params.onlyAvailable = false; // 전체 상품 보기
     if (isLiked) params.orderByLikes = true; // 좋아요순 정렬
 
     axios.get(url, {
@@ -108,6 +108,7 @@ const Search = ({navigation}) => {
       if (response.data.length > 0) {
         setPosts([...response.data]);
       } else {
+        setPosts([]); // 데이터가 없으면 빈 배열로 초기화
         setNoMore(true);
         setAlertMessage('더 이상 데이터가 없습니다.');
         setShowAlert(true);
