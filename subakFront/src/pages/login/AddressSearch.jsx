@@ -16,7 +16,6 @@ import { colorPalette } from '../../styles/shared';
 import Alert from '../components/Alert';
 
 const LocationSearch = ({ navigation }) => {
-  console.log(Config.KAKAO_REST_API_KEY);
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
 
