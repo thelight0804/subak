@@ -23,7 +23,7 @@ const LikesList = ({navigation}) => {
   const [posts, setPosts] = useState([]); // 게시글 목록
 
   useEffect(() => {
-    fetchpost(1);
+    fetchpost(0);
     setIsLoading(false);
   }, []);
 
