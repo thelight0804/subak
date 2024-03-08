@@ -14,6 +14,7 @@ import RenderPosts from '../components/RenderPosts';
 
 const PostsList = ({navigation}) => {
   const userToken = useSelector(state => state.userData.token);
+  console.log('userToken : ', userToken);
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
   const [isLoading, setIsLoading] = useState(false);
