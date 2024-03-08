@@ -30,7 +30,7 @@ const PurchaseHistory = ({navigation}) => {
   const [posts, setPosts] = useState([]); // 게시글 목록
 
   useEffect(() => {
-    fetchpost(1);
+    fetchpost(0);
     setIsLoading(false);
   }, []);
 
@@ -45,8 +45,7 @@ const PurchaseHistory = ({navigation}) => {
    * 구메 목록을 불러오는 함수
    */
   const fetchpost = useCallback((page) => {
-    // TODO: 구매내역 목록을 불러오는 API 연결
-    axios.get(`http://${Config.DB_IP}/posts/`,
+    axios.get(`http://${Config.DB_IP}/posts/purchased?offset=${page}&limit=10`,
       {headers: {
         'Authorization': `Bearer ${userData.token}` // 토큰 값
       },
