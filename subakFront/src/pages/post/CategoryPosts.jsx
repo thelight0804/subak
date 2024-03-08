@@ -24,7 +24,7 @@ const CategoryPosts = ({navigation, route}) => {
   const category = route.params.category; // 카테고리
 
   useEffect(() => {
-    fetchpost(1, category);
+    fetchpost(0, category);
     setIsLoading(false);
   }, []);
 

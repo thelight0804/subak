@@ -45,7 +45,6 @@ const SalesScreen = () => {
    * 판매중 게시글 목록을 불러오는 함수
    */
   const fetchpost = useCallback((page) => {
-    // TODO: 판매중 API 연동
     axios.get(`http://${Config.DB_IP}/posts/selling?offset=${page}&limit=10`,
       {headers: {
         'Authorization': `Bearer ${userData.token}` // 토큰 값
