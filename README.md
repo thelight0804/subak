@@ -39,82 +39,58 @@
         <td>회원가입</td>
         <td>POST</td>
         <td>/user</td>
-        <td>유저</td>
-    </tr>
-    <tr>
-        <td>회원 이메일 찾기</td>
-        <td>GET</td>
-        <td>/user/email</td>
-        <td>유저</td>
-    </tr>
-    <tr>
-        <td>로그아웃</td>
-        <td>POST</td>
-        <td>/user/logout</td>
-        <td>유저</td>
-    </tr>
-    <tr>
-        <td>회원 비밀번호 재설정</td>
-        <td>PATCH</td>
-        <td>/user/password</td>
-        <td>유저</td>
+        <td>회원</td>
     </tr>
     <tr>
         <td>로그인</td>
         <td>POST</td>
         <td>/user/sign-in</td>
-        <td>유저</td>
+        <td>회원</td>
+    </tr>
+    <tr>
+        <td>회원 프로필 수정</td>
+        <td>PUT</td>
+        <td>/user/{userId}/profile</td>
+        <td>회원</td>
+    </tr>
+    <tr>
+        <td>회원 이메일 찾기</td>
+        <td>POST</td>
+        <td>/user/email</td>
+        <td>회원</td>
+    </tr>
+    <tr>
+        <td>회원 비밀번호 재설정</td>
+        <td>POST</td>
+        <td>/user/password</td>
+        <td>회원</td>
     </tr>
     <tr>
         <td>회원 탈퇴</td>
         <td>PATCH</td>
-        <td>/user/{email}</td>
-        <td>유저</td>
+        <td>/user/withdraw</td>
+        <td>회원</td>
     </tr>
     <tr>
-        <td>회원 정보 수정</td>
-        <td>PUT</td>
-        <td>/user/{userId}</td>
-        <td>유저</td>
-    </tr>
-    <tr>
-        <td>회원 정보 반환</td>
-        <td>GET</td>
-        <td>/user/{userId}/profile</td>
-        <td>프로필</td>
-    </tr>
-    <tr>
-        <td>게시글(상품) 생성</td>
+        <td>게시글 생성</td>
         <td>POST</td>
         <td>/post</td>
         <td>게시글</td>
     </tr>
     <tr>
-        <td>게시글(상품) 수정</td>
-        <td>GET</td>
+        <td>게시글 수정</td>
+        <td>GUT</td>
         <td>/post/{postId}</td>
         <td>게시글</td>
     </tr>
     <tr>
-        <td>게시글(상품) 삭제</td>
+        <td>게시글 삭제</td>
         <td>DELETE</td>
         <td>/post/{postId}</td>
         <td>게시글</td>
     </tr>
     <tr>
-        <td>게시글 좋아요, 취소</td>
-        <td>POST</td>
-        <td>/post/{postId}/hearts</td>
-        <td>게시글</td>
-    </tr>
-    <tr>
-        <td>판매 내역 표시</td>
-        <td>GET</td>
-        <td>/post?user={userId}</td>
-        <td>게시글</td>
-    </tr>
-    <tr>
-        <td>게시글 리스트 조회</td>
+        <td>전체 게시글 조회</td>
         <td>GET</td>
         <td>/posts</td>
         <td>게시글</td>
@@ -126,29 +102,95 @@
         <td>게시글</td>
     </tr>
     <tr>
-        <td>관심 상품 조회</td>
-        <td>GET</td>
-        <td>/posts/likedBy</td>
+        <td>상품 상태 수정</td>
+        <td>PATCH</td>
+        <td>/post/{postId}/product-status</td>
         <td>게시글</td>
     </tr>
     <tr>
-        <td>판매완료 상품 조회</td>
+        <td>게시글 상태 수정</td>
+        <td>PATCH</td>
+        <td>/post/{postId}/status</td>
+        <td>게시글</td>
+    </tr>
+    <tr>
+        <td>게시글 좋아요, 취소</td>
+        <td>POST</td>
+        <td>/post/{postId}/hearts</td>
+        <td>게시글</td>
+    </tr>
+    <tr>
+        <td>끌어올리기</td>
+        <td>PUT</td>
+        <td>/post/{postId}/recent</td>
+        <td>게시글</td>
+    </tr>
+    <tr>
+        <td>판매중 게시글 조회</td>
+        <td>GET</td>
+        <td>/posts/selling</td>
+        <td>게시글</td>
+    </tr>
+    <tr>
+        <td>숨김 게시글 조회</td>
+        <td>GET</td>
+        <td>/posts/hide</td>
+        <td>게시글</td>
+    </tr>      
+    <tr>
+        <td>판매완료 게시글 조회</td>
         <td>GET</td>
         <td>/posts/completed</td>
         <td>게시글</td>
     </tr>
     <tr>
-        <td>숨김 상품 조회</td>
+        <td>구매완료 게시글 조회</td>
         <td>GET</td>
-        <td>/posts/hide</td>
+        <td>/posts/purchased</td>
         <td>게시글</td>
     </tr>
     <tr>
-        <td>유저가 받은 후기</td>
+        <td>관심 게시글 조회</td>
         <td>GET</td>
-        <td>/review?user={userId}</td>
-        <td>리뷰</td>
+        <td>/posts/likedBy</td>
+        <td>게시글</td>
     </tr>
+    <tr>
+        <td>게시글 검색</td>
+        <td>GET</td>
+        <td>/posts/search</td>
+        <td>게시글</td>
+    </tr>
+    <tr>
+        <td>카테고리별 게시글 검색</td>
+        <td>GET</td>
+        <td>/posts/category/{category}</td>
+        <td>게시글</td>
+    </tr>
+    <tr>
+        <td>판매중 게시글 개수 조회</td>
+        <td>GET</td>
+        <td>/posts/selling/count</td>
+        <td>게시글</td>
+    </tr>   
+    <tr>
+        <td>숨김 게시글 개수 조회</td>
+        <td>GET</td>
+        <td>/posts/hide/count</td>
+        <td>게시글</td>
+    </tr>    
+    <tr>
+        <td>판매완료 게시글 개수 조회</td>
+        <td>GET</td>
+        <td>/posts/completed/count</td>
+        <td>게시글</td>
+    </tr>    
+    <tr>
+        <td>판매하기</td>
+        <td>POST</td>
+        <td>/posts/{postId}/sell</td>
+        <td>게시글</td>
+    </tr>     
     <tr>
         <td>댓글 추가</td>
         <td>POST</td>
@@ -167,6 +209,30 @@
         <td>/post/{postId}/comments/{commentId}</td>
         <td>댓글</td>
     </tr>
+    <tr>
+        <td>후기 추가</td>
+        <td>POST</td>
+        <td>/review/{postId}</td>
+        <td>후기</td>
+    </tr>
+    <tr>
+        <td>후기 조회</td>
+        <td>GET</td>
+        <td>/review/{postId}</td>
+        <td>후기</td>
+    </tr>
+    <tr>
+        <td>구매자 후기 작성 여부 조회</td>
+        <td>GET</td>
+        <td>/reviews/{postId}/buyer-status</td>
+        <td>후기</td>
+    </tr>    
+    <tr>
+        <td>판매자 후기 작성 여부 조회</td>
+        <td>GET</td>
+        <td>/reviews/{postId}/seller-status</td>
+        <td>후기</td>
+    </tr> 
     </tbody>
 </table>
 <br>
