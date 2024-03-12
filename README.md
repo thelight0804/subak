@@ -13,7 +13,7 @@
 - Spring Data JPA
 - Swagger
 - MariaDB
-- Cloudnary
+- Cloudinary
 ### Frontend
 - JavaScript
 - React Native
