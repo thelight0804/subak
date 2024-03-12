@@ -18,7 +18,7 @@ const PostsList = ({navigation}) => {
   const prevProfileImg = userData.image ? {uri: userData.image} : require('../../assets/image/user-profile.png'); // 기존 프로필 이미지
   const [profileImg, setProfileImg] = useState(null); // 업로드 되는 프로필 이미지
 
-  let [image, setImage] = useState({uri: profileImg, type: 'jpg', name: 'ILoveReact.jpg'});
+  const [image, setImage] = useState({uri: profileImg, type: 'jpg', name: 'userProfileImg.jpg'});
 
   const [prevName, setPrevName] = useState(userData.name); // 이전 닉네임
   const [newName, setNewName] = useState(userData.name); // 닉네임
@@ -58,8 +58,7 @@ const PostsList = ({navigation}) => {
     }, (response) => {
       if (response.assets){ // 사진을 선택 했을 때
         setProfileImg(response.assets[0].uri);
-        setImage({uri: response.assets[0].uri, type: 'jpg', name: 'ILoveReact.jpg'});
-        // console.log(formData.getParts());
+        setImage({uri: response.assets[0].uri, type: 'jpg', name: 'userProfileImg.jpg'});
       }
       else if (response.didCancel){ // 취소 했을 때
         setAlertMessage(`사진 선택을 취소했습니다.`);
@@ -87,7 +86,7 @@ const PostsList = ({navigation}) => {
     formData.append('profileImage', {
       uri: profileImg,
       type: 'image/jpg',
-      name: 'profileImg.jpg'
+      name: 'userProfileImg.jpg'
     });
     axios.put(`http://${Config.DB_IP}/user/${userData.id}/profile`,
         formData,

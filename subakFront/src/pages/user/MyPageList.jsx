@@ -1,13 +1,21 @@
+import { useCallback, useState } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { shared } from '../../styles/shared';
 import styles from '../../styles/user/myPageList';
 
 const MyPage = ({navigation}) => {
   const userData = useSelector((state) => state.userData); // 유저 데이터
-  const profileImg = userData.image ? {uri: userData.image} : require('../../assets/image/user-profile.png'); // 프로필 이미지
+  const [profileImg, setProfileImg] = useState(userData.image ? {uri: userData.image} : require('../../assets/image/user-profile.png')); // 프로필 이미지
+
+  useFocusEffect(
+    useCallback(() => {
+      setProfileImg(userData.image ? {uri: userData.image} : require('../../assets/image/user-profile.png'))
+    }, []),
+  );
 
   return (
     <>
