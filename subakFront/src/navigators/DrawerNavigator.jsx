@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useDispatch, useSelector } from 'react-redux';
+import { StatusBar } from 'react-native';
 
 import loginUser from '../data/store/loginUser';
 import getStorageData from '../data/asyncStorage/getStorageData';
@@ -11,6 +12,7 @@ import FooterTabs from './FooterTabs';
 import PostStack from './PostStack';
 import HomeStack from './HomeStack';
 import Loading from '../pages/components/Loading';
+import { colorPalette } from '../styles/shared';
 
 const DrawerNavigator = () => {
   const Stack = createNativeStackNavigator(); //React navigation stack
@@ -26,16 +28,22 @@ const DrawerNavigator = () => {
     return <Loading />;
   }
   return (
-    <Stack.Navigator 
-      initialRouteName={userData.logined ? "FooterTabs" : "LoginStack"}
-      screenOptions={{ headerShown: false }}
-    >
-      <Stack.Screen name="LoginStack" component={LoginStack}/>
-      <Stack.Screen name="FooterTabs" component={FooterTabs}/>
-      <Stack.Screen name="HomeStack" component={HomeStack}/>
-      <Stack.Screen name="PostStack" component={PostStack}/>
-      <Stack.Screen name="UserStack" component={UserStack}/>
-    </Stack.Navigator>
+    <>
+      <StatusBar
+        backgroundColor={colorPalette.background}
+        animated={true}
+      />
+      <Stack.Navigator 
+        initialRouteName={userData.logined ? "FooterTabs" : "LoginStack"}
+        screenOptions={{ headerShown: false }}
+      >
+        <Stack.Screen name="LoginStack" component={LoginStack}/>
+        <Stack.Screen name="FooterTabs" component={FooterTabs}/>
+        <Stack.Screen name="HomeStack" component={HomeStack}/>
+        <Stack.Screen name="PostStack" component={PostStack}/>
+        <Stack.Screen name="UserStack" component={UserStack}/>
+      </Stack.Navigator>
+    </>
   );
 }
 
