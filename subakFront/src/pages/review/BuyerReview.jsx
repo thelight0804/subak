@@ -74,7 +74,7 @@ const BuyerReview = ({navigation, route}) => {
    * 구매자 리뷰 작성 여부 확인 함수
    */
   const getIsBuyerReview = () => {
-    axios.get(`http://${Config.DB_IP}/review/buyer/${postId}`,
+    axios.get(`http://${Config.DB_IP}/reviews/${postId}/buyer-status`,
       {headers: {
         'Authorization': `Bearer ${userData.token}` // 토큰 값
       },
@@ -93,7 +93,7 @@ const BuyerReview = ({navigation, route}) => {
    * 판매자 리뷰 작성 여부 확인 함수
    */
   const getIsSellerReview = () => {
-    axios.get(`http://${Config.DB_IP}/review/seller/${postId}`,
+    axios.get(`http://${Config.DB_IP}/reviews/${postId}/seller-status`,
       {headers: {
         'Authorization': `Bearer ${userData.token}` // 토큰 값
       },
