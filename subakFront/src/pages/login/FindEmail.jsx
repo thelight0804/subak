@@ -15,7 +15,6 @@ const FindEmail = ({ navigation }) => {
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
   const [name, setName] = useState(''); // 본명
   const [phone, setPhone] = useState(''); // 휴대폰 번호
-  const [findEmail, setFindEmail] = useState(''); // 찾은 이메일
 
   /**
    * 이메일을 찾는 함수
@@ -30,8 +29,7 @@ const FindEmail = ({ navigation }) => {
     ).then(response => {
       if (response.status === 200) {
         if (response.data) {
-          setFindEmail(response.data); // 찾은 이메일 저장
-          navigation.navigate('FindedEmail', {name: name, email: findEmail}); // 페이지 이동
+          navigation.navigate('FindedEmail', {name: name, email: response.data}); // 페이지 이동
         }
         else {
           setPhone(''); // 휴대폰 번호 초기화
