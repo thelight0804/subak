@@ -49,7 +49,7 @@ public class CommentController {
         return ResponseEntity.noContent().build();
     }
 
-    // 댓글 조회
+    @ApiOperation(value = "댓글 조회", notes = "특정 게시글에 대한 댓글을 조회한다.")
     @GetMapping("/posts/{postId}/comments/{commentId}")
     public ResponseEntity<Comment> getComment(@PathVariable Long postId,
                                               @PathVariable Long commentId) {

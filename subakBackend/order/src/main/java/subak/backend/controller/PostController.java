@@ -194,17 +194,7 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
-//    @ApiOperation(value = "판매하기(댓글단 사용자들 조회)")
-//    @GetMapping("/posts/{postId}/commenters")
-//    public ResponseEntity<List<GetCommenterMemberResponse>> getCommenters(
-//            @PathVariable Long postId,
-//            HttpServletRequest httpServletRequest) {
-//        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
-//        List<GetCommenterMemberResponse> commenters = postService.getCommenters(postId, loginMember);
-//        return ResponseEntity.ok(commenters);
-//    }
-
-    @ApiOperation(value = "상품 판매 완료 처리")
+    @ApiOperation(value = "판매하기")
     @PostMapping("/posts/{postId}/sell")
     public ResponseEntity<Void> sellPost(
             @PathVariable Long postId,
@@ -233,5 +223,15 @@ public class PostController {
         Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
         return ResponseEntity.ok(postService.countHidePosts(loginMember.getId()));
     }
+
+    //    @ApiOperation(value = "판매하기(댓글단 사용자들 조회)")
+    //    @GetMapping("/posts/{postId}/commenters")
+    //    public ResponseEntity<List<GetCommenterMemberResponse>> getCommenters(
+    //            @PathVariable Long postId,
+    //            HttpServletRequest httpServletRequest) {
+    //        Member loginMember = authService.getAuthenticatedMember(httpServletRequest);
+    //        List<GetCommenterMemberResponse> commenters = postService.getCommenters(postId, loginMember);
+    //        return ResponseEntity.ok(commenters);
+    //    }
 
 }

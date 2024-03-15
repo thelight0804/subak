@@ -9,8 +9,8 @@ import subak.backend.domain.enumType.ReviewStatus;
 public class ReviewResponse {
 
     private String postTitle;
-    private Long buyerId;
     private Long sellerId;
+    private Long buyerId;
     private String sellerName;
     private String buyerName;
     private String sellerProfileImage;

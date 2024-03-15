@@ -41,7 +41,7 @@ public class ReviewController {
     }
 
     @ApiOperation(value = "구매자의 리뷰 작성 여부 확인")
-    @GetMapping("/review/buyer/{postId}")
+    @GetMapping("/reviews/{postId}/buyer-status")
     public ResponseEntity<Boolean> isReviewWrittenByBuyer(
             @PathVariable Long postId,
             HttpServletRequest httpServletRequest) {
@@ -50,7 +50,7 @@ public class ReviewController {
     }
 
     @ApiOperation(value = "판매자의 리뷰 작성 여부 확인")
-    @GetMapping("/review/seller/{postId}")
+    @GetMapping("/reviews/{postId}/seller-status")
     public ResponseEntity<Boolean> isReviewWrittenBySeller(
             @PathVariable Long postId,
             HttpServletRequest httpServletRequest) {
