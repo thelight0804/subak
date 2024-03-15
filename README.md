@@ -7,21 +7,50 @@
 <br>
 
 ## 기술 스택
-### Backend
-- Java 11
-- Spring Boot 2.7.17
-- Spring Data JPA
-- Swagger
-- MariaDB
-- Cloudinary
-### Frontend
-- JavaScript
-- React Native
-- Axios
-- Redux
-- React Navigation
-- Async Storage
-- StyleSheet
+<table>
+<thead>
+  <tr>
+    <th>Backend</th>
+    <th>Frontend</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Java 11</td>
+    <td>JavaScript</td>
+  </tr>
+  <tr>
+    <td>Spring Boot 2.7.17</td>
+    <td>React Native</td>
+  </tr>
+  <tr>
+    <td>Spring Data JPA</td>
+    <td>Axios</td>
+  </tr>
+  <tr>
+    <td>Swagger</td>
+    <td>Redux</td>
+  </tr>
+  <tr>
+    <td>MariaDB</td>
+    <td>React Navigation</td>
+  </tr>
+  <tr>
+    <td>Cloudinary</td>
+    <td>Async Storage</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>StyleSheet</td>
+  </tr>
+</tbody>
+</table>
+<br>
+
+## 아키텍처
+<div align="center">
+  <img src="https://github.com/thelight0804/subak/assets/69424845/bdcd3d85-2ccc-46ff-8c42-a0cbf3b65064">
+</div>
 <br>
 
 ## API 명세서
@@ -237,11 +266,100 @@
 </table>
 <br>
 
-## 아키텍처
-<div align="center">
-  <img src="https://github.com/thelight0804/subak/assets/69424845/bdcd3d85-2ccc-46ff-8c42-a0cbf3b65064">
-</div>
+## 기능
+### 게시글
+<table>
+<thead>
+  <tr>
+    <th><img src="https://github.com/thelight0804/subak/assets/69424845/3e08af05-1a72-4531-b80f-6dd7240b5f9b"></th>
+    <th><img src="https://github.com/thelight0804/subak/assets/69424845/9329fc72-bf03-43c3-9752-932a55295ed8"></th>
+    <th><img src="https://github.com/thelight0804/subak/assets/69424845/edb5d8f8-78fa-4203-b324-cf125e33bd55"></th>
+    <th><img src="https://github.com/thelight0804/subak/assets/69424845/2fcb5e98-b450-4676-afb3-f35d19d5bf2a"></th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td align="center">목록</td>
+    <td align="center">글 작성</td>
+    <td align="center">상세 페이지</td>
+    <td align="center">게시글 관리</td>
+  </tr>
+</tbody>
+</table>
+
+### 조회
+<table>
+<thead>
+  <tr>
+    <th><img src="https://github.com/thelight0804/subak/assets/69424845/baa3c638-487d-4156-9e82-940486e24fea" width="80%"></th>
+    <th><img src="https://github.com/thelight0804/subak/assets/69424845/8048122b-322c-47fc-897a-bb7e159334b4" width="80%"></th>
+    <th><img src="https://github.com/thelight0804/subak/assets/69424845/289aba62-94b9-4e44-b5c3-94405beec121" width="80%"></th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td align="center">판매내역</td>
+    <td align="center">구매내역</td>
+    <td align="center">관심목록</td>
+  </tr>
+</tbody>
+</table>
+
+### 댓글
+<table>
+<thead>
+  <tr>
+    <th><img src="https://github.com/thelight0804/subak/assets/69424845/ed5f5984-1a17-420e-b419-05eee77b7b15" width="50%"></th>
+    <th><img src="https://github.com/thelight0804/subak/assets/69424845/4e97c5a4-b8ad-41d8-a9a7-9353986cfc7d" width="50%"></th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td align="center">추가</td>
+    <td align="center">수정</td>
+  </tr>
+</tbody>
+</table>
+
+### 유저 관리
+<table>
+<thead>
+  <tr>
+    <th><img src="https://github.com/thelight0804/subak/assets/69424845/9e3e05a0-27dd-4861-a918-d2ebe3a9c8be"></th>
+    <th><img src="https://github.com/thelight0804/subak/assets/69424845/a99a5744-fa0d-4d1e-ab47-129af0324fbd"></th>
+    <th><img src="https://github.com/thelight0804/subak/assets/69424845/96f88919-1b40-4779-ad39-47ea806eb6ae"></th>
+    <th><img src="https://github.com/thelight0804/subak/assets/69424845/d0a6c267-439d-4f59-a635-03c27cd0b8db"></th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td align="center">회원가입</td>
+    <td align="center">로그인</td>
+    <td align="center">이메일 및 비밀번호 찾기</td>
+    <td align="center">프로필 수정</td>
+  </tr>
+</tbody>
+</table>
+
+### 판매 및 구매
+<table>
+<thead>
+  <tr>
+    <th><img src="https://github.com/thelight0804/subak/assets/69424845/8ea2f965-cf0f-42b7-9adc-304e78007715" width="80%"></th>
+    <th><img src="https://github.com/thelight0804/subak/assets/69424845/48a439a0-fe3d-410d-94df-adb332012864" width="80%"></th>
+    <th><img src="https://github.com/thelight0804/subak/assets/69424845/6fae0e9c-64d8-4f1a-966e-41ec3f6af8a6" width="80%"></th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td align="center">내 물건 팔기</td>
+    <td align="center">후기 작성</td>
+    <td align="center">후기 확인</td>
+  </tr>
+</tbody>
+</table>
 <br>
+
 
 ## 팀원
 <table>
