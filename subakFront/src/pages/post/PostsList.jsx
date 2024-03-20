@@ -14,27 +14,11 @@ import RenderPosts from '../components/RenderPosts';
 
 const PostsList = ({navigation}) => {
   const userToken = useSelector(state => state.userData.token);
-  console.log('userToken : ', userToken);
   const [showAlert, setShowAlert] = useState(false); // 오류 알림창
   const [alertMessage, setAlertMessage] = useState(''); // 오류 메시지
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1); // 페이지 번호
   const [noMore, setNoMore] = useState(false); // 더 이상 데이터가 없는지 확인
-
-  // const [posts, setPosts] = useState([
-  //   {
-  //     "id": 0,
-  //     "memberName": "0",
-  //     "profileImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg",
-  //     "postTitle": "0",
-  //     "firstImage": "http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702468776/ab63209a-9fdf-44d0-bafa-ccecd61c1f9f.png.jpg",
-  //     "price": 0,
-  //     "postDateTime": "3일 전",
-  //     "address": "00",
-  //     "heartCount": 0,
-  //     "commentCount": 0
-  //   },
-  // ]);
 
   const [posts, setPosts] = useState([]); // 포스트 목록
 

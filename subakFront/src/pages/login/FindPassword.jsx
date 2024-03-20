@@ -26,8 +26,8 @@ const SignUp = ({ navigation }) => {
     axios.post(`http://${Config.DB_IP}/user/password`,
       {
         email: email,
-        newPassword: newPassword,
         name: name,
+        newPassword: newPassword,
         phone: phone,
       },
       {timeout: 2000},
@@ -160,7 +160,7 @@ const SignUp = ({ navigation }) => {
                 )}
                 <TouchableOpacity
                   style={styles.button}
-                  onPress={() => {handleChangePassword}}
+                  onPress={handleChangePassword}
                   disabled={!(emailCheck(email) && passwordCheck(newPassword) && nameCheck(name) && phoneCheck(phone))}>
                   <Text
                     style={[

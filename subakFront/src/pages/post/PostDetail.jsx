@@ -5,6 +5,7 @@ import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Config from 'react-native-config';
 import { useFocusEffect } from '@react-navigation/native';
+import Swiper from 'react-native-swiper'
 
 import Alert from '../components/Alert';
 import Loading from '../components/Loading';
@@ -39,7 +40,7 @@ const PostDetail = ({navigation, route}) => {
   const [modalSellerCommentIndex, setModalSellerCommentIndex] = useState(-1); // 판매자 댓글 상태 모달 선택 인덱스
   const [openBuyerCommentModal, setBuyerOpenCommentModal] = useState(false); // 구매자 댓글 상태 모달 창
   const [modalBuyerCommentIndex, setModalBuyerCommentIndex] = useState(-1); // 구매자 댓글 상태 모달 선택 인덱스\
- 
+  
   const [post, setPost] = useState(null); // 게시물 상세 데이터
   const [comments, setComments] = useState([]); // 댓글
   const [selectedCommentID, setSelectedCommentID] = useState(-1); // 선택된 댓글 ID
@@ -174,6 +175,7 @@ const PostDetail = ({navigation, route}) => {
     )
       .then(response => {
         if (response.status === 200) {
+          console.log(response.data);
           setPost(response.data);
           setLiked(response.data.hearted);
           setComments(response.data.comments);
@@ -638,14 +640,22 @@ const PostDetail = ({navigation, route}) => {
 
     return (
       <>
-        {[
-          post.postImages.length > 0 ? (
-            <View style={styles.imageContainer} key={post.postImages}>
-              <Image
-                style={styles.mainImage}
-                source={{uri: post.postImages[0]}}
-              />
-            </View>
+        {[post.postImages.length > 0 ? (
+            <Swiper 
+              style={styles.imageContainer}
+              activeDotColor={colorPalette.main}
+            >
+              {post.postImages.map((image, index) => {
+                return (
+                  <View key={index}>
+                    <Image
+                      style={styles.mainImage}
+                      source={{uri: image}}
+                    />
+                  </View>
+                );
+              })}
+            </Swiper>
           ) : (
             <View style={styles.notImageContainger} key={'postImage'} />
           ),

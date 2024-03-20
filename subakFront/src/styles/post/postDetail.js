@@ -22,7 +22,6 @@ const styles = StyleSheet.create({
 
   // 메인 이미지
   imageContainer: {
-    width: width,
     height: height * 0.4, // 화면의 40%만 차지
   },
   mainImage: {
