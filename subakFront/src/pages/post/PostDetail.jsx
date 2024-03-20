@@ -40,7 +40,7 @@ const PostDetail = ({navigation, route}) => {
   const [modalSellerCommentIndex, setModalSellerCommentIndex] = useState(-1); // 판매자 댓글 상태 모달 선택 인덱스
   const [openBuyerCommentModal, setBuyerOpenCommentModal] = useState(false); // 구매자 댓글 상태 모달 창
   const [modalBuyerCommentIndex, setModalBuyerCommentIndex] = useState(-1); // 구매자 댓글 상태 모달 선택 인덱스\
-
+  
   const [post, setPost] = useState(null); // 게시물 상세 데이터
   const [comments, setComments] = useState([]); // 댓글
   const [selectedCommentID, setSelectedCommentID] = useState(-1); // 선택된 댓글 ID
