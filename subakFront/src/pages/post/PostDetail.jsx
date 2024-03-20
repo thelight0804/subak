@@ -175,6 +175,7 @@ const PostDetail = ({navigation, route}) => {
     )
       .then(response => {
         if (response.status === 200) {
+          console.log(response.data);
           setPost(response.data);
           setLiked(response.data.hearted);
           setComments(response.data.comments);
