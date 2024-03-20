@@ -5,6 +5,7 @@ import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Config from 'react-native-config';
 import { useFocusEffect } from '@react-navigation/native';
+import Swiper from 'react-native-swiper'
 
 import Alert from '../components/Alert';
 import Loading from '../components/Loading';
@@ -39,49 +40,6 @@ const PostDetail = ({navigation, route}) => {
   const [modalSellerCommentIndex, setModalSellerCommentIndex] = useState(-1); // 판매자 댓글 상태 모달 선택 인덱스
   const [openBuyerCommentModal, setBuyerOpenCommentModal] = useState(false); // 구매자 댓글 상태 모달 창
   const [modalBuyerCommentIndex, setModalBuyerCommentIndex] = useState(-1); // 구매자 댓글 상태 모달 선택 인덱스\
-  
-  // FIX: 테스트용 코드
-  // const [post, setPost] = useState({
-  //   address: '부산광역시 부산진구 엄광로 176',
-  //   category: 'ELECTRONICS',
-  //   commentCount: 4,
-  //   comments: [
-  //     {
-  //       cmDateTime: '9일 전',
-  //       commentMemberId: 1008,
-  //       content: '댓글 테스트 3',
-  //       id: 19009,
-  //       memberName: '난상현이지롱',
-  //       profileImage:
-  //         'http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg',
-  //     },
-  //     {
-  //       cmDateTime: '3분 전',
-  //       commentMemberId: 24001,
-  //       content: '나눔 좋네요!',
-  //       id: 24002,
-  //       memberName: '상현',
-  //       profileImage: null,
-  //     },
-  //   ],
-  //   content: '무료 나눔입니다~',
-  //   heartCount: 2,
-  //   id: 17001,
-  //   liked: true,
-  //   memberId: 1008,
-  //   memberName: '난상현이지롱',
-  //   postDateTime: '35일 전',
-  //   postImages: [
-  //     'http://res.cloudinary.com/dp3fl7ntb/image/upload/v1705553365/90b91cbb-73d0-4c78-8a67-157eca4ca017.jpg.jpg',
-  //   ],
-  //   postTitle: '무료 나눔',
-  //   price: 0,
-  //   productStatus: 'SALE',
-  //   profileImage:
-  //     'http://res.cloudinary.com/dp3fl7ntb/image/upload/v1702469326/9cbfa241-b35f-45e6-9c69-64f8102d953a.jpg.jpg',
-  //   temp: 51.1,
-  //   views: 1488,
-  // });
 
   const [post, setPost] = useState(null); // 게시물 상세 데이터
   const [comments, setComments] = useState([]); // 댓글
@@ -217,6 +175,7 @@ const PostDetail = ({navigation, route}) => {
     )
       .then(response => {
         if (response.status === 200) {
+          console.log(response.data);
           setPost(response.data);
           setLiked(response.data.hearted);
           setComments(response.data.comments);
@@ -681,14 +640,22 @@ const PostDetail = ({navigation, route}) => {
 
     return (
       <>
-        {[
-          post.postImages.length > 0 ? (
-            <View style={styles.imageContainer} key={post.postImages}>
-              <Image
-                style={styles.mainImage}
-                source={{uri: post.postImages[0]}}
-              />
-            </View>
+        {[post.postImages.length > 0 ? (
+            <Swiper 
+              style={styles.imageContainer}
+              activeDotColor={colorPalette.main}
+            >
+              {post.postImages.map((image, index) => {
+                return (
+                  <View key={index}>
+                    <Image
+                      style={styles.mainImage}
+                      source={{uri: image}}
+                    />
+                  </View>
+                );
+              })}
+            </Swiper>
           ) : (
             <View style={styles.notImageContainger} key={'postImage'} />
           ),
