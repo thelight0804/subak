@@ -1,6 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import {useWindowDimensions} from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { useSelector } from "react-redux";
 import Config from 'react-native-config';
@@ -20,11 +19,10 @@ const renderScene = SceneMap({
   hidden: HiddenScreen,
 });
 
-const ItemTabs = ({navigation}) => {
+const ItemTabs = () => {
   const userToken = useSelector(state => state.userData.token); // 유저 데이터
   const [isLoading, setIsLoading] = useState(true); // 로딩
   const [postCounts, setPostCounts] = useState({sales: 0, completed: 0, hidden: 0}); // 판매중, 거래완료, 숨김 게시글 수
-
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0); // 탭 인덱스
   const [routes, setRoutes] = useState([ // 탭 라우트
@@ -32,6 +30,14 @@ const ItemTabs = ({navigation}) => {
     {key: 'completed', title: `거래완료`},
     {key: 'hidden', title: `숨김`},
   ]);
+  
+  useEffect(() => {
+    getPostCounts().then((counts) => {
+      setPostCounts(counts);
+    });
+    setIsLoading(false);
+  }, []);
+
 
   // postCounts가 변경될 때마다 routes를 업데이트
   useEffect(() => {
@@ -41,13 +47,6 @@ const ItemTabs = ({navigation}) => {
       {key: 'hidden', title: `숨김  ${postCounts.hidden}`},
     ]);
   }, [postCounts]);
-  
-  useEffect(() => {
-    getPostCounts().then((counts) => {
-      setPostCounts(counts);
-    });
-    setIsLoading(false);
-  }, []);
 
   /**
    * 게시글 수 가져오기
