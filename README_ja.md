@@ -1,8 +1,8 @@
-<h1 align="center">수박마켓</h1>
+<h1 align="center">Subak Market</h1>
 
 <div align="center">
-  <img width="80%" src="https://github.com/thelight0804/subak/assets/69424845/4ec71d02-afc5-4211-a25f-b8757c312908">
-  <p align="center">韓国で有名な中古品販売アプリkarrot(キャロット)の重要な機能を作ってみたサイドプロジェクトです。</p>
+  <img width="80%" src="https://github.com/thelight0804/subak/assets/69424845/3b099c1c-745a-44a3-a873-16319cf95cb5">
+  <p align="center">中古品販売アプリで必要な機能を作ってみたサイドプロジェクトです。</p>
 </div>
 <br>
 
