@@ -1,4 +1,6 @@
-<h1 align="center">수박마켓</h1>
+# 수박마켓
+> <a href="https://github.com/thelight0804/subak/blob/main/README_ja.md">日本語はこちらをご覧ください。</a>
+<br/>
 
 <div align="center">
   <img width="80%" src="https://github.com/thelight0804/subak/assets/69424845/4ec71d02-afc5-4211-a25f-b8757c312908">
